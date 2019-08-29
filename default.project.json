@@ -1,30 +1,87 @@
 {
-	"name": "roblox-ts-game",
-	"tree": {
-		"$className": "DataModel",
-		"ServerScriptService": {
-			"$className": "ServerScriptService",
-			"TS": {
-				"$path": "out/server"
-			}
-		},
-		"ReplicatedStorage": {
-			"$className": "ReplicatedStorage",
-			"rbxts_include": {
-				"$path": "include"
-			},
-			"TS": {
-				"$path": "out/shared"
-			}
-		},
-		"StarterPlayer": {
-			"$className": "StarterPlayer",
-			"StarterPlayerScripts": {
-				"$className": "StarterPlayerScripts",
-				"TS": {
-					"$path": "out/client"
-				}
-			}
-		}
-	}
+  "name": "roblox-ts-game",
+  "tree": {
+    "$className": "DataModel",
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "TS": {
+        "$path": "out/server"
+      },
+      "Schmeeda": {
+        "$path": "out/ServerScriptService/Schmeeda"
+      },
+      "Aero": {
+        "$path": "out/ServerScriptService/Aero"
+      },
+      "Agents": {
+        "$path": "out/ServerScriptService/Agents"
+      },
+      "AppStart": {
+        "$path": "out/ServerScriptService/AppStart"
+      },
+      "Components": {
+        "$path": "out/ServerScriptService/Components"
+      },
+      "Finders": {
+        "$path": "out/ServerScriptService/Finders"
+      },
+      "FunctionalDomains": {
+        "$path": "out/ServerScriptService/FunctionalDomains"
+      },
+      "GameModules": {
+        "$path": "out/ServerScriptService/GameModules"
+      },
+      "Nevermore": {
+        "$path": "out/ServerScriptService/Nevermore"
+      }
+    },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "rbxts_include": {
+        "$path": "include"
+      },
+      "TS": {
+        "$path": "out/shared"
+      },
+      "Aero": {
+        "$path": "out/ReplicatedStorage/Aero"
+      },
+      "Equipment": {
+        "$path": "out/ReplicatedStorage/Equipment"
+      },
+      "Nevermore": {
+        "$path": "out/ReplicatedStorage/Nevermore"
+      },
+      "Roact": {
+        "$path": "out/ReplicatedStorage/Roact"
+      },
+      "Rodux": {
+        "$path": "out/ReplicatedStorage/Rodux"
+      },
+      "Shared": {
+        "$path": "out/ReplicatedStorage/Shared"
+      },
+      "Std": {
+        "$path": "out/ReplicatedStorage/Std"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "TS": {
+          "$path": "out/client"
+        },
+        "Framework": {
+          "$path": "out/StarterPlayer/StarterPlayerScripts/Framework"
+        }
+      }
+    },
+    "ServerStorage": {
+      "$className": "ServerStorage",
+      "Aero": {
+        "$path": "out/ServerStorage/Aero"
+      }
+    }
+  }
 }
