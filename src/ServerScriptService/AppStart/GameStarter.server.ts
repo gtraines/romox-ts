@@ -1,13 +1,11 @@
 import { ServerScriptService } from "@rbxts/services";
+import { Lazarus } from '../Schmeeda/Lazarus';
 
-const scriptFolders = ServerScriptService.GetChildren();
-if (scriptFolders !== undefined){
-    scriptFolders.forEach(entry => print(entry.Name));
-} 
+let luaModule = ServerScriptService.WaitForChild("Schmeeda").WaitForChild("SchmeedaModule") as ModuleScript;
 
-if (ServerScriptService !== undefined) {
-    let folders = ServerScriptService.GetDescendants();
-    folders.forEach(element => {
-        print(element.Name)
-    });
-}
+const stephanie = require(luaModule) as Lazarus;
+
+let thousandsOfPictures = stephanie.TakePictures(5);
+
+print("The number of tens of thousands is ", thousandsOfPictures * 10000);
+
