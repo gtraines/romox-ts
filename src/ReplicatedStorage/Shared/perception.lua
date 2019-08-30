@@ -10,17 +10,17 @@ local module = {}
 function module.Raycast(ray, blacklist, partToCheck)
 	blacklist = blacklist or {}
 	local results = {}
-	
+
 	while true do
 		results = {Workspace:FindPartOnRayWithIgnoreList(ray, blacklist)}
-		
+
 		local hit = results[1]
-		
+
 		if not hit then
 			break
 		else
 			local canCollideWith = partToCheck and partToCheck:CanCollideWith(hit) or hit.CanCollide
-			
+
 			if canCollideWith then
 				break
 			else
@@ -28,18 +28,17 @@ function module.Raycast(ray, blacklist, partToCheck)
 			end
 		end
 	end
-	
+
 	return unpack(results)
 end
 
 --Checks if given a range, if origin has line of sight with character.
-function module.GetIsInLiveOfSight(origin, character, range, blacklist)
+function module.GetIsInLineOfSight(origin, character, range, blacklist)
 	if typeof(origin) == "Instance" then
 		origin = origin.Position
 	end
-	
 	local hit, point = module.Raycast(Ray.new(origin, (origin - character.HumanoidRootPart.Position).Unit * -range), blacklist)
-	
+
 	return hit and hit:IsDescendantOf(character), point
 end
 
@@ -48,7 +47,7 @@ function module.IsSpaceEmpty(position)
 	return Workspace:IsRegion3Empty(region)
 end
 
-function module:GetRandomXZOffsetNear(targetVector3)
+function module.GetRandomXZOffsetNear(targetVector3)
 	local xOffset = math.random(5,10)
 	if math.random() > .5 then
 		xOffset = xOffset * -1
@@ -83,7 +82,7 @@ function module.FindEmptySpaceCloseTo(targetVector3)
 		else
 			targetPos = targetPos + Vector3.new(0,4,0)
 		end
-		
+
 		if module.IsSpaceEmpty(targetPos) then
 			return targetPos
 		end
@@ -94,20 +93,19 @@ end
 
 function module.WideRayCast(start, target, offset, ignoreList)
 	local parts = {}
-	
-	local ray = Ray.new(start, target - start)
+
+	local offsetVector = offset *
+		(target - start):Cross(Vector3.FromNormalId(
+			Enum.NormalId.Top)
+		).unit
+	local ray = Ray.new(start + offsetVector,
+		target - start + offsetVector)
 	local part, point = Workspace:FindPartOnRayWithIgnoreList(ray, ignoreList)
-	if part then table.insert(parts, part) end
-	
-	local offsetVector = offset * (target - start):Cross(Vector3.FromNormalId(Enum.NormalId.Top)).unit
-	local ray = Ray.new(start + offsetVector, target - start + offsetVector)
-	local part, point = Workspace:FindPartOnRayWithIgnoreList(ray, ignoreList)
-	if part then table.insert(parts, part) end
-	
-	local ray = Ray.new(start - offsetVector, target - start - offsetVector)
-	local part, point = Workspace:FindPartOnRayWithIgnoreList(ray, ignoreList)
-	if part then table.insert(parts, part) end
-	
+
+	if part then
+		table.insert(parts, part)
+	end
+
 	return parts
 end
 
@@ -150,8 +148,8 @@ function module.GetClosestVisibleTarget(hunterPersonage, candidateTargets, ignor
 	local hunterTorso = rq.PersonageTorsoOrEquivalent(hunterPersonage)
 	for _, candidateTarget in pairs(candidateTargets) do
 		local targetTorso = rq.PersonageTorsoOrEquivalent(candidateTarget)
-		
-		if module.CanHunterSeeTarget(hunterTorso, fieldOfView, targetTorso, ignoreList) then 
+
+		if module.CanHunterSeeTarget(hunterTorso, fieldOfView, targetTorso, ignoreList) then
 			local toTargetOffsets = hunterTorso.Position - targetTorso.Position
 			if toTargetOffsets.magnitude < closestDistance then
 				closestTarget = targetTorso
