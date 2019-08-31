@@ -17,9 +17,6 @@ local DisplayManager = DomainFinder:FindDomain("DisplayManager")
 
 
 local GameManager = {
-	Waypoints = {},
-	CurrentWaypointIndex = 2,
-	Personage = nil
 	}
 
 -- Local Variables

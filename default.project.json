@@ -7,9 +7,6 @@
       "TS": {
         "$path": "out/server"
       },
-      "Schmeeda": {
-        "$path": "out/ServerScriptService/Schmeeda"
-      },
       "Aero": {
         "$path": "out/ServerScriptService/Aero"
       },
@@ -33,6 +30,9 @@
       },
       "Nevermore": {
         "$path": "out/ServerScriptService/Nevermore"
+      },
+      "PlayerInterest": {
+        "$path": "out/ServerScriptService/PlayerInterest"
       }
     },
     "ReplicatedStorage": {

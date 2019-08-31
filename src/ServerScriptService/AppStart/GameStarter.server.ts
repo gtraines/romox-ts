@@ -1,11 +1,34 @@
-import { ServerScriptService } from "@rbxts/services";
-import { Lazarus } from '../Schmeeda/Lazarus';
+import { ServerScriptService, ReplicatedStorage } from "@rbxts/services";
 
-let luaModule = ServerScriptService.WaitForChild("Schmeeda").WaitForChild("SchmeedaModule") as ModuleScript;
+import { IGameManager } from '../GameModules/GameModules';
+import { ISpawnerManager, SpawnerManager } from '../PlayerInterest/SpawnerManager';
 
-const stephanie = require(luaModule) as Lazarus;
+const nevermoreModule = ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript;
+const nevermoreInitialize = require(nevermoreModule);
 
-let thousandsOfPictures = stephanie.TakePictures(5);
+const gameMgrModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("GameManager") as ModuleScript;
+const GameManager = require(gameMgrModule) as IGameManager;
 
-print("The number of tens of thousands is ", thousandsOfPictures * 10000);
+function OneTimeSetup() : void {
+    const spawnerManager = new SpawnerManager();
+    spawnerManager.Init();
+}
 
+function RunForever() : void {
+    while (true) {
+        while (!GameManager.GameReady()) {
+            GameManager.RunIntermission();
+        }
+
+        GameManager.StopIntermission();
+        GameManager.StartRound();
+
+        while (!GameManager.RoundOver()) {
+            GameManager.Update();
+            wait(0.1);
+        }
+    }
+}
+
+OneTimeSetup();
+RunForever();

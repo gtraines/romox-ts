@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/gtraines/romox-ts#readme",
   "devDependencies": {
-    "@rbxts/types": "^1.0.254"
+    "@rbxts/types": "^1.0.258"
   },
   "dependencies": {
     "@rbxts/services": "^1.0.23",

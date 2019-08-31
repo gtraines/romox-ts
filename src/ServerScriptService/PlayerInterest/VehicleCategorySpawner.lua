@@ -12,7 +12,6 @@ local carAndDriver = DomainFinder:FindDomain("CarAndDriver")
 local wraptor = LibFinder:FindLib("Wraptor")
 local linq = LibFinder:FindLib("linq")
 local rq = LibFinder:FindLib("rquery")
-print("Loaded libraries")
 
 local module = {}
 
@@ -50,7 +49,7 @@ function module._vehicleSpawnerTouchedDelegate(spawnerModel, playerFromPart)
     return carAndDriver.CreateVehicleFromServerStorage(prototypeToSpawn, spawnLocation)
 end
 
-function module.ConfigureVehicleSpawners()
+function module.ConfigureSpawners()
     
     for spwnrMdl in module.GetSpawnerModels("VehicleSpawners") do
         print(spwnrMdl)
@@ -61,7 +60,7 @@ function module.ConfigureVehicleSpawners()
 end
 
 function module.Init()
-    module.ConfigureVehicleSpawners()
+    module.ConfigureSpawners()
 end
 
 return module
