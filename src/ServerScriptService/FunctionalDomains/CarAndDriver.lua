@@ -3,12 +3,14 @@ local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local libFinder = require(ServerScriptService:WaitForChild("Finders", 5):WaitForChild("LibFinder", 2))
+local libFinder = require(ReplicatedStorage:WaitForChild("StdLibFinder", 2))
 local exNihilo = require(script.Parent:WaitForChild("ExNihilo", 2))
+
 local rq = libFinder:FindLib("rquery")
 
 local elsComponents = ServerScriptService:WaitForChild("Components", 5):WaitForChild("Els", 2)
 local elsHud = require(elsComponents:FindFirstChild("ElsHud"))
+
 local module = {}
 
 function module.__setVehicleNetworkOwnershipToPlayer(vehicleModel, occupantPlayer)
@@ -22,7 +24,7 @@ end
 function module.__attachGuiToVehicleSeatOccupant(vehicleModel, occupantPlayer)
 
     if vehicleModel ~= nil and occupantPlayer ~= nil then
-        local ChassisLocal = ReplicatedStorage:WaitForChild("Scripts", 2):WaitForChild("Equipment", 2):WaitForChild("ChassisLocal"):Clone()
+        local ChassisLocal = ReplicatedStorage:WaitForChild("Equipment", 2):WaitForChild("ChassisLocal"):Clone()
 
         if ChassisLocal:FindFirstChild("Object") == nil then
             local objInstance = Instance.new("ObjectValue")

@@ -1,24 +1,14 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local foldersWithLibRegistrations = {
-    Shared = ReplicatedStorage:WaitForChild("Shared", 2),
-    Std = ReplicatedStorage:WaitForChild("Std", 2),
-}
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+local std = require("Std")
 
 local dedupedModules = {}
-for _, folder in pairs(foldersWithLibRegistrations) do
-    local registrationModuleScript = folder:FindFirstChild("_registerLibs")
-    if registrationModuleScript ~= nil then
-        local registrationModule = require(registrationModuleScript)
-    
-        for key,mod in pairs(registrationModule) do
-            if dedupedModules[key] == nil then
-                dedupedModules[key] = mod
-            end
-        end
-    end
-end
 
-dedupedModules["Std"] = require(foldersWithLibRegistrations.Std.Namespace)
+dedupedModules["Std"] = std
+
+for name, libModule in pairs(std) do
+    dedupedModules[name] = libModule
+end
 
 local module = {
     RegisteredLibs = dedupedModules

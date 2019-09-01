@@ -1,5 +1,3 @@
-local GameManager = {}
-
 -- ROBLOX services
 local Players = game:GetService("Players")
 local ServerStorage = game:GetService("ServerStorage")
@@ -16,8 +14,7 @@ local TimeManager = DomainFinder:FindDomain("TimeManager")
 local DisplayManager = DomainFinder:FindDomain("DisplayManager")
 
 
-local GameManager = {
-	}
+local GameManager = {}
 
 -- Local Variables
 local IntermissionRunning = false

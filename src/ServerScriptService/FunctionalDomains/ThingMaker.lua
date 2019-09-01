@@ -11,12 +11,12 @@
 -- set health
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
-local rq = require(ReplicatedStorage:WaitForChild("LibFinder", 2):FindLib("rquery"))
 local exNihilo = require(ServerScriptService:WaitForChild("FunctionalDomains"):WaitForChild("ExNihilo"))
 
-local require = require(game:GetService("ReplicatedStorage"):WaitForChild("Nevermore"))
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+local std = require("Std")
+local rq = std.rquery
 local _  = require("rodash")
-
 
 local module = {}
 
@@ -25,7 +25,7 @@ function module.HasHumanoid(personage)
         function (entry)
             return entry.Name == "Humanoid" or entry:IsA("Humanoid")
         end)
-        
+
     return hasHumanoid ~= nil and hasHumanoid
 end
 

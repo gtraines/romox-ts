@@ -1,13 +1,11 @@
 -- a place to group general player sugar functions
 -- @module spieler
-
-local libFinder = require(game:GetService("ServerScriptService")
-    :FindFirstChild("Finders")
-    :FindFirstChild("LibFinder"))
-
-local rq = libFinder:FindLib("rquery")
-
 local playerSvc = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+local std = require("Std")
+local rq = std.rquery
+
 
 -- @export spieler the module that actually gets exported
 local spieler = {

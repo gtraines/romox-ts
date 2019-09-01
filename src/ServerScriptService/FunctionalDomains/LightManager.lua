@@ -10,7 +10,7 @@ function module.addSurfaceLighting(part, surfaces, range, color)
 	-- Left: 3
 	-- Bottom: 4
     -- Front: 5
-    
+
 	for _, surface in pairs(surfaces) do
 		local lightObj = Instance.new('SurfaceLight', part)
 		lightObj.Face = surface

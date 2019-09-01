@@ -1,8 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local PlayersService = game:GetService("Players")
 
-local sharedLibs = ReplicatedStorage:FindFirstChild("Shared")
-local rq = require(sharedLibs:FindFirstChild("rquery"))
+local require = require(ReplicatedStorage:FindFirstChild("Nevermore"))
+local rq = require("Std").rquery
 
 local module = {}
 

@@ -1,9 +1,8 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
 
-local rq = require(ReplicatedStorage
-	:WaitForChild("Shared", 1)
-	:WaitForChild("rquery", 1))
+local rq = require("Std").rquery
 
 local module = {}
 

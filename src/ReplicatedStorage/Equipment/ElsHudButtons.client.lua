@@ -1,11 +1,9 @@
 wait(0.1)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local scriptFinder = require(ReplicatedStorage
-	:FindFirstChild("Scripts")
-	:FindFirstChild("ScriptFinder"))
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
 
-local pubSubClient = scriptFinder:FindLib("pubsubclient")
+local pubSubClient = require("PubSub")
 local RunService = game:GetService("RunService")
 local Player = game.Players.LocalPlayer
 local Character = workspace:WaitForChild(Player.Name)

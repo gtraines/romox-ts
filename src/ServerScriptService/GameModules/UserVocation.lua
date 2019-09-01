@@ -1,12 +1,12 @@
 local DataStoreService = game:GetService("DataStoreService")
 local Teams = game:GetService("Teams")
 local UserVocationDataStore = DataStoreService:GetDataStore("UserVocation")
-local LibFinder = require(game:GetService("ServerScriptService")
-    :WaitForChild("Finders", 1)
-    :WaitForChild("LibFinder", 1))
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local PubSub = LibFinder:FindLib("pubsub")
-local rq = LibFinder:FindLib("rquery")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+local rq = require("Std").rquery
+local PubSub = require("PubSub")
+
 
 -- Regen UserId
 -- 419193235

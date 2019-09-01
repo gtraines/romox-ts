@@ -1,12 +1,7 @@
-local ServerScriptService = game:GetService("ServerScriptService")
+local require = require(game:GetService("ReplicatedStorage"):WaitForChild("Nevermore", 2))
 
-local libFinder = require(game
-	:GetService("ServerScriptService")
-	:WaitForChild("Finders")
-	:WaitForChild("LibFinder"))
-
-local pubSub = libFinder:FindLib("PubSub")
-local ComponentBase = libFinder:FindLib("componentbase")
+local pubSub = require("PubSub")
+local ComponentBase = require("ComponentBase")
 
 local elsFuncs = {}
 

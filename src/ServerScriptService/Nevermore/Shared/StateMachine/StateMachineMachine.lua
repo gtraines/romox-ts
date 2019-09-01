@@ -1,9 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
 
-local rq = require(ReplicatedStorage
-	:WaitForChild("Shared", 2):WaitForChild("rquery", 2))
-local uuid = require(ReplicatedStorage
-	:WaitForChild("Std", 2):WaitForChild("uuid", 2))
+local std = require("Std")
+local rq = std.rquery
+local uuid = std.uuid
 
 local stateProto = {
 	__type = "state",

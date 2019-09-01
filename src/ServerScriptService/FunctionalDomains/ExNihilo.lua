@@ -1,4 +1,4 @@
---- Sugar for creating items out of thin air
+--- Sugar for creating something out of nothing
 -- @module ExNihilo
 
 -- @export table actually exported by the module for use

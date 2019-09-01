@@ -1,6 +1,3 @@
-local LibFinder = require(game
-    :GetService("ReplicatedStorage"):WaitForChild("LibFinder", 2))
-
 local DomainFinder = require(game
     :GetService("ServerScriptService")
     :WaitForChild("Finders", 5)
@@ -9,9 +6,13 @@ local DomainFinder = require(game
 local spieler = DomainFinder:FindDomain("spieler")
 local carAndDriver = DomainFinder:FindDomain("CarAndDriver")
 
-local wraptor = LibFinder:FindLib("Wraptor")
-local linq = LibFinder:FindLib("linq")
-local rq = LibFinder:FindLib("rquery")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+local std = require("Std")
+
+local wraptor = std.wraptor
+local linq = std.linq
+local rq = std.rquery
 
 local module = {}
 

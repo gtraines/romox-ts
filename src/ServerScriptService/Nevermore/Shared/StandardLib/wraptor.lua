@@ -1,6 +1,5 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local t = require(ReplicatedStorage:WaitForChild("Std"):WaitForChild("t"))
+local t = require(script.Parent:WaitForChild("t"))
 
 local module = {
     deprecatedWarning = "%s is deprecated. %s"

@@ -1,7 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local rq = require(ReplicatedStorage:FindFirstChild("Shared"):FindFirstChild("rquery"))
-local std = require(ReplicatedStorage:WaitForChild("Std").Namespace)
+local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
+local std = require("Std")
+local rq = std.rquery
 
 local component = {
     __type = "component"

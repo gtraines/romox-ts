@@ -1,6 +1,4 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local stdFolder = ReplicatedStorage:WaitForChild("Std")
-local t = require(stdFolder:WaitForChild("t"))
+local t = require(script.Parent:WaitForChild("t"))
 
 local module = {
     CommaSeparated = function (list)

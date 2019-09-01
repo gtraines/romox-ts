@@ -1,19 +1,21 @@
-local ServerScriptService = game:GetService("ServerScriptService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerStorage = game:GetService("ServerStorage")
 
-local libFinder = require(ServerScriptService:WaitForChild("Finders", 5):WaitForChild("LibFinder", 2))
-
-local rq = libFinder:FindLib("rquery")
-local ComponentBase = libFinder:FindLib("componentbase")
 local lightsComponent = require(script.Parent:WaitForChild("Lights", 5))
 local sirenComponent = require(script.Parent:WaitForChild("Sirens", 5))
+
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+
+local std = require("Std")
+local rq = std.rquery
+
+local ComponentBase = require("ComponentBase")
 local component = ComponentBase.new("ElsHud", {"elshud"})
 
 function component._attachElsGuiToVehicleSeatOccupant(vehicleModel, occupantPlayer)
     local elsHud = ServerStorage:WaitForChild("UserInterfaces"):WaitForChild("ElsHud"):Clone()
     elsHud.Vehicle.Value = vehicleModel
-    local elsButtons = ReplicatedStorage:WaitForChild("Scripts", 2):WaitForChild("Equipment", 2):WaitForChild("ElsHudButtons"):Clone()
+    local elsButtons = ReplicatedStorage:WaitForChild("Equipment", 2):WaitForChild("ElsHudButtons"):Clone()
     elsButtons.Parent = elsHud
     elsHud.Parent = occupantPlayer.PlayerGui
     elsHud.ElsHudButtons.Disabled = false

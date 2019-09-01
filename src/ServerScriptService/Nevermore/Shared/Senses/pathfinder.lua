@@ -1,6 +1,6 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local rq = require(ReplicatedStorage
-	:WaitForChild("Shared"):WaitForChild("rquery"))
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+local rq = require("Std").rquery
 local PathfindingService = game:GetService("PathfindingService")
 PathfindingService.EmptyCutoff = .3
 

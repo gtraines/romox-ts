@@ -1,13 +1,20 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local stdFolder = script.Parent
 
-local stdFolder = ReplicatedStorage:WaitForChild("Std", 1)
-
-local stdlib = require(stdFolder:WaitForChild("_registerLibs", 2))
-
-function stdlib.into(value, into)
-	into.value = value
-	return value
-end
+local stdLib = {
+    itertools = require(stdFolder:WaitForChild("itertools")),
+    linq = require(stdFolder:WaitForChild("linq")),
+    queue = require(stdFolder:WaitForChild("Queue")),
+    randumb = require(stdFolder:WaitForChild("randumb")),
+    rquery = require(stdFolder:WaitForChild("rquery")),
+	stringobj = require(stdFolder:WaitForChild("stringobj")),
+    t = require(stdFolder:WaitForChild("t")),
+    uuid = require(stdFolder:WaitForChild("uuid")),
+    wraptor = require(stdFolder:WaitForChild("wraptor")),
+    into = function(value, into)
+	    into.value = value
+	    return value
+    end
+}
 
 --[[
 	Binds a method with its object so that it can be used independently.
@@ -30,9 +37,9 @@ end
 ]]
 
 
-local bindCheck = stdlib.t.tuple(stdlib.t.table, stdlib.t.callback)
+local bindCheck = stdLib.t.tuple(stdLib.t.table, stdLib.t.callback)
 
-function stdlib.bind(obj, method)
+function stdLib.bind(obj, method)
 	assert(bindCheck(obj, method))
 
 	return function(...)
@@ -57,9 +64,9 @@ end
 		print(pretty(t))
 ]]
 
-stdlib._prettyCheck = stdlib.t.tuple(stdlib.t.any, stdlib.t.optional(stdlib.t.integer))
-function stdlib.repr(value, indentLevel)
-	assert(stdlib._prettyCheck(value, indentLevel))
+stdLib._prettyCheck = stdLib.t.tuple(stdLib.t.any, stdLib.t.optional(stdLib.t.integer))
+function stdLib.repr(value, indentLevel)
+	assert(stdLib._prettyCheck(value, indentLevel))
 
     indentLevel = indentLevel or 0
 
@@ -69,9 +76,9 @@ function stdlib.repr(value, indentLevel)
     if typeof(value) == "table" then
         table.insert(output, "{\n")
 
-        for _, k in pairs(stdlib.itertools.GetSortedKeys(value)) do
+        for _, k in pairs(stdLib.itertools.GetSortedKeys(value)) do
 			local indentation = indent:rep(indentLevel+1)
-			local otherValue = stdlib.repr(value[k], indentLevel+1)
+			local otherValue = stdLib.repr(value[k], indentLevel+1)
 
 			table.insert(output, ("%s %s = %s\n"):format(indentation, k, otherValue))
         end
@@ -87,4 +94,4 @@ function stdlib.repr(value, indentLevel)
 end
 
 
-return stdlib
+return stdLib
