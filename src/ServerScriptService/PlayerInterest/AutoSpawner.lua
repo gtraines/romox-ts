@@ -95,7 +95,7 @@ end
 
 function module.GetRandomZombieRootPart()
 
-    local selectedZombie = module.FindRandomZombie
+    local selectedZombie = module.FindRandomZombie()
     local rootPart =  selectedZombie:WaitForChild("HumanoidRootPart")
     return rootPart
 end
@@ -135,10 +135,11 @@ function module.CreateFemaleRunner()
 end
 
 
-function module.MaleRunner()
+function module.CreateMaleRunner()
     local personagePrototypeId = "GenericMale"
     local name = npcNames.GetMaleName().FullName
     
     module.CreateRunner("M", name, personagePrototypeId)
 end
 
+return module

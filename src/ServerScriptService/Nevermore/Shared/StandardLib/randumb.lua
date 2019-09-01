@@ -19,6 +19,9 @@ local module = {
 }
 
 function module:Init(sortOfSeed)
+    if self.__initialized then
+        return
+    end
     
     if sortOfSeed == nil or sortOfSeed == 0 then
         sortOfSeed = math.pi ^ 2

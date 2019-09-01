@@ -2,11 +2,13 @@ import { ServerScriptService, ReplicatedStorage } from "@rbxts/services";
 
 import { IGameManager } from '../GameModules/GameModules';
 import { ISpawnerManager, SpawnerManager } from '../PlayerInterest/SpawnerManager';
+import { IAutoSpawner } from '../PlayerInterest/SpawnerTypings';
 
 const nevermoreModule = ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript;
-//const nevermoreResourcesModule = ReplicatedStorage.WaitForChild("NevermoreResources") as ModuleScript;
-//const nevermoreResources = require(nevermoreResourcesModule);
 const nevermoreInitialize = require(nevermoreModule);
+
+const autoSpawnerModule = ServerScriptService.WaitForChild("PlayerInterest").WaitForChild("AutoSpawner") as ModuleScript;
+const AutoSpawner = require(autoSpawnerModule) as IAutoSpawner;
 
 const gameMgrModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("GameManager") as ModuleScript;
 const GameManager = require(gameMgrModule) as IGameManager;
@@ -24,7 +26,8 @@ function RunForever() : void {
 
         GameManager.StopIntermission();
         GameManager.StartRound();
-
+        AutoSpawner.CreateFemaleRunner();
+        AutoSpawner.CreateMaleRunner();
         while (!GameManager.RoundOver()) {
             GameManager.Update();
             wait(0.1);
