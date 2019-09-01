@@ -1,4 +1,5 @@
 import { IStateMachine, IStateMachineState } from '../Nevermore/Shared/StateMachine/StateMachineTypings';
+import { IPathProgressData } from "../Nevermore/Shared/Senses/SensesTypings";
 
 export interface IAiAgentContext {
     PersonageConfiguration : Table;
@@ -24,9 +25,6 @@ export interface IAiAgent {
 
 }
 
-export interface IPathProgressData {
-    
-}
 
 export interface IPathfindingAi {
     StateMachine : IStateMachine;

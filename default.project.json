@@ -4,9 +4,6 @@
     "$className": "DataModel",
     "ServerScriptService": {
       "$className": "ServerScriptService",
-      "TS": {
-        "$path": "out/server"
-      },
       "Aero": {
         "$path": "out/ServerScriptService/Aero"
       },
@@ -40,9 +37,6 @@
       "rbxts_include": {
         "$path": "include"
       },
-      "TS": {
-        "$path": "out/shared"
-      },
       "Aero": {
         "$path": "out/ReplicatedStorage/Aero"
       },
@@ -66,9 +60,6 @@
       "$className": "StarterPlayer",
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
-        "TS": {
-          "$path": "out/client"
-        },
         "Framework": {
           "$path": "out/StarterPlayer/StarterPlayerScripts/Framework"
         }

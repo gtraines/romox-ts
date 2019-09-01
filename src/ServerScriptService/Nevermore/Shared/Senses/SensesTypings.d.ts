@@ -1,6 +1,47 @@
+import { PathfindingService } from "@rbxts/services";
+
 export interface AzimuthVector {
     ToTargetOffsets : Vector3;
     AzimuthDegrees : number;
+}
+
+export interface IPathProgressData {
+    CurrentTargetPos: any;
+    LastTargetPos: any;
+    Waypoints: Array<PathWaypoint>;
+    Path: Path;
+    CurrentWaypointIndex: number;
+    PathBlockedEventConnection: RBXScriptConnection;
+    WaypointReachedEventConnection: RBXScriptConnection;
+    PathCalculationAttempts: number;
+    MAX_PATH_CALCULATION_ATTEMPTS: number;
+}
+
+export interface IPathParameters {
+    AgentRadius: number;
+    AgentHeight: number;
+}
+
+export interface IPersonageMovementParameters {
+    TargetOffsetMax: number;
+    JumpThreshold: number;
+    NextPointThreshold: number;
+}
+
+export interface IPathfinderModule {
+    GetPathForPersonage: (personage : Model, destinationObject : Part, pathParams : { AgentRadius:number, AgentHeight:number}) 
+        => IPathProgressData;
+    ClearPathWaypointMarkers: () => void;
+    DisplayPathWaypoints: (pathProgressData : IPathProgressData) => void;
+    MovePersonageOnPath: (personage : Model, 
+        pathProgressData: IPathProgressData, 
+        onWaypointReachedDelegate: (waypointReached: boolean) => void, 
+        personageMovementParams: {TargetOffsetMax: number, JumpThreshold: number, NextPointThreshold: number}) 
+        => IPathProgressData;
+}
+
+export interface IDestinationsModule {
+    GetRandomCFramFromTableOfParts: (candidatePartsTable : Table) => CFrame;
 }
 
 export interface IPerceptionModule {

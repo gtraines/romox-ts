@@ -17,11 +17,10 @@
     "url": "https://github.com/gtraines/romox-ts/issues"
   },
   "homepage": "https://github.com/gtraines/romox-ts#readme",
-  "devDependencies": {
-    "@rbxts/types": "^1.0.258"
-  },
+  "devDependencies": {},
   "dependencies": {
     "@rbxts/services": "^1.0.23",
+    "@rbxts/types": "^1.0.260",
     "roblox-ts": "^0.2.14"
   }
 }
