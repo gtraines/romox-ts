@@ -1,17 +1,15 @@
-
 local ServerScriptService = game:GetService("ServerScriptService")
-local libFinder = require(ServerScriptService
-	:WaitForChild("Finders", 2)
-	:WaitForChild("LibFinder"))
-
-local rq = libFinder:FindLib("rquery")
-local perception = libFinder:FindLib("perception")
-
-local StateMachineMachine = libFinder:FindLib("stateMachineMachine")
 local agentsFolder = ServerScriptService:WaitForChild("Agents", 2)
 
 local aiBase = require(agentsFolder:WaitForChild("PathfindingAiBase", 2))
-local HumanoidList = require(agentsFolder:WaitForChild("HumanoidFinder", 2))
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
+local HumanoidList = require("HumanoidFinder")
+
+local rq = require("Std").rquery
+local perception = require("perception")
+local StateMachineMachine = require("StateMachineMachine")
 
 local soldatAiProto = {
 	_configs = {},

@@ -1,3 +1,8 @@
+export interface AzimuthVector {
+    ToTargetOffsets : Vector3;
+    AzimuthDegrees : number;
+}
+
 export interface IPerceptionModule {
     Raycast: 
         (ray : any, blacklist : Array<Part>, partToCheck : Part) 

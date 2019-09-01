@@ -4,6 +4,8 @@ import { IGameManager } from '../GameModules/GameModules';
 import { ISpawnerManager, SpawnerManager } from '../PlayerInterest/SpawnerManager';
 
 const nevermoreModule = ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript;
+//const nevermoreResourcesModule = ReplicatedStorage.WaitForChild("NevermoreResources") as ModuleScript;
+//const nevermoreResources = require(nevermoreResourcesModule);
 const nevermoreInitialize = require(nevermoreModule);
 
 const gameMgrModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("GameManager") as ModuleScript;

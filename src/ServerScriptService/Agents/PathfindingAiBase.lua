@@ -1,22 +1,26 @@
-local ServerScriptService = game:GetService("ServerScriptService")
-local LibFinder = require(ServerScriptService:WaitForChild("Finders",2):WaitForChild("LibFinder",2))
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local rq = LibFinder:FindLib("rquery")
-local pathfinder = LibFinder:FindLib("pathfinder")
-local StateMachineMachine = LibFinder:FindLib("stateMachineMachine")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
+local pathfinder = require("pathfinder")
+local StateMachineMachine = require("StateMachineMachine")
 
 local pathfindingAiProto = {
 	_configs = {},
 	StateMachine = nil,
 	MAX_FORCE =  75,
-	Personage = nil
+	Personage = nil,
+	CancelPathRequested = false
 }
 
 local pathfindingAiMeta = { __index = pathfindingAiProto }
 
+function pathfindingAiProto:RequestPathCancellation()
+	self.CancelPathRequested = true
+end
+
 function pathfindingAiProto:GetOnWaypointReachedDelegate(pathProgressData)
 	local delegateHandler = function(reached)
-		
+
 		local currentWaypointIndex = pathProgressData.CurrentWaypointIndex
 		local waypoints = pathProgressData.Waypoints
 		if waypoints ~= nil then
@@ -27,10 +31,11 @@ function pathfindingAiProto:GetOnWaypointReachedDelegate(pathProgressData)
 				if movingTo["Position"] ~= nil then
 					--print("MOVING TO " .. tostring(waypoints[movingTo].Position))		
 					if reached and currentWaypointIndex < #waypoints then
-						
-						pathProgressData.CurrentWaypointIndex = currentWaypointIndex + 1
-						self.Personage:FindFirstChild("Humanoid"):MoveTo(
-							movingTo.Position)
+						if not self.CancelPathRequested then
+							pathProgressData.CurrentWaypointIndex = currentWaypointIndex + 1
+							self.Personage:FindFirstChild("Humanoid"):MoveTo(
+								movingTo.Position)
+						end
 					end
 				end
 			end
@@ -44,8 +49,10 @@ function pathfindingAiProto:GetOnPathBlockedDelegate(pathProgressData, destinati
 		if blockedWaypointIndex > pathProgressData.CurrentWaypointIndex then
 			pathProgressData.PathBlockedEventConnection:Disconnect()
 			pathProgressData.Path:destroy()
-			wait(0.5)
-			self:MoveTo( destinationPart, displayWaypointMarkers )
+			if not self.CancelPathRequested then
+				wait(0.2)
+				self:MoveTo( destinationPart, displayWaypointMarkers )
+			end
 		end
 	end
 
@@ -53,8 +60,10 @@ function pathfindingAiProto:GetOnPathBlockedDelegate(pathProgressData, destinati
 end
 
 function pathfindingAiProto:MoveTo( destinationPart, displayWaypointMarkers )
+	self.CancelPathRequested = false
 	local pathProgressData = pathfinder.GetPathForPersonage(
 		self.Personage, destinationPart)
+	
 	local pathBlockedEventConnection = pathProgressData.Path.Blocked:Connect(
 			self:GetOnPathBlockedDelegate(
 				pathProgressData,
@@ -63,7 +72,7 @@ function pathfindingAiProto:MoveTo( destinationPart, displayWaypointMarkers )
 			)
 	pathProgressData.PathBlockedEventConnection = pathBlockedEventConnection
 
-	if pathProgressData ~= nil then
+	if pathProgressData ~= nil and not self.CancelPathRequested then
 		if displayWaypointMarkers then
 			pathfinder.DisplayPathWaypoints(pathProgressData)
 		end

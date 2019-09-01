@@ -12,6 +12,7 @@ local mt = { __index = component }
 
 function component:Execute(gameObject) 
     error(self.Name .. ": Execute: NO RUBER")
+    print("Cognito ergo sum")
     return nil
 end
 

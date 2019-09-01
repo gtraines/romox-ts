@@ -1,10 +1,15 @@
 local ServerScriptService = game:GetService("ServerScriptService")
-local LibFinder = require(ServerScriptService:WaitForChild("Finders", 2):WaitForChild("LibFinder", 2))
-local PathLib = LibFinder:FindLib("pathfinder")
-local PerceptionLib = LibFinder:FindLib("perception")
+local agentsFolder = ServerScriptService:WaitForChild("Agents", 2)
 
-local AgentsFolder = ServerScriptService:WaitForChild("Agents", 2)
-local HumanoidFinder = require(AgentsFolder:WaitForChild("HumanoidFinder", 2))
+local aiBase = require(agentsFolder:WaitForChild("PathfindingAiBase", 2))
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
+local HumanoidList = require("HumanoidFinder")
+
+local rq = require("Std").rquery
+local perception = require("perception")
+local StateMachineMachine = require("StateMachineMachine")
 
 --REPLACE WITH AI BASE 
 -- local AIUtilities = require(game.ServerStorage.ROBLOX_AIUtilities)

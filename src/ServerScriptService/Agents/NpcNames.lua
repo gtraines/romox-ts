@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
 
-local std = require(ReplicatedStorage:WaitForChild("Std", 2).Namespace)
+local std = require("Std")
 local randumb = std.randumb
 
 local module = {

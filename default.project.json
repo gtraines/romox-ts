@@ -58,11 +58,8 @@
       "Rodux": {
         "$path": "out/ReplicatedStorage/Rodux"
       },
-      "Shared": {
-        "$path": "out/ReplicatedStorage/Shared"
-      },
-      "Std": {
-        "$path": "out/ReplicatedStorage/Std"
+      "StdLibFinder": {
+        "$path": "out/ReplicatedStorage/StdLibFinder.lua"
       }
     },
     "StarterPlayer": {

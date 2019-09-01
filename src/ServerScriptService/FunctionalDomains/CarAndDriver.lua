@@ -1,15 +1,17 @@
 
 local RunService = game:GetService("RunService")
 local ServerScriptService = game:GetService("ServerScriptService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local libFinder = require(ReplicatedStorage:WaitForChild("StdLibFinder", 2))
 local exNihilo = require(script.Parent:WaitForChild("ExNihilo", 2))
-
-local rq = libFinder:FindLib("rquery")
 
 local elsComponents = ServerScriptService:WaitForChild("Components", 5):WaitForChild("Els", 2)
 local elsHud = require(elsComponents:FindFirstChild("ElsHud"))
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+local std = require("Std")
+local rq = std.rquery
 
 local module = {}
 

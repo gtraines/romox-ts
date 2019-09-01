@@ -1,16 +1,39 @@
 import { IStateMachine, IStateMachineState } from '../Nevermore/Shared/StateMachine/StateMachineTypings';
 
-export interface AzimuthVector {
-    ToTargetOffsets : Vector3;
-    AzimuthDegrees : number;
+export interface IAiAgentContext {
+    PersonageConfiguration : Table;
+    Personage : Model;
+    StateMachine : IStateMachine;
+    
 }
+
+export interface IAgentInterest {
+    InterestPriority : number;
+    InterestStrength :  number;
+    InterestDwellTimeSecs: number;
+    GetInterestStateMachine: (context : IAiAgentContext) => IStateMachine;
+    DetermineInterest: (context : IAiAgentContext) => boolean;
+    OnInterestedDelegate: (context : IAiAgentContext) => IAiAgentContext;
+    StillInterestedDelegate:  (context : IAiAgentContext) => IAiAgentContext;
+    OnLostInterestDelegate: (context : IAiAgentContext) => IAiAgentContext;
+}
+
+export interface IAiAgent {
+    StateMachine : IStateMachine;
+    WireUpStateMachine() : void;
+
+}
+
 export interface IPathProgressData {
     
 }
+
 export interface IPathfindingAi {
     StateMachine : IStateMachine;
     MAX_FORCE : number;
     Personage : Model;
+    CancelPathRequested : boolean;
+    RequestPathCancellation() : void;
     GetOnWaypointReachedDelegate(pathProgressData : IPathProgressData) :  (reached: boolean) => void;
     GetOnPathBlockedDelegate(pathProgressData : IPathProgressData, 
         destinationPart : Part, displayWaypointMarkers : boolean) : (blockedWaypointIndex: number) => void;

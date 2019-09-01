@@ -1,8 +1,9 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local LibFinder = require(ReplicatedStorage.LibFinder)
-local t = LibFinder:FindLib("std").t
-
 local Tables = require(script.Parent.Tables)
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
+local t = require("Std").t
+
 local Classes = {}
 
 function Classes.makeClass(name, constructor)

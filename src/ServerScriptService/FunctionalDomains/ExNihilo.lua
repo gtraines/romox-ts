@@ -1,14 +1,11 @@
 --- Sugar for creating something out of nothing
--- @module ExNihilo
 
--- @export table actually exported by the module for use
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+local std = require("Std")
 
-local libFinder = require(game:GetService("ServerScriptService")
-    :WaitForChild("Finders", 5)
-    :WaitForChild("LibFinder", 5))
-
-local linq = libFinder:FindLib("linq")
-local uuid = libFinder:FindLib("uuid")
+local linq = std.linq
+local uuid = std.uuid
 local serverStorage =  game:GetService("ServerStorage")
 
 local module = {}

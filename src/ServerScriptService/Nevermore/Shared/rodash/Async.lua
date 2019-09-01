@@ -3,13 +3,15 @@
 	and borrowing ideas from [Bluebird](http://bluebirdjs.com/docs/getting-started.html),
 	these functions improve the experience of working with asynchronous code in Roblox.
 ]]
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local LibFinder = require(ReplicatedStorage.LibFinder)
-local t = LibFinder:FindLib("std").t
 
-local Promise = require(script.Parent.Parent.Promise)
 local Tables = require(script.Parent.Tables)
 local Functions = require(script.Parent.Functions)
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
+local t = require("Std").t
+local Promise = require("Promise")
+
 local Async = {}
 
 local baseRandomStream = Random.new()

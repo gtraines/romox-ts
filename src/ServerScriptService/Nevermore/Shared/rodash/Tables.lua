@@ -1,6 +1,6 @@
 --[[
-	Tables is a library to handle tables. There are some reasons for this:
-
+	Tables is a library to handle tables. 
+	There are some reasons for this:
 	* Great docs
 	* Some custom
 
@@ -13,8 +13,8 @@
 	Right?
 ]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local LibFinder = require(ReplicatedStorage.LibFinder)
-local t = LibFinder:FindLib("std").t
+local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
+local t = require("Std").t
 
 local Tables = {}
 

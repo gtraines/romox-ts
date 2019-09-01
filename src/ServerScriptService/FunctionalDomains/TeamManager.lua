@@ -4,9 +4,10 @@ local TeamManager = {}
 
 local Teams = game:GetService("Teams")
 local Players = game:GetService("Players")
-local ServerScriptService = game:GetService("ServerScriptService")
-local libFinder = require(ServerScriptService:WaitForChild("Finders", 1):WaitForChild("LibFinder", 1))
-local randumb = libFinder:FindLib("randumb")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local require = require(ReplicatedStorage:WaitForChild("Nevermore"))
+local std = require("Std")
+local randumb = std.randumb
 
 -- Game services
 local Configurations = require(game.ServerStorage.Configurations)
