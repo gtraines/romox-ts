@@ -1,7 +1,7 @@
 --- Main injection point for the game on the client
 -- @script ClientMain
 
-local require = require(game:GetService("ReplicatedStorage"):WaitForChild("Nevermore"))
+local require = require(game:GetService("ReplicatedStorage"):WaitForChild("Nevermore", 10))
 
 local Players = game:GetService("Players")
 

@@ -3,7 +3,7 @@ import { Workspace, ServerScriptService, ReplicatedStorage } from '@rbxts/servic
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
 import { SpawnerArtifact } from './SpawnerArtifact';
 
-const personageSpawnerModule = ServerScriptService.WaitForChild("PlayerInterest").WaitForChild("PersonageSpawner") as ModuleScript
+const personageSpawnerModule = ServerScriptService.WaitForChild("Spawning").WaitForChild("PersonageSpawner") as ModuleScript
 const personageSpawner = require(personageSpawnerModule) as IPersonageSpawner
 
 const rqModule = ReplicatedStorage.WaitForChild("NevermoreResources").WaitForChild("Modules").WaitForChild("rquery") as ModuleScript;

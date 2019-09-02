@@ -28,8 +28,8 @@
       "Nevermore": {
         "$path": "out/ServerScriptService/Nevermore"
       },
-      "PlayerInterest": {
-        "$path": "out/ServerScriptService/PlayerInterest"
+      "Spawning": {
+        "$path": "out/ServerScriptService/Spawning"
       }
     },
     "ReplicatedStorage": {

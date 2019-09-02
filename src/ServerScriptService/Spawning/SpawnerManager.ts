@@ -2,8 +2,11 @@
 import { ICategorySpawner, ISpawnerArtifact, IVehicleCategorySpawner } from './SpawnerTypings';
 import { ReplicatedStorage, ServerScriptService } from '@rbxts/services';
 import { NpcCategorySpawner } from './NpcCategorySpawner';
+import { IConfigManager } from '../GameModules/GameModulesTypings';
+const configManagerModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("ConfigManager") as ModuleScript;
+const configManager = require(configManagerModule) as IConfigManager;
 
-const vehicleSpawnerModule = ServerScriptService.WaitForChild("PlayerInterest").WaitForChild("VehicleCategorySpawner") as ModuleScript;
+const vehicleSpawnerModule = ServerScriptService.WaitForChild("Spawning").WaitForChild("VehicleCategorySpawner") as ModuleScript;
 const VehicleCategorySpawner = require(vehicleSpawnerModule) as IVehicleCategorySpawner;
 const _ = require(ReplicatedStorage.WaitForChild("NevermoreResources").WaitForChild("Modules").WaitForChild("rodash") as ModuleScript)
 
@@ -18,9 +21,15 @@ export class SpawnerManager implements ISpawnerManager {
         this.CategorySpawners = new Array<ICategorySpawner>();
     }
     Init(): void {
+        
         this.CategorySpawners = new Array<ICategorySpawner>();
-        this.CategorySpawners.push(VehicleCategorySpawner);
-        this.CategorySpawners.push(new NpcCategorySpawner())
+        if (configManager.GetFeatureEnabled("UseVehicleSpawners")) {
+            this.CategorySpawners.push(VehicleCategorySpawner);
+        }
+        if (configManager.GetFeatureEnabled("UseNpcSpawners")) {
+            this.CategorySpawners.push(new NpcCategorySpawner())
+        }
+        
         this.ConfigureSpawners();
     }    
     ConfigureSpawners(): void {

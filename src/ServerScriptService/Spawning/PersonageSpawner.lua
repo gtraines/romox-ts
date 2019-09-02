@@ -1,4 +1,5 @@
 local ServerScriptService = game:GetService("ServerScriptService")
+local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 local findersFolder = ServerScriptService:WaitForChild("Finders", 2)
@@ -41,8 +42,9 @@ function module.SpawnPersonage(storageFolder,
 	onSpawnCompleteCallback)
 
     local spawnedPersonage = Instance.new("Model")
+	local storageFolderInstance = ServerStorage:WaitForChild("Humanoids"):WaitForChild(storageFolder)
 
-    exNihilo.CreateFromServerStorage(storageFolder,
+	exNihilo.CreateFromFolder(storageFolderInstance,
         personagePrototypeId,
         spawnLocation,
         function(createdPersonage)
@@ -58,7 +60,7 @@ function module.SpawnMaleHumanoid(
 	onSpawnCompleteCallback)
 
 	local storageFolder = "MaleHumanoids"
-
+	
     module.SpawnPersonage(storageFolder,
 		personagePrototypeId,
 		spawnLocation,

@@ -1,9 +1,8 @@
 import { ISpawnerArtifact } from './SpawnerTypings';
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
-import { ReplicatedStorage } from '@rbxts/services';
-
-const rqModule = ReplicatedStorage.WaitForChild("NevermoreResources").WaitForChild("Modules").WaitForChild("rquery") as ModuleScript;
-const rq = require(rqModule) as IRquery
+import { ReplicatedStorage, ServerScriptService } from '@rbxts/services';
+const loader = require(ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript) as (module : string) => any
+const rq = loader("rquery") as IRquery
 
 export class SpawnerArtifact implements ISpawnerArtifact {
     constructor(spawnerModel: Model, spawnCooldownTime: number = 6) {

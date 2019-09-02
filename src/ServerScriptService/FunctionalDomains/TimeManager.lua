@@ -1,3 +1,7 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 5))
+local rq = require("rquery")
 local TimeManager = {}
 
 -- Local Variables
@@ -6,8 +10,8 @@ local StartTime = 0
 local Duration = 0
 
 -- Initialization
-
-local Time = Instance.new('IntValue', game.Workspace:WaitForChild('MapPurgeProof'))
+local MapPurgeProof = rq.GetOrAddItem("MapPurgeProof", "Folder", game:GetService("Workspace"))
+local Time = Instance.new('IntValue', MapPurgeProof)
 Time.Name = 'Time'
 
 -- Functions

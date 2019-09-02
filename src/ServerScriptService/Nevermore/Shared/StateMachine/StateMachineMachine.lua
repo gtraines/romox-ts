@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local require = require(ReplicatedStorage:WaitForChild("Nevermore", 2))
+local require = require(ReplicatedStorage:WaitForChild("Nevermore", 5))
 
 local std = require("Std")
 local rq = std.rquery

@@ -1,27 +1,35 @@
 import { ServerScriptService, ReplicatedStorage } from "@rbxts/services";
-
-import { IGameManager } from '../GameModules/GameModules';
-import { ISpawnerManager, SpawnerManager } from '../PlayerInterest/SpawnerManager';
-import { IPersonageSpawner } from '../PlayerInterest/SpawnerTypings';
-
+// Run this before the other stuff
 const nevermoreModule = ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript;
 const nevermoreInitialize = require(nevermoreModule);
 
-const autoSpawnerModule = ServerScriptService.WaitForChild("PlayerInterest").WaitForChild("PersonageSpawner") as ModuleScript;
+import { IGameManager, IConfigManager } from '../GameModules/GameModulesTypings';
+import { SpawnerManager } from '../Spawning/SpawnerManager';
+import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
+
+
+const configManagerModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("ConfigManager") as ModuleScript;
+const configManager = require(configManagerModule) as IConfigManager;
+
+const autoSpawnerModule = ServerScriptService.WaitForChild("Spawning").WaitForChild("PersonageSpawner") as ModuleScript;
 const AutoSpawner = require(autoSpawnerModule) as IPersonageSpawner;
 
 const gameMgrModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("GameManager") as ModuleScript;
 const GameManager = require(gameMgrModule) as IGameManager;
 
 function OneTimeSetup() : void {
-    const spawnerManager = new SpawnerManager();
-    spawnerManager.Init();
+    GameManager.Initialize()
+    if (configManager.GetFeatureEnabled("UseNpcSpawners")) {
+        const spawnerManager = new SpawnerManager();
+        spawnerManager.Init();
+    }
 }
 
 function RunForever() : void {
     while (true) {
         while (!GameManager.GameReady()) {
             GameManager.RunIntermission();
+            wait(0.2);
         }
 
         GameManager.StopIntermission();
