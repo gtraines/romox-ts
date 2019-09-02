@@ -2,13 +2,13 @@ import { ServerScriptService, ReplicatedStorage } from "@rbxts/services";
 
 import { IGameManager } from '../GameModules/GameModules';
 import { ISpawnerManager, SpawnerManager } from '../PlayerInterest/SpawnerManager';
-import { IAutoSpawner } from '../PlayerInterest/SpawnerTypings';
+import { IPersonageSpawner } from '../PlayerInterest/SpawnerTypings';
 
 const nevermoreModule = ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript;
 const nevermoreInitialize = require(nevermoreModule);
 
-const autoSpawnerModule = ServerScriptService.WaitForChild("PlayerInterest").WaitForChild("AutoSpawner") as ModuleScript;
-const AutoSpawner = require(autoSpawnerModule) as IAutoSpawner;
+const autoSpawnerModule = ServerScriptService.WaitForChild("PlayerInterest").WaitForChild("PersonageSpawner") as ModuleScript;
+const AutoSpawner = require(autoSpawnerModule) as IPersonageSpawner;
 
 const gameMgrModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("GameManager") as ModuleScript;
 const GameManager = require(gameMgrModule) as IGameManager;

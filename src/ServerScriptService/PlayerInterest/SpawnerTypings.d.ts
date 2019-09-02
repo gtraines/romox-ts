@@ -1,6 +1,8 @@
 export interface ISpawnerArtifact {
     SpawnsPrototypeId : string;
     SpawnCooldownTime : number;
+    SpawnPad: Part;
+    SpawnsAtCFrame: CFrame;
 }
 
 export interface ICategorySpawner {
@@ -8,11 +10,11 @@ export interface ICategorySpawner {
     SpawnersFolder : string;
     ServerStorageFolder : string;
     Spawners : Array<ISpawnerArtifact>;
-    ConfigureSpawners: () => void;
-    GetSpawnerModels: (categoryName : string) => Array<Model>;
+    ConfigureSpawners() : void;
+    GetSpawnerModels(categoryName : string) : Array<Model>;
 }
 
-export interface IAutoSpawner {
+export interface IPersonageSpawner {
     ChooseRandomSpawnLocation: () => CFrame;
     SpawnPersonage: (storageFolder : string, 
         personagePrototypeId : string, 

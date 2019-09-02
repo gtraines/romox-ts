@@ -6,6 +6,29 @@ export interface IRandumbModule {
     ShuffleList<T>(listToShuffle : Array<T>) : Array<T>;
 }
 
+export interface IRquery {
+    CreateFolder: (folderName : string, parentObjectInstance : Instance) => Folder
+    FindSiblingNamed: (part : Instance, siblingName : string) => Instance
+    DeepCopyTable: (orig : Table) => Table;
+    GetPlayerDrivingVehicle: (vehicleModel : Model) => Player
+    PersonageTorsoOrEquivalent: (personage : Model) => Part
+    AttachedHumanoidOrNil: (part : Part) => Humanoid
+    AttachedCharacterOrNil: (part : Part) => Model
+    GetUserIdString: (player : Player) => string
+    GetUserIdFromCharacter: (character: Model) => string
+    GetPlayerFromUserId: (userId:string) => Player
+    GetCharacterFromUserId: (userId: string) => Model
+    FolderContentsOrNil: (folderName : string, parent : Instance) => Array<Instance>
+    ComponentsFolderOrNil: (item : Instance) => Array<Instance>
+    StringValueOrNil: (valueName : string, parent : Instance) => string
+    BoolValueOrNil: (valueName : string, parent : Instance) => string
+    ObjectValueOrNil: (valueName : string, parent : Instance) => Instance
+    IntValueOrNil: (valueName : string, parent : Instance) => number
+    GetOrAddItem: (itemName: string, itemType: string, parent: Instance) => Instance
+    GetOrAddEntityId: (item : Instance) => string
+    Assign: ( target : Table, ... sourceThings : any[]) => Table
+}
+
 export interface IWraptor {
     DEPRECATED: (func : (...args : any[]) => any, funcName : string, reason : string) 
         => (...args : any[]) => any;

@@ -16,7 +16,7 @@ local rq = std.rquery
 
 local module = {}
 
-function module.GetSpawnerModels(categoryName)
+function module:GetSpawnerModels(categoryName)
     local wsRoot = game:WaitForChild("Workspace", 1)
     -- Get Spawners
 
@@ -50,9 +50,9 @@ function module._vehicleSpawnerTouchedDelegate(spawnerModel, playerFromPart)
     return carAndDriver.CreateVehicleFromServerStorage(prototypeToSpawn, spawnLocation)
 end
 
-function module.ConfigureSpawners()
+function module:ConfigureSpawners()
     
-    for spwnrMdl in module.GetSpawnerModels("VehicleSpawners") do
+    for spwnrMdl in self:GetSpawnerModels("VehicleSpawners") do
         print(spwnrMdl)
         spwnrMdl:FindFirstChild("Touchstone").Touched:Connect(
             module.TouchedByAPlayerClosure(spwnrMdl, module._vehicleSpawnerTouchedDelegate)
@@ -60,8 +60,8 @@ function module.ConfigureSpawners()
     end
 end
 
-function module.Init()
-    module.ConfigureSpawners()
+function module:Init()
+    self:ConfigureSpawners()
 end
 
 return module

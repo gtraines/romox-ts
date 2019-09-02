@@ -18,9 +18,7 @@ local std = require("Std")
 local rq = std.rquery
 local randumb = std.randumb
 
-local module = {
-
-}
+local module = {}
 
 function module.ChooseRandomSpawnLocation()
     local wsChildren = Workspace:GetChildren()

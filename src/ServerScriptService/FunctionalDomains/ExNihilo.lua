@@ -47,11 +47,9 @@ function module.MoveModelToCoordFrame( modelWithPrimaryPart, newCoordFrame )
     end
 end
 
--- createdModelCallback takes the createdModel as its only parameter
-function module.CreateFromServerStorage( storageCategory, prototypeId, coordsForNewInstance, createdModelCallback, targetParent )
-    local storageCategoryFolder = serverStorage:FindFirstChild(storageCategory)
-    
-    local foundPrototype = linq(storageCategoryFolder:GetChildren()):firstOrDefault(function( itm )
+function module.CreateFromFolder(storageFolderInstance, prototypeId, coordsForNewInstance, createdModelCallback, targetParent)
+    local modelCandidates = storageFolderInstance:GetChildren()
+    local foundPrototype = linq(modelCandidates):firstOrDefault(function( itm )
 
         local itmPrototypeId = itm:FindFirstChild("PrototypeId")
         
@@ -63,7 +61,7 @@ function module.CreateFromServerStorage( storageCategory, prototypeId, coordsFor
     end)
 
     if foundPrototype == nil then
-        foundPrototype = linq(storageCategoryFolder:GetChildren()):firstOrDefault(function( itm )
+        foundPrototype = linq(modelCandidates:GetChildren()):firstOrDefault(function( itm )
             return itm.Name == prototypeId
         end)
     end
@@ -73,8 +71,18 @@ function module.CreateFromServerStorage( storageCategory, prototypeId, coordsFor
         return nil
     end
 
+    module.SpawnModelFromPrototype(foundPrototype, coordsForNewInstance, createdModelCallback, targetParent)
+end
+
+-- createdModelCallback takes the createdModel as its only parameter
+function module.CreateFromServerStorage( storageCategory, prototypeId, coordsForNewInstance, createdModelCallback, targetParent )
+    local storageCategoryFolder = serverStorage:FindFirstChild(storageCategory)
+    module.CreateFromFolder(storageCategoryFolder, prototypeId, coordsForNewInstance, createdModelCallback, targetParent)
+end
+
+function module.SpawnModelFromPrototype(prototypeModel, coordsForNewInstance, createdModelCallback, targetParent)
     spawn(function ()
-        local createdItem = foundPrototype:Clone()
+        local createdItem = prototypeModel:Clone()
         local entityIdObj = createdItem:FindFirstChild("EntityId")
         if entityIdObj == nil then
             entityIdObj = Instance.new("StringValue")
