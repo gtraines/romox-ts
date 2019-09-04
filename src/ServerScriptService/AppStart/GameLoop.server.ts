@@ -2,7 +2,7 @@ import { ServerScriptService, ReplicatedStorage } from "@rbxts/services";
 // Run this before the other stuff
 const nevermoreModule = ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript;
 const nevermoreInitialize = require(nevermoreModule);
-
+// Nevermore intialized, safe to proceed
 import { IGameManager, IConfigManager } from '../GameModules/GameModulesTypings';
 import { SpawnerManager } from '../Spawning/SpawnerManager';
 import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
