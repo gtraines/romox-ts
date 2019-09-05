@@ -37,6 +37,25 @@ function module.DeepCopyTable(orig)
     end
     return copy
 end
+--- Returns the Player and Character that a descendent is part of, if it is part of one.
+-- @param descendant A child of the potential character.
+-- @treturn Player player
+-- @treturn Character charcater
+function module.GetPlayerFromCharacterOrDescendant(descendantCharacter)
+	local characterCandidate = descendantCharacter
+	local player = Players:GetPlayerFromCharacter(characterCandidate)
+
+	while not player do
+		if characterCandidate.Parent then
+			characterCandidate = characterCandidate.Parent
+			player = Players:GetPlayerFromCharacter(characterCandidate)
+		else
+			return nil
+		end
+	end
+
+	return player
+end
 
 function module.GetPlayerDrivingVehicle(vehicleModel)
     if vehicleModel ~= nil and
@@ -57,6 +76,33 @@ function module.PersonageTorsoOrEquivalent(personage)
 	end
 	return personageTorso
 end
+function module.GetPersonageOrPlayerHumanoidOrNil(personageOrPlayer)
+	if personageOrPlayer:FindFirstChildOfClass("Humanoid") ~= nil then
+		return personageOrPlayer:FindFirstChildOfClass("Humanoid")
+	end
+	local character = personageOrPlayer["Character"]
+	if not character then
+		return nil
+	end
+
+	return character:FindFirstChildOfClass("Humanoid")
+end
+
+--- Retrieves a humanoid from a descendant (Players only).
+-- @param descendant Child of a humanoid model, like a limb
+-- @return Humanoid
+function module.GetHumanoid(descendantPart)
+	local characterCandidate = descendantPart
+	while characterCandidate do
+		local humanoid = characterCandidate:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			return humanoid
+		end
+		characterCandidate = characterCandidate.Parent
+	end
+
+	return nil
+end
 
 function module.AttachedHumanoidOrNil(part)
 	if part == nil then return nil end
@@ -68,8 +114,7 @@ function module.AttachedHumanoidOrNil(part)
 	elseif part:FindFirstChild( "Humanoid", false ) ~= nil then
 		return part:FindFirstChild( "Humanoid", false )
 	end
-		
-	return nil
+	return module.GetHumanoid(part)
 end
 
 function module.AttachedCharacterOrNil( part )
@@ -84,6 +129,42 @@ function module.AttachedCharacterOrNil( part )
 
 	return nil
 end
+
+
+function module.GetAlivePersonageOrPlayerHumanoid(personageOrPlayer)
+	local humanoid = module.GetPersonageOrPlayerHumanoidOrNil(personageOrPlayer)
+	if not humanoid or humanoid.Health <= 0 then
+		return nil
+	end
+
+	return humanoid
+end
+
+function module.GetAlivePersonageOrPlayerRootPart(personageOrPlayer)
+	local humanoid = module.GetPersonageOrPlayerHumanoidOrNil(personageOrPlayer)
+	if not humanoid or humanoid.Health <= 0 then
+		return nil
+	end
+
+	return humanoid.RootPart
+end
+
+function module.GetPersonageOrPlayerRootPart(personageOrPlayer)
+	local humanoid = module.GetPersonageOrPlayerHumanoidOrNil(personageOrPlayer)
+	if not humanoid then
+		return nil
+	end
+
+	return humanoid.RootPart
+end
+
+function module.UnequipTools(personageOrPlayer)
+	local humanoid = module.GetPersonageOrPlayerHumanoidOrNil(personageOrPlayer)
+	if humanoid then
+		humanoid:UnequipTools()
+	end
+end
+
 
 function module.GetUserIdString(player)
 	--assert(getUserIdCheck(player))
@@ -131,6 +212,19 @@ function module.FolderContentsOrNil( folderName, parent )
 	end
 
 	return nil
+end
+
+--- Forcefully unseats the humanoid. Useful when teleporting humanoid
+function module.ForceUnseatHumanoid(humanoid)
+	if humanoid.SeatPart then
+		local weld = humanoid.SeatPart:FindFirstChild("SeatWeld")
+		if weld then
+			weld:Destroy()
+		end
+
+		humanoid.SeatPart:Sit(nil)
+	end
+	humanoid.Sit = false
 end
 
 function module.ComponentsFolderOrNil( item )
