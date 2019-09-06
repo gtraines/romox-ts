@@ -54,6 +54,9 @@
       },
       "StdLibFinder": {
         "$path": "out/ReplicatedStorage/StdLibFinder.lua"
+      },
+      "ToughS": {
+        "$path": "out/ReplicatedStorage/ToughS"
       }
     },
     "StarterPlayer": {

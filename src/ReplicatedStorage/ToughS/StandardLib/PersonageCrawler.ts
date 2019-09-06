@@ -1,4 +1,4 @@
-import { requireScript } from '../ScriptLoader';
+import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
 
 const rq = requireScript("rquery") as IRquery
@@ -23,15 +23,20 @@ export interface IPersonageArms {
 
 export class PersonageArms implements IPersonageArms {
     constructor() {
-        
+
     }
     Left? : Part;
     Right? : Part;
 }
 
+export interface IPersonageCrawler {
+    IsPersonageR6(personageOrPlayer : Instance) : boolean
+    GetArms(personageOrPlayer : Instance) : IPersonageArms
+    GetShoulders(personageOrPlayer : Instance) : IPersonageShoulders
+}
 
-export class PersonageCrawler {
-    IsPersonageR6(personageOrPlayer : Instance) : boolean {
+export class PersonageCrawler implements IPersonageCrawler {
+    IsPersonageR6(personageOrPlayer : Instance) {
         let foundHumanoid = rq.GetPersonageOrPlayerHumanoidOrNil(personageOrPlayer)
         if (foundHumanoid !== undefined) {
             return foundHumanoid.RigType === Enum.HumanoidRigType.R6
@@ -39,7 +44,6 @@ export class PersonageCrawler {
         throw "Not a valid Humanoid-carrying Instance";
     }
     GetArms(personageOrPlayer : Instance) : IPersonageArms {
-        
         let arms = new PersonageArms()
         if (this.IsPersonageR6(personageOrPlayer)) {
             let humanoid = rq.GetPersonageOrPlayerHumanoidOrNil(personageOrPlayer)
@@ -57,7 +61,6 @@ export class PersonageCrawler {
             return this._getShouldersR6(personageOrPlayer)
         }
         return this._getShouldersR15(personageOrPlayer)
-
     }
     _getShouldersR6(personage : Instance) : IPersonageShoulders {
         
