@@ -6,6 +6,7 @@ const nevermoreInitialize = require(nevermoreModule);
 import { IGameManager, IConfigManager } from '../GameModules/GameModulesTypings';
 import { SpawnerManager } from '../Spawning/SpawnerManager';
 import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
+import { IStretcherTool, StretcherTool } from '../../ReplicatedStorage/Equipment/Stretcher';
 
 
 const configManagerModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("ConfigManager") as ModuleScript;
@@ -23,6 +24,9 @@ function OneTimeSetup() : void {
         const spawnerManager = new SpawnerManager();
         spawnerManager.Init();
     }
+
+    let stretcher = game.Workspace.FindFirstChild("StretcherScript") as Model
+    let theLast = new StretcherTool(stretcher) as IStretcherTool
 }
 
 function RunForever() : void {

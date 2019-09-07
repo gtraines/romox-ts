@@ -100,12 +100,6 @@ function Finale()
 end
 
 
-Tool.Equipped:connect(Finale)
-Tool.Unequipped:connect(Finale)
-Finale()
-Tool.Equipped:connect(Equip)
-Tool.Unequipped:connect(Unequip)
-
 function module.new(toolModel)
     local tool = {}
     

@@ -61,7 +61,7 @@ function module.CreateFromFolder(storageFolderInstance, prototypeId, coordsForNe
     end)
 
     if foundPrototype == nil then
-        foundPrototype = linq(modelCandidates:GetChildren()):firstOrDefault(function( itm )
+        foundPrototype = linq(modelCandidates):firstOrDefault(function( itm )
             return itm.Name == prototypeId
         end)
     end

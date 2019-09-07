@@ -23,6 +23,3 @@ RunService.RenderStepped:Connect(function()
 		script:Destroy()
 	end
 end)
-
-
-

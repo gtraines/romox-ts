@@ -45,13 +45,14 @@ export class PersonageCrawler implements IPersonageCrawler {
     }
     GetArms(personageOrPlayer : Instance) : IPersonageArms {
         let arms = new PersonageArms()
+        let humanoid = rq.GetPersonageOrPlayerHumanoidOrNil(personageOrPlayer)
+        let personage = humanoid.Parent as Instance
         if (this.IsPersonageR6(personageOrPlayer)) {
-            let humanoid = rq.GetPersonageOrPlayerHumanoidOrNil(personageOrPlayer)
-            let personage = humanoid.Parent as Instance
             arms.Left = personage.FindFirstChild("Left Arm")
             arms.Right = personage.FindFirstChild("Right Arm")
         } else {
-
+            arms.Left = personage.FindFirstChild("LeftLowerArm")
+            arms.Right = personage.FindFirstChild("RightLowerArm")
         }
 
         return arms
