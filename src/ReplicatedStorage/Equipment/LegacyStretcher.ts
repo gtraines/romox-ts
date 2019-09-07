@@ -1,11 +1,11 @@
 import { IRquery } from '../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
-import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
+import { requireScript } from '../ToughS/ScriptLoader';
 import { IPersonageShoulders, 
     PersonageArms, 
     IPersonageArms, 
     PersonageShoulders, 
     IPersonageCrawler,
-    PersonageCrawler } from '../../ReplicatedStorage/ToughS/StandardLib/PersonageCrawler';
+    PersonageCrawler } from '../ToughS/StandardLib/PersonageCrawler';
 
 const rq = requireScript("rquery") as IRquery
 const personageCrawler = new PersonageCrawler() as IPersonageCrawler
@@ -74,14 +74,13 @@ export class StretcherTool implements IStretcherTool {
                 let arms = this._attachedPersonageArms
                 let leftWeld = this._weldArmToTool(personage, shoulders.Left as Motor6D, arms.Left as Part)
                 let rightWeld = this._weldArmToTool(personage, shoulders.Right as Motor6D, arms.Right as Part)
-                leftWeld.C1 = new CFrame(0.5, 0.5, -1.5).mul(CFrame.fromEulerAnglesXYZ(math.rad(270), 0, math.rad(-90))) 
-                rightWeld.C1 = new CFrame(1.5, 0.5, -0.5).mul(CFrame.fromEulerAnglesXYZ(math.rad(-90), math.rad(0), 0))
+                leftWeld.C1 = new CFrame(-0.5, 0.5, 1.5).mul(CFrame.fromEulerAnglesXYZ(math.rad(270), 0, math.rad(-90))) 
+                rightWeld.C1 = new CFrame(-1.5, 0.5, 0.5).mul(CFrame.fromEulerAnglesXYZ(math.rad(-90), math.rad(0), 0))
             }
         }
     }
     DetachFromPersonage(personage : Model) : void {
         let shLeft = this._attachedPersonageShoulders.Left as Motor6D
-        shLeft.Part1 = undefined
     }
     _weldArmToTool(personage : Model, shoulder : Motor6D, arm : Part) : JointInstance {
         shoulder.Part1 = undefined

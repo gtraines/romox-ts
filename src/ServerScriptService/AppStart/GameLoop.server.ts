@@ -6,7 +6,7 @@ const nevermoreInitialize = require(nevermoreModule);
 import { IGameManager, IConfigManager } from '../GameModules/GameModulesTypings';
 import { SpawnerManager } from '../Spawning/SpawnerManager';
 import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
-import { IStretcherTool, StretcherTool } from '../../ReplicatedStorage/Equipment/Stretcher';
+import { IStretcherTool, StretcherTool } from '../../ReplicatedStorage/Equipment/LegacyStretcher';
 
 
 const configManagerModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("ConfigManager") as ModuleScript;
