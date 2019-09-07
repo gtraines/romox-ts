@@ -25,8 +25,8 @@ function OneTimeSetup() : void {
         spawnerManager.Init();
     }
 
-    let stretcher = game.Workspace.FindFirstChild("StretcherScript") as Model
-    let theLast = new StretcherTool(stretcher) as IStretcherTool
+   // let stretcher = game.Workspace.FindFirstChild("StretcherScript") as Model
+   // let theLast = new StretcherTool(stretcher) as IStretcherTool
 }
 
 function RunForever() : void {
