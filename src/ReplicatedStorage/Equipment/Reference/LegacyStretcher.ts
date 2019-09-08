@@ -1,23 +1,23 @@
-import { IRquery } from '../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
-import { requireScript } from '../ToughS/ScriptLoader';
+import { IRquery } from '../../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
+import { requireScript } from '../../ToughS/ScriptLoader';
 import { IPersonageShoulders, 
     PersonageArms, 
     IPersonageArms, 
     PersonageShoulders, 
     IPersonageCrawler,
-    PersonageCrawler } from '../ToughS/StandardLib/PersonageCrawler';
+    PersonageCrawler } from '../../ToughS/StandardLib/PersonageCrawler';
 
 const rq = requireScript("rquery") as IRquery
 const personageCrawler = new PersonageCrawler() as IPersonageCrawler
 
-export interface IStretcherTool {
+export interface ILegacyStretcherTool {
     ConnectToEvents() : Model
     DetachFromPersonage(personage : Model) : void
     Equip(mouse: any) : void
     Unequip(mouse: any) : void
 }
 
-export class StretcherTool implements IStretcherTool {
+export class StretcherTool implements ILegacyStretcherTool {
     constructor(toolModel : Model) {
         this.ToolModel = toolModel;
         this._tool = toolModel.FindFirstChildWhichIsA("Tool") as Tool;
