@@ -68,7 +68,7 @@ function module.ConnectEntityListenerFuncToTopic(entityId, categoryName, topic, 
 		end
 		return wrapperFunc
 	end
-	
+
 	local subscribedTopic = module.SubscribeServerToTopicEvent(categoryName, 
 		topic,
 		gatekeeperClosure(entityId, listenerFunc))
