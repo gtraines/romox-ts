@@ -108,7 +108,21 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     PickedUpEventConnection?: RBXScriptConnection | undefined;
     CarrierDiedEventConnection?: RBXScriptConnection | undefined;
     Destroy(): void {
-        throw "Method not implemented.";
+        let parts = this.ModelInstance.GetDescendants()
+        if (this.TouchedEventConnection !== undefined) {
+            this.TouchedEventConnection.Disconnect()
+        }
+        if (this.PickedUpEventConnection !== undefined) {
+            this.PickedUpEventConnection.Disconnect()
+        }
+        if (this.CarrierDiedEventConnection !== undefined) {
+            this.CarrierDiedEventConnection.Disconnect()
+        }
+
+        this.ModelInstance.Parent = undefined
+        parts.forEach(element => {
+            element.Destroy()    
+        });
     }
 }
 
