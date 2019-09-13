@@ -12,7 +12,8 @@ const pubSub = requireScript("PubSub") as IPubSub
 
 export enum TransportableArtifactState {
     AtSpawn = 0,
-    PickedUp = 1
+    PickedUp = 1,
+    Dropped = 2
 }
 
 export interface ITransportObjective extends IGameModel {
@@ -27,13 +28,14 @@ export interface ITransportableArtifact extends IGameModel {
 
     WireUpHandlers() : Array<IKeyValuePair<string, RBXScriptConnection>>
     GetOnPickedUpHandler() : (player : Player) => void
-    GetOnCarrierDiedHandler() : (player : Player) => void
+    GetOnCarrierDiedHandler() : () => void
     GetOnTouchedHandler() : (otherPart : BasePart) => void
     PickupArtifact(player : Player) : void
     State : TransportableArtifactState
     TouchedEventConnection? : RBXScriptConnection
     PickedUpEventConnection? : RBXScriptConnection
     CarrierDiedEventConnection? : RBXScriptConnection
+
     Destroy() : void
 }
 
@@ -61,11 +63,15 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         }
         return handler;
     }
-    GetOnCarrierDiedHandler() : (player : Player) => void {
-        let handler = (player : Player) => {
-            // local flagObject = FlagCarriers[player]
+    GetOnCarrierDiedHandler() : () => void {
+        let handler = () => {
+            this.FlagBanner.CanCollide = false
+            this.FlagPole.CanCollide = false
+            this.FlagPole.Anchored = true
+            this.FlagBanner.Anchored = true
 
-        }
+            this.State = TransportableArtifactState.Dropped
+        }   
         return handler;
     }
     GetOnTouchedHandler() : (otherPart : BasePart) => void {
@@ -80,12 +86,12 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
                 }
             }
         }
-        return handler;
+        return handler
     }
     PickupArtifact(player : Player) {
         // FlagCarriers[player] = flagModel
         this.State = TransportableArtifactState.PickedUp
-        let torso = rq.PersonageTorsoOrEquivalent(player.Character as Model)
+        let carryingPersonage = new Personage(player.Character as Model)
 
         this.FlagPole.Anchored = false
         this.FlagBanner.Anchored = false
@@ -95,11 +101,10 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         let weld = new Instance("Weld", this.FlagPole)
         weld.Name = "PlayerFlagWeld"
         weld.Part0 = this.FlagPole
-        weld.Part1 = torso
+        weld.Part1 = carryingPersonage.Torso
         weld.C0 = new CFrame(0, 0, -1)
 
-        // Attach event handlers to player
-        // OnBaseTouched -- remove handler
+        this.CarrierDiedEventConnection = carryingPersonage.Humanoid.Died.Connect(this.GetOnCarrierDiedHandler())
     }
     State: TransportableArtifactState;
     FlagPole : Part
