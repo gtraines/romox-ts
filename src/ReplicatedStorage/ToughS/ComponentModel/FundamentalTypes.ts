@@ -41,7 +41,7 @@ export interface ICollectibleGameEntity {
 
 export interface IComponentizedGameEntity extends IGameEntity {
     Components : Array<IEntityComponentValue<any>>
-    GetComponentValue(componentKey : string) : any
+    GetComponentValue(componentKey : string) : unknown
     GetComponentStringValue(componentKey : string) : string
     GetComponentBoolValue(componentKey : string) : boolean
     GetComponentNumberValue(componentKey : string) : number
@@ -63,7 +63,7 @@ export class ComponentizedGameEntity extends GameEntityBase implements IComponen
         });
     }
     Components : Array<IEntityComponentValue<any>>
-    GetComponentValue(componentKey : string) : any {
+    GetComponentValue(componentKey : string) : unknown {
         let foundValue = this.Components.find(
             (element : IEntityComponentValue<any>, idx : number) => {
                 return element.Name === componentKey || element.Name.lower() === componentKey.lower()

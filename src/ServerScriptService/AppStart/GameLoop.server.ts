@@ -2,12 +2,11 @@ import { ServerScriptService, ReplicatedStorage } from "@rbxts/services";
 // Run this before the other stuff
 const nevermoreModule = ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript;
 const nevermoreInitialize = require(nevermoreModule);
-// Nevermore intialized, safe to proceed
+// Nevermore initialized, safe to proceed
 import { IGameManager, IConfigManager } from '../GameModules/GameModulesTypings';
 import { SpawnerManager } from '../Spawning/SpawnerManager';
 import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
 import { IStretcherTool, StretcherTool } from '../../ReplicatedStorage/Equipment/StretcherTool';
-
 
 
 const configManagerModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("ConfigManager") as ModuleScript;
@@ -26,8 +25,8 @@ function OneTimeSetup() : void {
         spawnerManager.Init();
     }
 
-   let stretcher = game.Workspace.FindFirstChild("RealStretcherTool") as Model
-   let theLast = new StretcherTool(stretcher) as IStretcherTool
+    let stretcher = game.Workspace.FindFirstChild("RealStretcherTool") as Model
+    let theLast = new StretcherTool(stretcher) as IStretcherTool
 }
 
 function RunForever() : void {
