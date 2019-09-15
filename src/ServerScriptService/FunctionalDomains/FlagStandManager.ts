@@ -17,11 +17,9 @@ export enum TransportableArtifactState {
 }
 
 export interface ITransportObjective extends IGameModel {
+    
     WireUpHandlers() : Array<RBXScriptConnection>
-    GetOnPickedUpHandler() : (player : Player) => void
-    GetOnCarrierDiedHandler() : (player : Player) => void
-
-    DestroyObjective() : void
+    
 }
 
 export interface ITransportableArtifact extends IGameModel {
@@ -30,13 +28,14 @@ export interface ITransportableArtifact extends IGameModel {
     GetOnPickedUpHandler() : (player : Player) => void
     GetOnCarrierDiedHandler() : () => void
     GetOnTouchedHandler() : (otherPart : BasePart) => void
-    PickupArtifact(player : Player) : void
 
+    PickupArtifact(player : Player) : void
+    SeverConnection : (connection? : RBXScriptConnection) => void
     State : TransportableArtifactState
     TouchedEventConnection? : RBXScriptConnection
     PickedUpEventConnection? : RBXScriptConnection
     CarrierDiedEventConnection? : RBXScriptConnection
-
+    CharacterRemovingEventConnection? : RBXScriptConnection
     Destroy() : void
 }
 
@@ -107,6 +106,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
             }
         }
         return handler
+
     }
     PickupArtifact(player : Player) {
         // FlagCarriers[player] = flagModel
@@ -128,7 +128,9 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
             carryingPersonage.Humanoid.Died.Connect(
                 this.GetOnCarrierDiedHandler()
                 )
-        
+        this.CharacterRemovingEventConnection = player.CharacterRemoving.Connect(
+            this.GetOnCarrierDiedHandler()
+        )
     }
     State: TransportableArtifactState;
     FlagPole : Part
@@ -136,6 +138,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     TouchedEventConnection?: RBXScriptConnection | undefined;
     PickedUpEventConnection?: RBXScriptConnection | undefined;
     CarrierDiedEventConnection?: RBXScriptConnection | undefined;
+    CharacterRemovingEventConnection? : RBXScriptConnection | undefined;
     Destroy(): void {
         let parts = this.ModelInstance.GetDescendants()
         if (this.TouchedEventConnection !== undefined) {
@@ -170,6 +173,7 @@ export class CtfObjectiveManager implements ICtfObjectiveManager {
     
     constructor(gameConfig : Array<any>) {
         this.GameConfig = gameConfig
+
         let folder = pubSub.GetOrCreateClientServerTopicCategory("Ctf")
         // PubSub this.CaptureFlag 
         this.GameConfig = gameConfig
