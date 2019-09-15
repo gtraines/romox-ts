@@ -1,6 +1,7 @@
 import { IGameModel } from '../../../ReplicatedStorage/ToughS/ComponentModel/FundamentalTypes';
 import { IKeyValuePair } from '../../../ReplicatedStorage/ToughS/StandardLib/KeyValuePair';
 import { ITransportObjective } from "./TransportObjective";
+import { IFactionable } from '../../../ReplicatedStorage/ToughS/ComponentModel/FactionTypes';
 
 export enum TransportableArtifactState {
     AtSpawn = 0,
@@ -8,7 +9,9 @@ export enum TransportableArtifactState {
     Dropped = 2
 }
 
+
 export interface ITransportableArtifact extends IGameModel {
+    ArtifactAttributes : Array<string>
     WireUpHandlers(): Array<IKeyValuePair<string, RBXScriptConnection>>;
     GetOnPickedUpHandler(): (player: Player) => void;
     GetOnCarrierDiedHandler(): () => void;
@@ -21,6 +24,7 @@ export interface ITransportableArtifact extends IGameModel {
     PickedUpEventConnection?: RBXScriptConnection;
     CarrierDiedEventConnection?: RBXScriptConnection;
     CharacterRemovingEventConnection?: RBXScriptConnection;
+    Factions : IFactionable
     ItemDroppedCallback?: (artifact: ITransportableArtifact) => void;
     ArtifactPickedUpCallback?: (artifact: ITransportableArtifact, player: Player) => void;
     TouchedObjectiveCallback?: (artifact: ITransportableArtifact, objective: ITransportObjective) => void;

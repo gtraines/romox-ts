@@ -7,10 +7,15 @@ import { IGameManager, IConfigManager } from '../GameModules/GameModulesTypings'
 import { SpawnerManager } from '../Spawning/SpawnerManager';
 import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
 import { IStretcherTool, StretcherTool } from '../../ReplicatedStorage/Equipment/StretcherTool';
+import { ICtfObjectiveManager, CtfObjectiveManager } from '../FunctionalDomains/Transporting/CtfObjectiveManager';
 
 
 const configManagerModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("ConfigManager") as ModuleScript;
 const configManager = require(configManagerModule) as IConfigManager;
+
+const configValues = [ "val1" ]
+
+const ctfObjectiveManager = new CtfObjectiveManager(configValues) as ICtfObjectiveManager
 
 const autoSpawnerModule = ServerScriptService.WaitForChild("Spawning").WaitForChild("PersonageSpawner") as ModuleScript;
 const AutoSpawner = require(autoSpawnerModule) as IPersonageSpawner;

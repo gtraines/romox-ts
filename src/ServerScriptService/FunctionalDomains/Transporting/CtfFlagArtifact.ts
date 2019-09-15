@@ -6,6 +6,7 @@ import { ITransportObjective } from "./TransportObjective";
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
+import { IFactionable, Factionable } from '../../../ReplicatedStorage/ToughS/ComponentModel/FactionTypes';
 
 const rq = requireScript("rquery") as IRquery
 const pubSub = requireScript("PubSub") as IPubSub
@@ -18,12 +19,23 @@ export interface ICtfFlagArtifact extends ITransportableArtifact {
 }
 
 export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
-    constructor(gameModel: Model) {
+    
+    ArtifactAttributes : string[] = [
+        "Ctf",
+        "Flag"
+    ]
+    constructor(gameModel: Model, ...factions : string[]) {
         super(gameModel);
-        this.WireUpHandlers();
+
+        this.Factions = new Factionable()
+        if (this.GetComponentStringValue("Faction") !== undefined) {
+            this.Factions.AddFaction(this.GetComponentStringValue("Faction"))
+        }
+        factions.forEach(faction => this.Factions.AddFaction(faction))
         this.State = TransportableArtifactState.AtSpawn;
         this.FlagBanner = gameModel.FindFirstChild("FlagBanner") as Part;
         this.FlagPole = gameModel.FindFirstChild("FlagPole") as Part;
+        this.WireUpHandlers();
     }
     WireUpHandlers(): IKeyValuePair<string, RBXScriptConnection>[] {
         let createdConnections = new Array<IKeyValuePair<string, RBXScriptConnection>>();
@@ -95,6 +107,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         }
     };
     State: TransportableArtifactState;
+    Factions: IFactionable
     FlagPole: Part;
     FlagBanner: Part;
     TouchedEventConnection?: RBXScriptConnection | undefined;

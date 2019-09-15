@@ -14,3 +14,24 @@ export interface ITransportObjectiveManager {
     GetDroppedCallback(): (artifact: ITransportableArtifact) => void;
     GetTouchedObjectiveCallback(): (artifact: ITransportableArtifact, objective: ITransportObjective) => void;
 }
+
+export abstract class TransportObjectiveManager implements ITransportObjectiveManager {
+    abstract GameConfig: any[];    
+    abstract  TransportableArtifacts: ITransportableArtifact[];
+    abstract TransportObjectives: ITransportObjective[];
+    abstract TransporterPersonages: IPersonage[];
+    abstract CompletedTransport: RemoteEvent;
+    abstract ReturnArtifact: RemoteEvent;
+    GatherModels(): void {
+        throw "Method not implemented.";
+    }
+    GetArtifactPickedUpCallback(): (artifact: ITransportableArtifact, player: Player) => void {
+        throw "Method not implemented.";
+    }
+    GetDroppedCallback(): (artifact: ITransportableArtifact) => void {
+        throw "Method not implemented.";
+    }
+    GetTouchedObjectiveCallback(): (artifact: ITransportableArtifact, objective: ITransportObjective) => void {
+        throw "Method not implemented.";
+    }
+}

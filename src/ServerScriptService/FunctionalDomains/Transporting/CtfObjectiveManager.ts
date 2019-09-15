@@ -10,11 +10,11 @@ import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
 const pubSub = requireScript("PubSub") as IPubSub
 
 export interface ICtfObjectiveManager extends ITransportObjectiveManager {
-
+    CreateFlagArtifact(model : Model) : CtfFlagArtifact
 }
 
-
 export class CtfObjectiveManager implements ICtfObjectiveManager {
+    
     constructor(gameConfig: Array<any>) {
         this.GameConfig = gameConfig;
         let folder = pubSub.GetOrCreateClientServerTopicCategory("Ctf");
@@ -25,6 +25,7 @@ export class CtfObjectiveManager implements ICtfObjectiveManager {
         this.TransporterPersonages = new Array<IPersonage>();
         this.TransportableArtifacts = new Array<ITransportableArtifact>();
         this.TransportObjectives = new Array<ITransportObjective>();
+        this.GatherModels()
     }
     GameConfig: any[];
     ReturnArtifact: RemoteEvent;
@@ -32,6 +33,13 @@ export class CtfObjectiveManager implements ICtfObjectiveManager {
     TransportableArtifacts: ITransportableArtifact[];
     TransportObjectives: ITransportObjective[];
     TransporterPersonages: IPersonage[];
+    CreateFlagArtifact(model: Model): CtfFlagArtifact {
+        let artifact = new CtfFlagArtifact(model)
+        artifact.TouchedObjectiveCallback = this.GetTouchedObjectiveCallback()
+        artifact.ArtifactPickedUpCallback = this.GetArtifactPickedUpCallback()
+        artifact.ItemDroppedCallback = this.GetDroppedCallback()
+        return artifact
+    }
     GetOnCompletedTransportHandler() {
         let handler = (player: Player, ...data: any[]) => {
         };
@@ -43,21 +51,38 @@ export class CtfObjectiveManager implements ICtfObjectiveManager {
         let transportableModelsFolder = ctfItems.FindFirstChild("Artifacts") as Folder;
         let transportableModels = transportableModelsFolder.GetChildren();
         transportableModels.forEach(model => {
-            this.TransportableArtifacts.push(new CtfFlagArtifact(model as Model));
+            if (model.Name === "Flag" && model.IsA("Model")) {
+                this.TransportableArtifacts.push(this.CreateFlagArtifact(model as Model));
+            }
+            
         });
+
+        let objectives = ctfItems.GetChildren().filter((instance : Instance, idx : number) => {
+            return (instance.Name === "FlagStand" && instance.IsA("Model"))
+        })
+
+        objectives.forEach(model => {
+            //
+            
+        });
+        
     }
+
     GetArtifactPickedUpCallback(): (artifact: ITransportableArtifact, player: Player) => void {
         let cb = (artifact: ITransportableArtifact, player: Player) => {
+            print(artifact.ModelInstance.Name, " was picked up by ", player.Name)
         };
         return cb;
     }
     GetDroppedCallback(): (artifact: ITransportableArtifact) => void {
         let cb = (artifact: ITransportableArtifact) => {
+            print(artifact.ModelInstance.Name, " was dropped ")
         };
         return cb;
     }
     GetTouchedObjectiveCallback(): (artifact: ITransportableArtifact, objective: ITransportObjective) => void {
         let cb = (artifact: ITransportableArtifact, objective: ITransportObjective) => {
+            print(artifact.ModelInstance.Name, " touched ", objective.ModelInstance.Name)
         };
         return cb;
     }

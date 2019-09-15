@@ -43,12 +43,12 @@ end
 -- @treturn Character charcater
 function module.GetPlayerFromCharacterOrDescendant(descendantCharacter)
 	local characterCandidate = descendantCharacter
-	local player = Players:GetPlayerFromCharacter(characterCandidate)
+	local player = PlayersService:GetPlayerFromCharacter(characterCandidate)
 
 	while not player do
 		if characterCandidate.Parent then
 			characterCandidate = characterCandidate.Parent
-			player = Players:GetPlayerFromCharacter(characterCandidate)
+			player = PlayersService:GetPlayerFromCharacter(characterCandidate)
 		else
 			return nil
 		end
