@@ -101,6 +101,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         // Attach event handlers to player
         // OnBaseTouched -- remove handler
     }
+    
     State: TransportableArtifactState;
     FlagPole : Part
     FlagBanner : Part
