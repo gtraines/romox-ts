@@ -63,16 +63,19 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     GetOnTouchedHandler(): (otherPart: BasePart) => void {
         let handler = (otherPart: BasePart) => {
             let touchingPersonage = rq.AttachedCharacterOrNil(otherPart as Part);
-            let foundPlayer = rq.GetPlayerFromCharacterOrDescendant(touchingPersonage);
-            if (foundPlayer !== undefined) {
-                let foundHumanoid = rq.GetPersonageOrPlayerHumanoidOrNil(touchingPersonage);
-                if (foundHumanoid.Health <= 0)
-                    return;
-                if (this.FlagBanner.BrickColor !== foundPlayer.TeamColor &&
-                    this.State !== TransportableArtifactState.PickedUp) {
-                    this.PickupArtifact(foundPlayer);
+            if (touchingPersonage !== undefined) {
+                let foundPlayer = rq.GetPlayerFromCharacterOrDescendant(touchingPersonage);
+                if (foundPlayer !== undefined) {
+                    let foundHumanoid = rq.GetPersonageOrPlayerHumanoidOrNil(touchingPersonage);
+                    if (foundHumanoid.Health <= 0)
+                        return;
+                    if (this.FlagBanner.BrickColor !== foundPlayer.TeamColor &&
+                        this.State !== TransportableArtifactState.PickedUp) {
+                        this.PickupArtifact(foundPlayer);
+                    }
                 }
             }
+            
         };
         return handler;
     }

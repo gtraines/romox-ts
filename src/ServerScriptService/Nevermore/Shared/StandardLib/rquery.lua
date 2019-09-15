@@ -43,14 +43,21 @@ end
 -- @treturn Character charcater
 function module.GetPlayerFromCharacterOrDescendant(descendantCharacter)
 	local characterCandidate = descendantCharacter
-	local player = PlayersService:GetPlayerFromCharacter(characterCandidate)
+	local player = nil
 
 	while not player do
-		if characterCandidate.Parent then
-			characterCandidate = characterCandidate.Parent
+		if characterCandidate ~= nil and characterCandidate:FindFirstChild("Humanoid") ~= nil then
 			player = PlayersService:GetPlayerFromCharacter(characterCandidate)
-		else
-			return nil
+		end
+
+		if characterCandidate ~= nil and characterCandidate.Parent ~= nil then
+			characterCandidate = characterCandidate.Parent
+			if characterCandidate.Name == "Workspace" then
+				return nil
+			end
+		end
+		if characterCandidate == nil then
+			return player
 		end
 	end
 
