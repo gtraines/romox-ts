@@ -1,8 +1,4 @@
-
-export interface IKeyValuePair<TKey, TValue> {
-    Key : TKey;
-    Value : TValue;
-}
+import { IKeyValuePair } from '../../../../ReplicatedStorage/ToughS/StandardLib/KeyValuePair';
 
 export interface IRodash {
     slice: (source : Array<Table>, first? : number, last? : number, step? : number) => Table[]

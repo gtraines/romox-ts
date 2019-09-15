@@ -2,42 +2,45 @@ import { ReplicatedStorage, ServerStorage, CollectionService } from "@rbxts/serv
 import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
 import { IGameModel, GameModel } from '../../ReplicatedStorage/ToughS/ComponentModel/FundamentalTypes';
-import { IKeyValuePair } from "ServerScriptService/Nevermore/Shared/rodash/RodashTypings";
-import { IStateMachineState } from "ServerScriptService/Nevermore/Shared/StateMachine/StateMachineTypings";
 import { IPersonage, Personage } from "ReplicatedStorage/ToughS/StandardLib/Personage";
 import { IPubSub } from '../Nevermore/Shared/Events/PubSubTypings';
+import { IKeyValuePair, KeyValuePair } from '../../ReplicatedStorage/ToughS/StandardLib/KeyValuePair';
+
 
 const rq = requireScript("rquery") as IRquery
 const pubSub = requireScript("PubSub") as IPubSub
 
 export enum TransportableArtifactState {
     AtSpawn = 0,
-    PickedUp = 1
+    PickedUp = 1,
+    Dropped = 2
 }
 
 export interface ITransportObjective extends IGameModel {
+    
     WireUpHandlers() : Array<RBXScriptConnection>
-    GetOnPickedUpHandler() : (player : Player) => void
-    GetOnCarrierDiedHandler() : (player : Player) => void
-
-    DestroyObjective() : void
+    
 }
 
 export interface ITransportableArtifact extends IGameModel {
 
     WireUpHandlers() : Array<IKeyValuePair<string, RBXScriptConnection>>
     GetOnPickedUpHandler() : (player : Player) => void
-    GetOnCarrierDiedHandler() : (player : Player) => void
+    GetOnCarrierDiedHandler() : () => void
     GetOnTouchedHandler() : (otherPart : BasePart) => void
+
     PickupArtifact(player : Player) : void
+    SeverConnection : (connection? : RBXScriptConnection) => void
     State : TransportableArtifactState
     TouchedEventConnection? : RBXScriptConnection
     PickedUpEventConnection? : RBXScriptConnection
     CarrierDiedEventConnection? : RBXScriptConnection
+    CharacterRemovingEventConnection? : RBXScriptConnection
     Destroy() : void
 }
 
 export interface ICtfFlagArtifact extends ITransportableArtifact {
+    //OnDroppedCallback : () => void
     FlagPole : Part
     FlagBanner : Part
 }
@@ -53,6 +56,10 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     WireUpHandlers(): IKeyValuePair<string, RBXScriptConnection>[] {
         let createdConnections = new Array<IKeyValuePair<string, RBXScriptConnection>>()
         this.TouchedEventConnection = this.FlagPole.Touched.Connect(this.GetOnTouchedHandler())
+        createdConnections.push(new KeyValuePair<string, RBXScriptConnection>(
+            "TouchedEventConnection",
+            this.TouchedEventConnection
+        ))
         return createdConnections
     }
     GetOnPickedUpHandler() : (player : Player) => void {
@@ -61,12 +68,29 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         }
         return handler;
     }
-    GetOnCarrierDiedHandler() : (player : Player) => void {
-        let handler = (player : Player) => {
-            // local flagObject = FlagCarriers[player]
+    GetOnCarrierDiedHandler() : () => void {
+        let handler = () => {
+            this.FlagBanner.CanCollide = false
+            this.FlagPole.CanCollide = false
+            this.FlagPole.Anchored = true
+            this.FlagBanner.Anchored = true
 
+            this.State = TransportableArtifactState.Dropped
+            
+            if (this.CarrierDiedEventConnection !== undefined) {
+                if (this.CarrierDiedEventConnection.Connected) {
+                    this.CarrierDiedEventConnection.Disconnect()
+                }
+                this.CarrierDiedEventConnection = undefined;
+            }
+            if (this.TouchedEventConnection !== undefined) {
+                if (this.TouchedEventConnection.Connected) {
+                    this.TouchedEventConnection.Disconnect()
+                }
+            }
+            this.WireUpHandlers()
         }
-        return handler;
+        return handler
     }
     GetOnTouchedHandler() : (otherPart : BasePart) => void {
         let handler = (otherPart : BasePart) => {
@@ -75,17 +99,19 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
             if (foundPlayer !== undefined) {
                 let foundHumanoid = rq.GetPersonageOrPlayerHumanoidOrNil(touchingPersonage)
                 if (foundHumanoid.Health <= 0) return;
-                if (this.FlagBanner.BrickColor !== foundPlayer.TeamColor && this.State !== TransportableArtifactState.PickedUp) {
+                if (this.FlagBanner.BrickColor !== foundPlayer.TeamColor && 
+                    this.State !== TransportableArtifactState.PickedUp) {
                     this.PickupArtifact(foundPlayer)
                 }
             }
         }
-        return handler;
+        return handler
+
     }
     PickupArtifact(player : Player) {
         // FlagCarriers[player] = flagModel
         this.State = TransportableArtifactState.PickedUp
-        let torso = rq.PersonageTorsoOrEquivalent(player.Character as Model)
+        let carryingPersonage = new Personage(player.Character as Model)
 
         this.FlagPole.Anchored = false
         this.FlagBanner.Anchored = false
@@ -95,11 +121,16 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         let weld = new Instance("Weld", this.FlagPole)
         weld.Name = "PlayerFlagWeld"
         weld.Part0 = this.FlagPole
-        weld.Part1 = torso
+        weld.Part1 = carryingPersonage.Torso
         weld.C0 = new CFrame(0, 0, -1)
 
-        // Attach event handlers to player
-        // OnBaseTouched -- remove handler
+        this.CarrierDiedEventConnection = 
+            carryingPersonage.Humanoid.Died.Connect(
+                this.GetOnCarrierDiedHandler()
+                )
+        this.CharacterRemovingEventConnection = player.CharacterRemoving.Connect(
+            this.GetOnCarrierDiedHandler()
+        )
     }
     
     State: TransportableArtifactState;
@@ -108,6 +139,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     TouchedEventConnection?: RBXScriptConnection | undefined;
     PickedUpEventConnection?: RBXScriptConnection | undefined;
     CarrierDiedEventConnection?: RBXScriptConnection | undefined;
+    CharacterRemovingEventConnection? : RBXScriptConnection | undefined;
     Destroy(): void {
         let parts = this.ModelInstance.GetDescendants()
         if (this.TouchedEventConnection !== undefined) {
@@ -127,33 +159,6 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     }
 }
 
-export class CtfFlagObjective extends GameModel implements ITransportObjective {
-    constructor(gameModel : Model) {
-        super(gameModel)
-    }
-    WireUpHandlers(): RBXScriptConnection[] {
-        throw "Method not implemented.";
-    }
-    GetOnPickedUpHandler() {
-        let handler = (player : Player) => {
-
-        }
-
-        return handler
-    }
-    GetOnCarrierDiedHandler() {
-        let handler = (player : Player) => {
-
-        }
-        return handler
-    }
-    DestroyObjective(): void {
-        throw "Method not implemented.";
-    }
-    
-}
-
-
 export interface ITransportObjectiveManager {
     GameConfig : Array<any>
     TransportableArtifacts : Array<ITransportableArtifact>
@@ -169,6 +174,7 @@ export class CtfObjectiveManager implements ICtfObjectiveManager {
     
     constructor(gameConfig : Array<any>) {
         this.GameConfig = gameConfig
+
         let folder = pubSub.GetOrCreateClientServerTopicCategory("Ctf")
         // PubSub this.CaptureFlag 
         this.GameConfig = gameConfig
