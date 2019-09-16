@@ -25,7 +25,7 @@ export interface ITransportableArtifact extends IGameModel {
     CarrierDiedEventConnection?: RBXScriptConnection;
     CharacterRemovingEventConnection?: RBXScriptConnection;
     Factions : IFactionable
-    ItemDroppedCallback?: (artifact: ITransportableArtifact) => void;
+    ArtifactDroppedCallback?: (artifact: ITransportableArtifact) => void;
     ArtifactPickedUpCallback?: (artifact: ITransportableArtifact, player: Player) => void;
     TouchedObjectiveCallback?: (artifact: ITransportableArtifact, objective: ITransportObjective) => void;
     Destroy(): void;

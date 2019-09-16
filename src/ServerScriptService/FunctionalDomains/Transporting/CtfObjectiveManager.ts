@@ -2,7 +2,7 @@ import { Workspace } from '@rbxts/services';
 import { IPersonage } from "ReplicatedStorage/ToughS/StandardLib/Personage";
 import { ITransportableArtifact } from './TransportableArtifact';
 import { CtfFlagArtifact } from './CtfFlagArtifact';
-import { ITransportObjective } from "./TransportObjective";
+import { ITransportObjective, TransportObjective } from "./TransportObjective";
 import { ITransportObjectiveManager } from './TransportObjectiveManager';
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
@@ -11,6 +11,7 @@ const pubSub = requireScript("PubSub") as IPubSub
 
 export interface ICtfObjectiveManager extends ITransportObjectiveManager {
     CreateFlagArtifact(model : Model) : CtfFlagArtifact
+    CreateFlagStandObjective(model : Model) : TransportObjective
 }
 
 export class CtfObjectiveManager implements ICtfObjectiveManager {
@@ -20,6 +21,7 @@ export class CtfObjectiveManager implements ICtfObjectiveManager {
         let folder = pubSub.GetOrCreateClientServerTopicCategory("Ctf");
         this.ReturnArtifact = pubSub.GetOrCreateClientServerTopicInCategory("Ctf", "ReturnArtifact");
         this.ReturnArtifact.OnServerEvent.Connect(() => {
+
         });
         this.CompletedTransport = pubSub.GetOrCreateClientServerTopicInCategory("Ctf", "CompletedTransport");
         this.TransporterPersonages = new Array<IPersonage>();

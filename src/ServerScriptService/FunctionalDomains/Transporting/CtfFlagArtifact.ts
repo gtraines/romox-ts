@@ -94,6 +94,10 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         this.CarrierDiedEventConnection =
             carryingPersonage.Humanoid.Died.Connect(this.GetOnCarrierDiedHandler());
         this.CharacterRemovingEventConnection = player.CharacterRemoving.Connect(this.GetOnCarrierDiedHandler());
+        
+        if (this.ArtifactPickedUpCallback !== undefined) {
+            this.ArtifactPickedUpCallback(this, player)
+        }
     }
     SeverAllConnections(): void {
         this.SeverConnection(this.CarrierDiedEventConnection);
@@ -118,7 +122,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     CarrierDiedEventConnection?: RBXScriptConnection | undefined;
     CharacterRemovingEventConnection?: RBXScriptConnection | undefined;
     ArtifactPickedUpCallback?: (artifact: ITransportableArtifact, player: Player) => void;
-    ItemDroppedCallback?: (artifact: ITransportableArtifact) => void;
+    ArtifactDroppedCallback?: (artifact: ITransportableArtifact) => void;
     TouchedObjectiveCallback?: (artifact: ITransportableArtifact, objective: ITransportObjective) => void;
     Destroy(): void {
         this.SeverAllConnections();
