@@ -4,7 +4,7 @@ import { ITransportableArtifact } from './TransportableArtifact';
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 
-const rq =  requireScript("rquery") as IRquery
+const rq =  requireScript<IRquery>("rquery")
 
 export interface ITransportObjective extends IGameModel {
     WireUpHandlers(): Array<RBXScriptConnection>;
