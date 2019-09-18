@@ -5,9 +5,13 @@ const nevermoreInitialize = require(nevermoreModule);
 // Nevermore initialized, safe to proceed
 import { IGameManager, IConfigManager } from '../GameModules/GameModulesTypings';
 import { SpawnerManager } from '../Spawning/SpawnerManager';
+
 import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
 import { IStretcherTool, StretcherTool } from '../../ReplicatedStorage/Equipment/StretcherTool';
+
+import { Spieler } from '../FunctionalDomains/Spieler';
 import { ICtfObjectiveManager, CtfObjectiveManager } from '../FunctionalDomains/Transporting/CtfObjectiveManager';
+import { Personage } from '../../ReplicatedStorage/ToughS/StandardLib/Personage';
 
 
 const configManagerModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("ConfigManager") as ModuleScript;
@@ -15,8 +19,10 @@ const configManager = require(configManagerModule) as IConfigManager;
 
 const configValues = [ "val1" ]
 
+Spieler.Init()
+print("Pretty weird, guys")
 const ctfObjectiveManager = new CtfObjectiveManager(configValues) as ICtfObjectiveManager
-
+print("CUT")
 const autoSpawnerModule = ServerScriptService.WaitForChild("Spawning").WaitForChild("PersonageSpawner") as ModuleScript;
 const AutoSpawner = require(autoSpawnerModule) as IPersonageSpawner;
 

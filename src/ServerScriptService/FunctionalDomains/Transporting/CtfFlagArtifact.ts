@@ -16,6 +16,7 @@ export interface ICtfFlagArtifact extends ITransportableArtifact {
     //OnDroppedCallback : () => void
     FlagPole : Part
     FlagBanner : Part
+    
 }
 
 export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
@@ -39,8 +40,11 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     }
     WireUpHandlers(): IKeyValuePair<string, RBXScriptConnection>[] {
         let createdConnections = new Array<IKeyValuePair<string, RBXScriptConnection>>();
+        this.LogClass("Wiring up handlers")
         this.TouchedEventConnection = this.FlagPole.Touched.Connect(this.GetOnTouchedHandler());
+        this.LogClass("Wired touched event handlers")
         createdConnections.push(new KeyValuePair<string, RBXScriptConnection>("TouchedEventConnection", this.TouchedEventConnection));
+        print("WIRED")
         return createdConnections;
     }
     GetOnPickedUpHandler(): (player: Player) => void {
@@ -61,14 +65,21 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         return handler;
     }
     GetOnTouchedHandler(): (otherPart: BasePart) => void {
+        print("Getting touched handler")
         let handler = (otherPart: BasePart) => {
+            
             let touchingPersonage = rq.AttachedCharacterOrNil(otherPart as Part);
             if (touchingPersonage !== undefined) {
-                let foundPlayer = rq.GetPlayerFromCharacterOrDescendant(touchingPersonage);
+                
+                let foundPlayer = rq.GetPlayerFromCharacterOrDescendant(touchingPersonage); 
+
                 if (foundPlayer !== undefined) {
+                    
                     let foundHumanoid = rq.GetPersonageOrPlayerHumanoidOrNil(touchingPersonage);
-                    if (foundHumanoid.Health <= 0)
+                    if (foundHumanoid.Health <= 0) {
+                        this.LogClass("Has NO health")
                         return;
+                    }
                     if (this.FlagBanner.BrickColor !== foundPlayer.TeamColor &&
                         this.State !== TransportableArtifactState.PickedUp) {
                         this.PickupArtifact(foundPlayer);
@@ -77,9 +88,11 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
             }
             
         };
+        
         return handler;
     }
     PickupArtifact(player: Player) {
+        this.LogClass("Picking up")
         this.State = TransportableArtifactState.PickedUp;
         let carryingPersonage = new Personage(player.Character as Model);
         this.FlagPole.Anchored = false;

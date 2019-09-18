@@ -35,7 +35,11 @@ export class CtfObjectiveManager extends TransportObjectiveManager implements IC
         return handler;
     }
     GetArtifactDroppedCallback(): (artifact: ITransportableArtifact) => void {
-        throw "Method not implemented.";
+        //
+        let cb = (artifact : ITransportableArtifact) => {
+            print("Dropped artifact: ", artifact.ModelInstance.Name)
+        }
+        return cb
     }
     GetArtifactPickedUpCallback(): (artifact: ITransportableArtifact, player: Player) => void {
         let cb = (artifact: ITransportableArtifact, player: Player) => {

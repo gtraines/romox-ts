@@ -2,6 +2,7 @@ import { requireScript } from '../ScriptLoader';
 import { IRquery } from '../../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
 import { ReplicatedStorage } from '@rbxts/services';
 import { IRodash } from '../../../ServerScriptService/Nevermore/Shared/rodash/RodashTypings';
+import { StretcherTool } from '../../Equipment/Reference/LegacyStretcher';
 
 const _ = requireScript("rodash") as IRodash
 const rq = requireScript("rquery") as IRquery
@@ -25,6 +26,7 @@ export abstract class EntityComponentValue<TValueType>
 }
 
 export interface IGameEntity {
+    LogClass(message : string) : void
     EntityId : string
 }
 
@@ -34,6 +36,12 @@ export abstract class GameEntityBase implements IGameEntity {
         this.EntityId = rq.GetOrAddEntityId(gameEntity)
     }
     EntityId : string
+    LogClass(message : string) : void {
+        
+        let className = tostring(this)
+        let msgPrefix = "[" + className + "] "
+        print(msgPrefix, message)
+    }
 }
 
 export interface ICollectibleGameEntity { 

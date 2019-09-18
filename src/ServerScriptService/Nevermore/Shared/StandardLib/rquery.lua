@@ -47,9 +47,11 @@ function module.GetPlayerFromCharacterOrDescendant(descendantCharacter)
 
 	while not player do
 		if characterCandidate ~= nil and characterCandidate:FindFirstChild("Humanoid") ~= nil then
+			print("Found a humanoid!")
 			player = PlayersService:GetPlayerFromCharacter(characterCandidate)
+			return player
 		end
-
+		print(characterCandidate.Name)
 		if characterCandidate ~= nil and characterCandidate.Parent ~= nil then
 			characterCandidate = characterCandidate.Parent
 			if characterCandidate.Name == "Workspace" then

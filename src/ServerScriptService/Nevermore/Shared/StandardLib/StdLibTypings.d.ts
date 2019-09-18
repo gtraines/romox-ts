@@ -10,6 +10,8 @@ export interface IRquery {
     CreateFolder: (folderName : string, parentObjectInstance : Instance) => Folder
     FindSiblingNamed: (part : Instance, siblingName : string) => Instance
     DeepCopyTable: (orig : Table) => Table;
+    GetAlivePersonageOrPlayerHumanoid: (personageOrPlayer : Instance) => Humanoid
+    GetPersonageOrPlayerRootPart: (personageOrPlayer : Instance) => Part
     GetPersonageOrPlayerHumanoidOrNil: (personageOrPlayer : Instance) => Humanoid
     GetPlayerFromCharacterOrDescendant: (descendantCharacter : Instance) => Player
     GetPlayerDrivingVehicle: (vehicleModel : Model) => Player

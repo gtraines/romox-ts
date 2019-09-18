@@ -27,7 +27,8 @@ export abstract class TransportObjectiveManager implements ITransportObjectiveMa
         this.TransportableArtifacts = new Array<ITransportableArtifact>()
         this.TransportObjectives = new Array<ITransportObjective>()
         this.TransporterPersonages = new Array<IPersonage>()
-
+        this.GenerateAndRegisterArtifacts()
+        this.GenerateAndRegisterObjectives()
     }
     abstract GameConfig: any[];
     TransportableArtifacts: ITransportableArtifact[];

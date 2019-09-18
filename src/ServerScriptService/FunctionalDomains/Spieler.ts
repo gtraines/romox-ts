@@ -17,8 +17,8 @@ class RbxScriptConnection implements IRbxScriptConnection {
         this.IsActive = false
         this.Connected = false
     }
-    IsActive: boolean;    
-    Connected: boolean;
+    IsActive: boolean    
+    Connected: boolean
     Disconnect(): void {
         warn("Disconnected a placeholder RBXScriptConnection, that was probably not what was intended")
     }
