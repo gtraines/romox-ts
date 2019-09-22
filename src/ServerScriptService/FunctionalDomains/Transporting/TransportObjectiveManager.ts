@@ -1,19 +1,19 @@
 import { IPersonage } from "ReplicatedStorage/ToughS/StandardLib/Personage";
 import { ITransportableArtifact } from './TransportableArtifact';
 import { ITransportObjective, TransportObjective } from './TransportObjective';
-import { PersonageCollection, Spieler } from '../Spieler';
-import { IEntityCollection, CollectionIntegration } from '../../../ReplicatedStorage/ToughS/ComponentModel/CollectionIntegration';
-
+import { Spieler } from '../Spieler';
 
 export interface ITransportObjectiveManager {
     GameConfig: Array<any>;
     ManagerName : string
-    TransportableArtifacts: Array<ITransportableArtifact>;
-    TransportObjectives: Array<ITransportObjective>;
-    TransporterPersonages: Array<IPersonage>;
+    TransportableArtifacts: Map<string, ITransportableArtifact>
+    TransportObjectives: Map<string, ITransportObjective>;
+    TransporterPersonages: Map<string, IPersonage>;
+    TransportingEntityIdToArtifactEntityIdMap: Map<string, string>
     CompletedTransport: RemoteEvent;
     ReturnArtifact: RemoteEvent;
-    _personageTracker: PersonageCollection
+    AddTransporterToTrackedTransporters(entityId : string, artifact : ITransportableArtifact) : void
+    RemoveTransporterFromTrackedTransporters(entityId : string) : void
     GenerateAndRegisterArtifacts() : void
     GenerateAndRegisterObjectives() : void
     GatherTransportableArtifactModels() : Array<Model>
@@ -24,36 +24,52 @@ export interface ITransportObjectiveManager {
     CreateObjective(model : Model) : ITransportObjective
     GetArtifactPickedUpCallback(): (artifact: ITransportableArtifact, player: Player) => void;
     GetArtifactDroppedCallback(): (artifact: ITransportableArtifact) => void;
-    GetTouchedObjectiveCallback(): (artifact: ITransportableArtifact, objective: ITransportObjective) => void;
+    GetCharacterTouchedObjectiveCallback(): 
+        (character : Model, 
+            objective: ITransportObjective) => void;
 }
 
 export abstract class TransportObjectiveManager implements ITransportObjectiveManager {
+
     constructor(managerName : string) {
         this.ManagerName = managerName
-        this.TransportableArtifacts = new Array<ITransportableArtifact>()
-        this.TransportObjectives = new Array<ITransportObjective>()
-        
-        this._personageTracker = Spieler.CreateSubCollection(this.ManagerName)
-        this.PersonageEntityTracker = CollectionIntegration.GetEntityCollectionService(this.ManagerName + "PersonageEntities")
-        this.TransporterPersonages = new Array<IPersonage>()
+        this.TransportableArtifacts = new Map<string, ITransportableArtifact>()
+        this.TransportObjectives = new Map<string, ITransportObjective>()
+        this.TransporterPersonages = new Map<string, IPersonage>()
+        this.TransportingEntityIdToArtifactEntityIdMap = new Map<string, string>()
         this.GenerateAndRegisterArtifacts()
         this.GenerateAndRegisterObjectives()
     }
     abstract GameConfig: any[];
     ManagerName : string
-    TransportableArtifacts: ITransportableArtifact[];
-    TransportObjectives: ITransportObjective[];
-    TransporterPersonages: IPersonage[];
-    _personageTracker: PersonageCollection
-    PersonageEntityTracker : IEntityCollection
+    TransportableArtifacts: Map<string, ITransportableArtifact>
+    TransportObjectives: Map<string, ITransportObjective>;
+    TransporterPersonages: Map<string, IPersonage>
+    TransportingEntityIdToArtifactEntityIdMap: Map<string, string>
     abstract CompletedTransport: RemoteEvent;
-    abstract ReturnArtifact: RemoteEvent;
+    abstract ReturnArtifact: RemoteEvent
+    AddTransporterToTrackedTransporters(entityId: string, 
+        artifact : ITransportableArtifact): 
+        void {
+        
+        this.TransportingEntityIdToArtifactEntityIdMap.set(entityId, 
+            artifact.EntityId)
+        let personage = Spieler.GetPersonageFromEntityId(entityId)
+        if (personage !== undefined) {
+            this.TransporterPersonages.set(entityId, personage)
+        }
+    }
+    RemoveTransporterFromTrackedTransporters(entityId: string): void {
+        this.TransporterPersonages.delete(entityId)
+        this.TransportingEntityIdToArtifactEntityIdMap.delete(entityId)
+    }
     GenerateAndRegisterArtifacts() : void {
         let models = this.GatherTransportableArtifactModels()
         models.forEach(model => {
             let createdArtifact = this.CreateArtifact(model)
             createdArtifact = this.AttachCallbacksToArtifact(createdArtifact)
-            this.TransportableArtifacts.push(createdArtifact)
+            this.TransportableArtifacts.set(createdArtifact.EntityId, 
+                createdArtifact)
         })
     }
     GenerateAndRegisterObjectives() : void {
@@ -61,7 +77,7 @@ export abstract class TransportObjectiveManager implements ITransportObjectiveMa
         models.forEach(model => {
             let createdObjective = this.CreateObjective(model)
             createdObjective = this.AttachCallbacksToObjective(createdObjective)
-            this.TransportObjectives.push(createdObjective)
+            this.TransportObjectives.set(createdObjective.EntityId, createdObjective)
         })
     }
     abstract GatherTransportableArtifactModels() : Array<Model>
@@ -69,16 +85,20 @@ export abstract class TransportObjectiveManager implements ITransportObjectiveMa
     AttachCallbacksToArtifact(artifact : ITransportableArtifact) : ITransportableArtifact {
         artifact.ArtifactPickedUpCallback = this.GetArtifactPickedUpCallback()
         artifact.ArtifactDroppedCallback = this.GetArtifactDroppedCallback()
-        artifact.TouchedObjectiveCallback = this.GetTouchedObjectiveCallback()
+        
         return artifact
     }
-    AttachCallbacksToObjective(objective : ITransportObjective) : ITransportObjective {
-        objective.ArtifactTouchedObjectiveCallback = this.GetTouchedObjectiveCallback()
+    AttachCallbacksToObjective(objective : ITransportObjective) : 
+        ITransportObjective {
+        objective.CharacterTouchedObjectiveCallback = 
+            this.GetCharacterTouchedObjectiveCallback()
         return objective
     }
     abstract CreateArtifact(model : Model) : ITransportableArtifact
     abstract CreateObjective(model : Model) : ITransportObjective
     abstract GetArtifactPickedUpCallback(): (artifact: ITransportableArtifact, player: Player) => void 
     abstract GetArtifactDroppedCallback(): (artifact: ITransportableArtifact) => void
-    abstract GetTouchedObjectiveCallback(): (artifact: ITransportableArtifact, objective: ITransportObjective) => void
+    abstract GetCharacterTouchedObjectiveCallback(): 
+        (character: Model, 
+            objective: ITransportObjective) => void
 }

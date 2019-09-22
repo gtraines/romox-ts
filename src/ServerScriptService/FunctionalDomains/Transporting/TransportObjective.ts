@@ -11,7 +11,8 @@ export interface ITransportObjective extends IGameModel {
     GetOnTouchedHandler() : (otherPart : BasePart) => void
     Factions : IFactionable
     TouchedConnection? : RBXScriptConnection
-    ArtifactTouchedObjectiveCallback? : (artifact : ITransportableArtifact, objective : ITransportObjective) => void
+    CharacterTouchedObjectiveCallback? : 
+        (character : Model, objective : ITransportObjective) => void
 }
 
 export class TransportObjective 
@@ -25,25 +26,24 @@ export class TransportObjective
         if (this.GetComponentStringValue("Faction") !== undefined) {
             this.Factions.AddFaction(this.GetComponentStringValue("Faction"))
         }
+        this.WireUpHandlers()
 
     }
     WireUpHandlers(): RBXScriptConnection[] {
         let scriptConnections = new Array<RBXScriptConnection>()
         
-        let flagBase = this.ModelInstance.PrimaryPart
-
+        let flagBase = this.ModelInstance.PrimaryPart as BasePart
+        this.TouchedConnection = flagBase.Touched.Connect(this.GetOnTouchedHandler())
+        scriptConnections.push(this.TouchedConnection)
         return scriptConnections
     }
     GetOnTouchedHandler(): (otherPart: BasePart) => void {
         let handler = (otherPart: BasePart) => {
-            // Either the artifact directly or someone carrying it
-            // otherPart : belongs to x
+            
             let attachedCharacter = rq.AttachedCharacterOrNil(otherPart as Part)
-            if (attachedCharacter !== undefined) {
-                let attachedPlayer = rq.GetPlayerFromCharacterOrDescendant(attachedCharacter)
-                if (attachedPlayer !== undefined) {
-                    
-                }
+            if (attachedCharacter !== undefined &&
+                this.CharacterTouchedObjectiveCallback !== undefined) {
+                this.CharacterTouchedObjectiveCallback(attachedCharacter, this)
             }
             // Cool down
             wait(0.2)
@@ -52,5 +52,7 @@ export class TransportObjective
         return handler
     }
     Factions : IFactionable
-    TouchedConnection?: RBXScriptConnection | undefined;
+    TouchedConnection?: RBXScriptConnection | undefined
+    CharacterTouchedObjectiveCallback? : 
+        (character : Model, objective : ITransportObjective) => void
 }

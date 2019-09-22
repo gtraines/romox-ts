@@ -1,16 +1,14 @@
 import { Players } from '@rbxts/services';
 import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
-import { ITagService } from '../Nevermore/Shared/ComponentModel/TagTypings';
 import { Personage, IPersonage } from '../../ReplicatedStorage/ToughS/StandardLib/Personage';
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
-import { CollectionIntegration } from '../../ReplicatedStorage/ToughS/ComponentModel/CollectionIntegration';
+import { ITagService, CollectionIntegration } from '../../ReplicatedStorage/ToughS/ComponentModel/CollectionIntegration';
 
-export interface IPersonageCollection 
-        extends ITagService<Personage> {}
-const TagService = requireScript<IPersonageCollection>("Tag")
-
-export class PersonageCollection 
-        extends TagService implements IPersonageCollection {}
+export interface IPersonageCharacterCollection 
+        extends ITagService<Model> {
+            
+        }
+const TagService = requireScript<ITagService<Model>>("Tag")
 
 const rq = requireScript<IRquery>("rquery")
 
@@ -35,23 +33,23 @@ export class Spieler {
     static _CharacterJoinedHandlers: Array<(personage : Personage) => void>
     static _CharacterDiedHandlers: Array<(personage : Personage) => void>
     static Personages : Array<Personage>
-    static _collections : Map<string, PersonageCollection>
+    static _collections : Map<string, IPersonageCharacterCollection>
     static _isInitialized : boolean
-    static PersonageTracker : PersonageCollection
+    static PersonageTracker : IPersonageCharacterCollection
     static PersonageEntityIdTracker : ITagService<string>
     static PlayerEntityIdTracker : ITagService<string>
     static EntityIdToPlayerIdMapping : Map<string, string>
 
     static Init() : void {
         if (!this._isInitialized) {
-            this.PersonageTracker = new PersonageCollection("Personages")
+            this.PersonageTracker = new TagService("Personages")
             
             this.EntityIdToPlayerIdMapping = new Map<string, string>()
 
             this.Personages = new Array<Personage>();
             this.PersonageEntityIdTracker = 
                 CollectionIntegration.GetCollectionService<string>("PersonageEntityId")
-            this._collections = new Map<string, ITagService<IPersonage>>()
+            this._collections = new Map<string, ITagService<Model>>()
             this._CharacterDiedHandlers = new Array<(personage : Personage) => void>()
             this._CharacterJoinedHandlers = new Array<(personage : Personage) => void>()
             this._alwaysAddPlayersToTrackers()
@@ -98,17 +96,34 @@ export class Spieler {
         let existingPersonageEntityId = this.GetEntityIdFromPlayerId(playerInstance.UserId)
 
         if (existingPersonageEntityId === undefined) {
-            let personageFromPlayer = new Personage(playerInstance.WaitForChild("Character"))
-
-            let personageEntityId = personageFromPlayer.EntityId
-            this.EntityIdToPlayerIdMapping.set(personageEntityId, tostring(playerInstance.UserId))
-            this.Personages.push(personageFromPlayer)
-            this.PersonageTracker.add(personageFromPlayer)
+            
+            if (playerInstance.Character !== undefined) {
+                let personageFromPlayer = new Personage(playerInstance.Character)
+                this.AddPersonageToTrackers(personageFromPlayer, playerInstance.UserId)
+            } else {
+                playerInstance.CharacterAdded.Connect((addedCharacter : Model) => {
+                    let personageFromCharacter = new Personage(addedCharacter)
+                    this.AddPersonageToTrackers(personageFromCharacter, playerInstance.UserId)
+                })
+            }
 
             return true
         }
         
         return false
+    }
+
+    static AddPersonageToTrackers(personage : Personage, userId? : number) : void {
+
+        let personageEntityId = personage.EntityId
+        
+        this.Personages.push(personage)
+        
+        this.PersonageTracker.add(personage.ModelInstance)
+
+        if (userId !== undefined) {
+            this.EntityIdToPlayerIdMapping.set(personageEntityId, tostring(userId))
+        }
     }
 
     static GetPersonageFromEntityId(entityId : string) : Personage | undefined {
@@ -127,18 +142,18 @@ export class Spieler {
             })
             this.Personages.remove(foundPersonagesIndex)
 
-            this.PersonageTracker.remove(foundPersonage)
+            this.PersonageTracker.remove(foundPersonage.ModelInstance)
             return true
         }
 
         return false
     }
 
-    static CreateSubCollection(name : string) : PersonageCollection {
+    static CreateSubCollection(name : string) : IPersonageCharacterCollection {
         if (this._collections.has(name)) {
-            return this._collections.get(name) as PersonageCollection
+            return this._collections.get(name) as IPersonageCharacterCollection
         }
-        let namedCollection = new PersonageCollection(name)
+        let namedCollection = new TagService(name)
         this._collections.set(name, namedCollection)
         return namedCollection
     }
@@ -155,11 +170,11 @@ export class Spieler {
         if (player.Character !== undefined) {
             let playerPersonage = new Personage(player.Character)
             this.Personages.push(playerPersonage)
-            this.PersonageTracker.add(playerPersonage)
+            this.PersonageTracker.add(playerPersonage.ModelInstance)
         } else {
             player.CharacterAdded.Connect((character : Model) => {
                 let playerPersonage = new Personage(character)
-                this.PersonageTracker.add(playerPersonage)
+                this.PersonageTracker.add(playerPersonage.ModelInstance)
             })
         }
     }
@@ -205,16 +220,31 @@ export class Spieler {
 
     static _alwaysAddPlayersToTrackers() : void {
         let characterAddedHandler = ( character : Model ) => {
-            let player = character.Parent as Player
-            this.AddPlayerAsPersonage(player)
+            print("Adding character as Personage: ", character.Name)
+            let possiblyPlayer = rq.GetPlayerFromCharacterOrDescendant(character)
+            if (possiblyPlayer !== undefined) {
+                let player = possiblyPlayer as Player 
+                this.AddPlayerAsPersonage(player)
+            }       
         }
         this.AddOnCharacterAddedHandler(characterAddedHandler)
 
         let characterDiedHandler = ( character : Model ) => {
-            let player = character.Parent as Player
-            let foundEntityId = this.GetEntityIdFromPlayerId(player.UserId)
+            print( character.Name, " died!")
+            let entityId = rq.StringValueOrNil("EntityId", character)
+            if (entityId !== undefined) {
+                this.RemovePersonageFromTrackers(entityId)
+            }
+
+            let possiblyPlayer = rq.GetPlayerFromCharacterOrDescendant(character)
+            if (possiblyPlayer !== undefined && 
+                possiblyPlayer.Name !== "Workspace" 
+                && possiblyPlayer.IsA("Player")) {
+                let player = possiblyPlayer as Player
+                let foundEntityId = this.GetEntityIdFromPlayerId(player.UserId)
             
-            this.RemovePersonageFromTrackers(foundEntityId as string)
+                this.RemovePersonageFromTrackers(foundEntityId as string)    
+            }
         }
         this.AddOnCharacterDiedHandler(characterDiedHandler)
     }

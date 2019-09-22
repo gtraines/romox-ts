@@ -7,6 +7,7 @@ import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
 import { IFactionable, Factionable } from '../../../ReplicatedStorage/ToughS/ComponentModel/FactionTypes';
+import { Spieler } from '../Spieler';
 
 const rq = requireScript("rquery") as IRquery
 const pubSub = requireScript("PubSub") as IPubSub
@@ -37,7 +38,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         this.FlagBanner = gameModel.FindFirstChild("FlagBanner") as Part
         this.FlagPole = gameModel.FindFirstChild("FlagPole") as Part
         this.WireUpHandlers()
-    }
+    } 
     WireUpHandlers(): IKeyValuePair<string, RBXScriptConnection>[] {
         let createdConnections = new Array<IKeyValuePair<string, RBXScriptConnection>>();
         this.LogClass("Wiring up handlers")
@@ -80,13 +81,19 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
                         this.LogClass("Has NO health")
                         return;
                     }
-                    if (this.FlagBanner.BrickColor !== foundPlayer.TeamColor &&
-                        this.State !== TransportableArtifactState.PickedUp) {
-                        this.PickupArtifact(foundPlayer);
+                    // 
+                    let entityId = rq.GetOrAddEntityId(touchingPersonage)
+                    let foundPersonage = Spieler.GetPersonageFromEntityId(entityId)
+                    if (foundPersonage !== undefined) {                        
+                        if (!this.Factions.HasAnyFactionIn( ...foundPersonage.Factions.Factions ) &&
+                            this.State !== TransportableArtifactState.PickedUp) {
+                            
+                                this.PickupArtifact(foundPlayer);
+                        }
                     }
+                    
                 }
             }
-            
         };
         
         return handler;
@@ -129,6 +136,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     };
     State: TransportableArtifactState;
     Factions: IFactionable
+    TransportedBy? : Model
     FlagPole: Part;
     FlagBanner: Part;
     TouchedEventConnection?: RBXScriptConnection | undefined;

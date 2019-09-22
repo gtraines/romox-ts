@@ -6,7 +6,10 @@ import { ITransportObjective, TransportObjective } from "./TransportObjective";
 import { ITransportObjectiveManager, TransportObjectiveManager } from './TransportObjectiveManager';
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
+import { Spieler } from '../Spieler';
+import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 
+const rq = requireScript<IRquery>("rquery")
 const pubSub = requireScript<IPubSub>("PubSub")
 
 export interface ICtfObjectiveManager extends ITransportObjectiveManager {
@@ -48,18 +51,23 @@ export class CtfObjectiveManager extends TransportObjectiveManager implements IC
         let cb = (artifact: ITransportableArtifact, player: Player) => {
             
             print(artifact.ModelInstance.Name, " was picked up by ", player.Name)
+            let playerEntityId = Spieler.GetEntityIdFromPlayerId(player.UserId)
+            if (playerEntityId !== undefined) {
+                this.AddTransporterToTrackedTransporters(playerEntityId, artifact)
+            }
         }
         return cb;
     }
-    GetDroppedCallback(): (artifact: ITransportableArtifact) => void {
-        let cb = (artifact: ITransportableArtifact) => {
-            print(artifact.ModelInstance.Name, " was dropped ")
-        }
-        return cb;
-    }
-    GetTouchedObjectiveCallback(): (artifact: ITransportableArtifact, objective: ITransportObjective) => void {
-        let cb = (artifact: ITransportableArtifact, objective: ITransportObjective) => {
-            print(artifact.ModelInstance.Name, " touched ", objective.ModelInstance.Name)
+    GetCharacterTouchedObjectiveCallback(): 
+        (character: Model, objective: ITransportObjective) => void {
+        let cb = (character: Model, objective: ITransportObjective) => {
+            print(character.Name, " touched ", objective.ModelInstance.Name)
+            let entityId = rq.GetOrAddEntityId(character)
+            let carryingArtifact = this.TransporterPersonages.has(entityId)
+            if (carryingArtifact) {
+                print("Carrying artifact!")
+                this.RemoveTransporterFromTrackedTransporters(entityId)
+            }
         }
         return cb;
     }

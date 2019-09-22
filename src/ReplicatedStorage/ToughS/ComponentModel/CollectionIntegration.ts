@@ -1,7 +1,18 @@
 import { CollectionService } from "@rbxts/services"
-import { ITagService } from '../../../ServerScriptService/Nevermore/Shared/ComponentModel/TagTypings';
 import { requireScript } from '../ScriptLoader';
 
+export interface ITagService<TInstanceType> {
+    new(name : string, typecheck? : (instance : Instance) => boolean) : ITagService<TInstanceType>
+    name : string
+    has(instance : TInstanceType) : boolean
+    add(instance : TInstanceType) : void
+    remove(instance : TInstanceType) : unknown
+    toggle(instance : TInstanceType) : void
+    getTagged() : Array<TInstanceType>
+
+    onAdded(callback : (instance : TInstanceType) => void) : RBXScriptConnection
+    onRemoved(callback : (instance : TInstanceType) => void) : RBXScriptConnection
+}
 export interface ICollectionIntegration  {
 
 }
