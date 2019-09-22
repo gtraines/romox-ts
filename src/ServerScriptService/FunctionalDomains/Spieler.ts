@@ -3,6 +3,7 @@ import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
 import { ITagService } from '../Nevermore/Shared/ComponentModel/TagTypings';
 import { Personage, IPersonage } from '../../ReplicatedStorage/ToughS/StandardLib/Personage';
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
+import { CollectionIntegration } from '../../ReplicatedStorage/ToughS/ComponentModel/CollectionIntegration';
 
 export interface IPersonageCollection 
         extends ITagService<Personage> {}
@@ -37,11 +38,15 @@ export class Spieler {
     static _collections : Map<string, PersonageCollection>
     static _isInitialized : boolean
     static PersonageTracker : PersonageCollection
+    static PersonageEntityIdTracker : ITagService<string>
+    static PlayerEntityIdTracker : ITagService<string>
 
     static Init() : void {
         if (!this._isInitialized) {
             this.PersonageTracker = new PersonageCollection("Personages")
             this.Personages = new Array<Personage>();
+            this.PersonageEntityIdTracker = 
+                CollectionIntegration.GetCollectionService<string>("PersonageEntityId")
             this._collections = new Map<string, ITagService<IPersonage>>()
             this._CharacterDiedHandlers = new Array<(personage : Personage) => void>()
             this._CharacterJoinedHandlers = new Array<(personage : Personage) => void>()
