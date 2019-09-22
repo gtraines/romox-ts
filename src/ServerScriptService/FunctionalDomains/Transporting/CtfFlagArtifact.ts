@@ -33,10 +33,10 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
             this.Factions.AddFaction(this.GetComponentStringValue("Faction"))
         }
         factions.forEach(faction => this.Factions.AddFaction(faction))
-        this.State = TransportableArtifactState.AtSpawn;
-        this.FlagBanner = gameModel.FindFirstChild("FlagBanner") as Part;
-        this.FlagPole = gameModel.FindFirstChild("FlagPole") as Part;
-        this.WireUpHandlers();
+        this.State = TransportableArtifactState.AtSpawn
+        this.FlagBanner = gameModel.FindFirstChild("FlagBanner") as Part
+        this.FlagPole = gameModel.FindFirstChild("FlagPole") as Part
+        this.WireUpHandlers()
     }
     WireUpHandlers(): IKeyValuePair<string, RBXScriptConnection>[] {
         let createdConnections = new Array<IKeyValuePair<string, RBXScriptConnection>>();
@@ -49,8 +49,9 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     }
     GetOnPickedUpHandler(): (player: Player) => void {
         let handler = (player: Player) => {
-        };
-        return handler;
+
+        }
+        return handler
     }
     GetOnCarrierDiedHandler(): () => void {
         let handler = () => {
@@ -71,11 +72,10 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
             let touchingPersonage = rq.AttachedCharacterOrNil(otherPart as Part);
             if (touchingPersonage !== undefined) {
                 
-                let foundPlayer = rq.GetPlayerFromCharacterOrDescendant(touchingPersonage); 
-
+                let foundPlayer = rq.GetPlayerFromCharacterOrDescendant(touchingPersonage) 
                 if (foundPlayer !== undefined) {
                     
-                    let foundHumanoid = rq.GetPersonageOrPlayerHumanoidOrNil(touchingPersonage);
+                    let foundHumanoid = rq.GetPersonageOrPlayerHumanoidOrNil(touchingPersonage)
                     if (foundHumanoid.Health <= 0) {
                         this.LogClass("Has NO health")
                         return;
@@ -95,6 +95,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         this.LogClass("Picking up")
         this.State = TransportableArtifactState.PickedUp;
         let carryingPersonage = new Personage(player.Character as Model);
+        
         this.FlagPole.Anchored = false;
         this.FlagBanner.Anchored = false;
         this.FlagPole.CanCollide = false;

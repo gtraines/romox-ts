@@ -40,24 +40,100 @@ export class Spieler {
     static PersonageTracker : PersonageCollection
     static PersonageEntityIdTracker : ITagService<string>
     static PlayerEntityIdTracker : ITagService<string>
+    static EntityIdToPlayerIdMapping : Map<string, string>
 
     static Init() : void {
         if (!this._isInitialized) {
             this.PersonageTracker = new PersonageCollection("Personages")
+            
+            this.EntityIdToPlayerIdMapping = new Map<string, string>()
+
             this.Personages = new Array<Personage>();
             this.PersonageEntityIdTracker = 
                 CollectionIntegration.GetCollectionService<string>("PersonageEntityId")
             this._collections = new Map<string, ITagService<IPersonage>>()
             this._CharacterDiedHandlers = new Array<(personage : Personage) => void>()
             this._CharacterJoinedHandlers = new Array<(personage : Personage) => void>()
+            this._alwaysAddPlayersToTrackers()
             this._isInitialized = true
         }
     }
-    static FindPersonageFromPlayer(playerInstance : Player) : Personage {
-        let foundPersonage = this.Personages.filter((persItem : Personage) => {
-            return persItem.IsPlayer &&  == tostring(playerInstance.UserId) 
-        })
+
+    static IsEntityIdPlayer(entityId : string) : boolean {
+        if (this.EntityIdToPlayerIdMapping.has(entityId)) {
+            return true
+        }
+        return false
     }
+
+    static GetPlayerIdFromEntityId(entityId : string) : string | undefined {
+        let foundPlayerId = this.EntityIdToPlayerIdMapping.get(entityId)
+        return foundPlayerId
+    }
+
+    static GetEntityIdFromPlayerId(playerId : number) : string | undefined {
+        let foundEntityId = this.EntityIdToPlayerIdMapping.entries().find(
+            kvPair => kvPair[1] === tostring(playerId))
+        if (foundEntityId === undefined) {
+            return undefined
+        }
+        return foundEntityId[0]
+    }
+
+    static FindPersonageFromPlayer(playerInstance : Player) : Personage {
+        let playerId = playerInstance.UserId
+        let entityId = this.GetEntityIdFromPlayerId(playerId)
+
+        if (entityId === undefined) {
+            this.AddPlayerAsPersonage(playerInstance)
+            entityId = this.GetEntityIdFromPlayerId(playerId)
+        }
+
+        let foundPersonage = this.GetPersonageFromEntityId(entityId as string)
+        return foundPersonage as Personage
+    }
+
+    static AddPlayerAsPersonage(playerInstance : Player) : boolean {
+        
+        let existingPersonageEntityId = this.GetEntityIdFromPlayerId(playerInstance.UserId)
+
+        if (existingPersonageEntityId === undefined) {
+            let personageFromPlayer = new Personage(playerInstance.WaitForChild("Character"))
+
+            let personageEntityId = personageFromPlayer.EntityId
+            this.EntityIdToPlayerIdMapping.set(personageEntityId, tostring(playerInstance.UserId))
+            this.Personages.push(personageFromPlayer)
+            this.PersonageTracker.add(personageFromPlayer)
+
+            return true
+        }
+        
+        return false
+    }
+
+    static GetPersonageFromEntityId(entityId : string) : Personage | undefined {
+        let foundPersonage = this.Personages.find(pers => pers.EntityId === entityId)
+        return foundPersonage
+    }
+
+    static RemovePersonageFromTrackers(entityId : string) : boolean {
+        let foundPersonage = this.GetPersonageFromEntityId(entityId)
+
+        if (foundPersonage !== undefined) {
+            this.EntityIdToPlayerIdMapping.delete(entityId as string)
+            
+            let foundPersonagesIndex = this.Personages.findIndex(( personage : Personage ) => {
+                return personage.EntityId === entityId
+            })
+            this.Personages.remove(foundPersonagesIndex)
+
+            this.PersonageTracker.remove(foundPersonage)
+            return true
+        }
+
+        return false
+    }
+
     static CreateSubCollection(name : string) : PersonageCollection {
         if (this._collections.has(name)) {
             return this._collections.get(name) as PersonageCollection
@@ -127,12 +203,19 @@ export class Spieler {
         // Add to future handlers added to collection
     }
 
-    static _addHandlersToPersonagesTracker() : void {
-        this.PersonageTracker.onAdded( (addedPersonage : Personage) => {
-            this._CharacterDiedHandlers.forEach((hndler : () => void) => {
+    static _alwaysAddPlayersToTrackers() : void {
+        let characterAddedHandler = ( character : Model ) => {
+            let player = character.Parent as Player
+            this.AddPlayerAsPersonage(player)
+        }
+        this.AddOnCharacterAddedHandler(characterAddedHandler)
 
-                addedPersonage.Humanoid.Died.Connect(hndler)
-            })
-        })
+        let characterDiedHandler = ( character : Model ) => {
+            let player = character.Parent as Player
+            let foundEntityId = this.GetEntityIdFromPlayerId(player.UserId)
+            
+            this.RemovePersonageFromTrackers(foundEntityId as string)
+        }
+        this.AddOnCharacterDiedHandler(characterDiedHandler)
     }
 }

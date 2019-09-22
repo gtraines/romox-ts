@@ -6,7 +6,11 @@ export interface ICollectionIntegration  {
 
 }
 
-export class CollectionIntegration<TItem> 
+export interface IEntityCollection extends ITagService<string> {
+
+}
+
+export class CollectionIntegration
     implements ICollectionIntegration {
 
     static _createdCollections : Map<string, ITagService<any>>
@@ -16,6 +20,10 @@ export class CollectionIntegration<TItem>
             this._createdCollections = new Map<string, ITagService<any>>()
             this._isInitialized = true
         }
+    }
+
+    static GetEntityCollectionService(collectionName : string) : ITagService<string> {
+        return this.GetCollectionService<string>(collectionName)
     }
 
     static GetCollectionService<TItem>(collectionName : string) 

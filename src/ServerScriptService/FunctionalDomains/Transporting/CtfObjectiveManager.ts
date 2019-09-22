@@ -48,19 +48,19 @@ export class CtfObjectiveManager extends TransportObjectiveManager implements IC
         let cb = (artifact: ITransportableArtifact, player: Player) => {
             
             print(artifact.ModelInstance.Name, " was picked up by ", player.Name)
-        };
+        }
         return cb;
     }
     GetDroppedCallback(): (artifact: ITransportableArtifact) => void {
         let cb = (artifact: ITransportableArtifact) => {
             print(artifact.ModelInstance.Name, " was dropped ")
-        };
+        }
         return cb;
     }
     GetTouchedObjectiveCallback(): (artifact: ITransportableArtifact, objective: ITransportObjective) => void {
         let cb = (artifact: ITransportableArtifact, objective: ITransportObjective) => {
             print(artifact.ModelInstance.Name, " touched ", objective.ModelInstance.Name)
-        };
+        }
         return cb;
     }
     CreateArtifact(model: Model): ITransportableArtifact {

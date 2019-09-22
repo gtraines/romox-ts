@@ -2,6 +2,7 @@ import { IPersonage } from "ReplicatedStorage/ToughS/StandardLib/Personage";
 import { ITransportableArtifact } from './TransportableArtifact';
 import { ITransportObjective, TransportObjective } from './TransportObjective';
 import { PersonageCollection, Spieler } from '../Spieler';
+import { IEntityCollection, CollectionIntegration } from '../../../ReplicatedStorage/ToughS/ComponentModel/CollectionIntegration';
 
 
 export interface ITransportObjectiveManager {
@@ -33,6 +34,7 @@ export abstract class TransportObjectiveManager implements ITransportObjectiveMa
         this.TransportObjectives = new Array<ITransportObjective>()
         
         this._personageTracker = Spieler.CreateSubCollection(this.ManagerName)
+        this.PersonageEntityTracker = CollectionIntegration.GetEntityCollectionService(this.ManagerName + "PersonageEntities")
         this.TransporterPersonages = new Array<IPersonage>()
         this.GenerateAndRegisterArtifacts()
         this.GenerateAndRegisterObjectives()
@@ -43,6 +45,7 @@ export abstract class TransportObjectiveManager implements ITransportObjectiveMa
     TransportObjectives: ITransportObjective[];
     TransporterPersonages: IPersonage[];
     _personageTracker: PersonageCollection
+    PersonageEntityTracker : IEntityCollection
     abstract CompletedTransport: RemoteEvent;
     abstract ReturnArtifact: RemoteEvent;
     GenerateAndRegisterArtifacts() : void {
