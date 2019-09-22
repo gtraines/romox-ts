@@ -16,6 +16,7 @@ export enum PersonageRigType {
 export interface IPersonage extends IGameModel{
     Factions : IFactionable
     IsPlayer : boolean
+    UserId? : string
     Humanoid : Humanoid
     RootPart : BasePart
     Torso : Part
@@ -32,6 +33,11 @@ export class Personage extends GameModel implements IPersonage {
     constructor(characterInstance : Model) {
         super(characterInstance)
         this.IsPlayer = personageCrawler.IsPersonagePlayer(characterInstance)
+
+        if (this.IsPlayer) {
+            this.UserId = rq.GetUserIdString(rq.GetPlayerFromCharacterOrDescendant(characterInstance))
+        }
+        
         this.Humanoid = personageCrawler.GetHumanoid(characterInstance)
         this.Torso = rq.PersonageTorsoOrEquivalent(characterInstance)
         this.Factions = new Factionable()
@@ -44,6 +50,7 @@ export class Personage extends GameModel implements IPersonage {
     }
     Factions : IFactionable
     IsPlayer: boolean;
+    UserId? : string
     Humanoid: Humanoid;
     Torso: Part
     RootPart: BasePart;

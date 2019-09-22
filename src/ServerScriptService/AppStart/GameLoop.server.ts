@@ -20,9 +20,7 @@ const configManager = require(configManagerModule) as IConfigManager;
 const configValues = [ "val1" ]
 
 Spieler.Init()
-print("Pretty weird, guys")
 const ctfObjectiveManager = new CtfObjectiveManager(configValues) as ICtfObjectiveManager
-print("CUT")
 const autoSpawnerModule = ServerScriptService.WaitForChild("Spawning").WaitForChild("PersonageSpawner") as ModuleScript;
 const AutoSpawner = require(autoSpawnerModule) as IPersonageSpawner;
 

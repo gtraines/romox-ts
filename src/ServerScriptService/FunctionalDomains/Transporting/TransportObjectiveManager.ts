@@ -1,14 +1,18 @@
 import { IPersonage } from "ReplicatedStorage/ToughS/StandardLib/Personage";
 import { ITransportableArtifact } from './TransportableArtifact';
 import { ITransportObjective, TransportObjective } from './TransportObjective';
+import { PersonageCollection, Spieler } from '../Spieler';
+
 
 export interface ITransportObjectiveManager {
     GameConfig: Array<any>;
+    ManagerName : string
     TransportableArtifacts: Array<ITransportableArtifact>;
     TransportObjectives: Array<ITransportObjective>;
     TransporterPersonages: Array<IPersonage>;
     CompletedTransport: RemoteEvent;
     ReturnArtifact: RemoteEvent;
+    _personageTracker: PersonageCollection
     GenerateAndRegisterArtifacts() : void
     GenerateAndRegisterObjectives() : void
     GatherTransportableArtifactModels() : Array<Model>
@@ -23,17 +27,22 @@ export interface ITransportObjectiveManager {
 }
 
 export abstract class TransportObjectiveManager implements ITransportObjectiveManager {
-    constructor() {
+    constructor(managerName : string) {
+        this.ManagerName = managerName
         this.TransportableArtifacts = new Array<ITransportableArtifact>()
         this.TransportObjectives = new Array<ITransportObjective>()
+        
+        this._personageTracker = Spieler.CreateSubCollection(this.ManagerName)
         this.TransporterPersonages = new Array<IPersonage>()
         this.GenerateAndRegisterArtifacts()
         this.GenerateAndRegisterObjectives()
     }
     abstract GameConfig: any[];
+    ManagerName : string
     TransportableArtifacts: ITransportableArtifact[];
     TransportObjectives: ITransportObjective[];
     TransporterPersonages: IPersonage[];
+    _personageTracker: PersonageCollection
     abstract CompletedTransport: RemoteEvent;
     abstract ReturnArtifact: RemoteEvent;
     GenerateAndRegisterArtifacts() : void {

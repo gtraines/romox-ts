@@ -1,12 +1,17 @@
 import { Players } from '@rbxts/services';
 import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
 import { ITagService } from '../Nevermore/Shared/ComponentModel/TagTypings';
-import { Personage } from '../../ReplicatedStorage/ToughS/StandardLib/Personage';
+import { Personage, IPersonage } from '../../ReplicatedStorage/ToughS/StandardLib/Personage';
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
 
-const TagService = requireScript<ITagService<Personage>>("Tag")
-const rq = requireScript<IRquery>("rquery")
+export interface IPersonageCollection 
+        extends ITagService<Personage> {}
+const TagService = requireScript<IPersonageCollection>("Tag")
 
+export class PersonageCollection 
+        extends TagService implements IPersonageCollection {}
+
+const rq = requireScript<IRquery>("rquery")
 
 interface IRbxScriptConnection extends RBXScriptConnection {
     IsActive : boolean
@@ -26,43 +31,54 @@ class RbxScriptConnection implements IRbxScriptConnection {
 
 export class Spieler {
 
-    static _CharacterJoinedHandlers: Array<(character : Model) => void>
-    static _CharacterDiedHandlers: Array<(character : Model) => void>
+    static _CharacterJoinedHandlers: Array<(personage : Personage) => void>
+    static _CharacterDiedHandlers: Array<(personage : Personage) => void>
     static Personages : Array<Personage>
-    
+    static _collections : Map<string, PersonageCollection>
     static _isInitialized : boolean
-    static TagService : ITagService<Personage>
+    static PersonageTracker : PersonageCollection
 
     static Init() : void {
         if (!this._isInitialized) {
-            this.TagService = new TagService("Personage")
-            this._CharacterDiedHandlers = new Array<(character : Model) => void>()
-            this._CharacterJoinedHandlers = new Array<(character : Model) => void>()
+            this.PersonageTracker = new PersonageCollection("Personages")
+            this.Personages = new Array<Personage>();
+            this._collections = new Map<string, ITagService<IPersonage>>()
+            this._CharacterDiedHandlers = new Array<(personage : Personage) => void>()
+            this._CharacterJoinedHandlers = new Array<(personage : Personage) => void>()
             this._isInitialized = true
         }
     }
-
-    static CreateSubCollection(name : string) : ITagService<Personage> {
-        return new TagService("Personage")
+    static FindPersonageFromPlayer(playerInstance : Player) : Personage {
+        let foundPersonage = this.Personages.filter((persItem : Personage) => {
+            return persItem.IsPlayer &&  == tostring(playerInstance.UserId) 
+        })
+    }
+    static CreateSubCollection(name : string) : PersonageCollection {
+        if (this._collections.has(name)) {
+            return this._collections.get(name) as PersonageCollection
+        }
+        let namedCollection = new PersonageCollection(name)
+        this._collections.set(name, namedCollection)
+        return namedCollection
     }
 
     static _addCurrentPlayersToTagSvc() : void {
         let currentPlayers = Players.GetPlayers()
 
         currentPlayers.forEach((player : Player) => {
-            this._addPlayerToTagSvc(player)
+            this._addPlayerToPersonageCollection(player)
         })
     }
 
-    static _addPlayerToTagSvc(player : Player) : void {
+    static _addPlayerToPersonageCollection(player : Player) : void {
         if (player.Character !== undefined) {
             let playerPersonage = new Personage(player.Character)
             this.Personages.push(playerPersonage)
-            this.TagService.add(playerPersonage)
+            this.PersonageTracker.add(playerPersonage)
         } else {
             player.CharacterAdded.Connect((character : Model) => {
                 let playerPersonage = new Personage(character)
-                this.TagService.add(playerPersonage)
+                this.PersonageTracker.add(playerPersonage)
             })
         }
     }
@@ -70,9 +86,11 @@ export class Spieler {
     static AddOnPlayerJoinedHandler = (handlerFunc: (player: Player) => void) => {
         return Players.PlayerAdded.Connect(handlerFunc)
     }
+
     static AddOnPlayerLeavingHandler = (handlerFunc: (player: Player) => void) => {
         return Players.PlayerRemoving.Connect(handlerFunc)
     }
+
     /**
      * @remarks
      * Note that the Humanoid and its body parts (head, torso and limbs) will exist when this event fires, 
@@ -88,6 +106,7 @@ export class Spieler {
 
         return rbxConn
     }
+
     static AddOnCharacterDiedHandler = (handlerFunc: (character: Model) => void) => {
         let rbxConn = new RbxScriptConnection() as RBXScriptConnection
         Spieler.AddOnPlayerJoinedHandler((player : Player) => {
@@ -97,7 +116,18 @@ export class Spieler {
         return rbxConn
     }
 
-    static _addHandlersToTagSvc() : void {
-        
+    static AddPersonageOnDiedHandler(handler : (addedPersonage : Personage) => void) : void {
+        // Add to existing
+
+        // Add to future handlers added to collection
+    }
+
+    static _addHandlersToPersonagesTracker() : void {
+        this.PersonageTracker.onAdded( (addedPersonage : Personage) => {
+            this._CharacterDiedHandlers.forEach((hndler : () => void) => {
+
+                addedPersonage.Humanoid.Died.Connect(hndler)
+            })
+        })
     }
 }

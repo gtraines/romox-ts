@@ -16,14 +16,16 @@ export interface ICtfObjectiveManager extends ITransportObjectiveManager {
 export class CtfObjectiveManager extends TransportObjectiveManager implements ICtfObjectiveManager {
 
     constructor(gameConfig: Array<any>) {
-        super()
+        super("Ctf")
         this.GameConfig = gameConfig;
         let folder = pubSub.GetOrCreateClientServerTopicCategory("Ctf");
         this.ReturnArtifact = pubSub.GetOrCreateClientServerTopicInCategory("Ctf", "ReturnArtifact");
         this.ReturnArtifact.OnServerEvent.Connect(() => {
 
         });
+
         this.CompletedTransport = pubSub.GetOrCreateClientServerTopicInCategory("Ctf", "CompletedTransport");
+        
     }
     GameConfig: any[];
     ReturnArtifact: RemoteEvent;
@@ -31,6 +33,7 @@ export class CtfObjectiveManager extends TransportObjectiveManager implements IC
     
     GetOnCompletedTransportHandler() {
         let handler = (player: Player, ...data: any[]) => {
+            
         };
         return handler;
     }
@@ -43,6 +46,7 @@ export class CtfObjectiveManager extends TransportObjectiveManager implements IC
     }
     GetArtifactPickedUpCallback(): (artifact: ITransportableArtifact, player: Player) => void {
         let cb = (artifact: ITransportableArtifact, player: Player) => {
+            
             print(artifact.ModelInstance.Name, " was picked up by ", player.Name)
         };
         return cb;
