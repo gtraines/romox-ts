@@ -6,7 +6,7 @@ import { ITransportObjective } from "./TransportObjective";
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
-import { IFactionable, Factionable } from '../../../ReplicatedStorage/ToughS/ComponentModel/FactionTypes';
+import { IFactionComponent, FactionComponent } from '../../Components/Factionable';
 import { Spieler } from '../Spieler';
 
 const rq = requireScript("rquery") as IRquery
@@ -21,6 +21,7 @@ export interface ICtfFlagArtifact extends ITransportableArtifact {
 }
 
 export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
+    FactionTracker : IFactionComponent = new FactionComponent()
     
     ArtifactAttributes : string[] = [
         "Ctf",
@@ -29,16 +30,16 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     constructor(gameModel: Model, ...factions : string[]) {
         super(gameModel);
 
-        this.Factions = new Factionable()
-        if (this.GetComponentStringValue("Faction") !== undefined) {
-            this.Factions.AddFaction(this.GetComponentStringValue("Faction"))
+        this.FactionTracker = new FactionComponent(...factions)
+        if (this.GetComponentStringValue("Factions") !== undefined) {
+            this.FactionTracker.AddFaction(this.GetComponentStringValue("Factions"))
         }
-        factions.forEach(faction => this.Factions.AddFaction(faction))
+        
         this.State = TransportableArtifactState.AtSpawn
         this.FlagBanner = gameModel.FindFirstChild("FlagBanner") as Part
         this.FlagPole = gameModel.FindFirstChild("FlagPole") as Part
         this.WireUpHandlers()
-    } 
+    }
     WireUpHandlers(): IKeyValuePair<string, RBXScriptConnection>[] {
         let createdConnections = new Array<IKeyValuePair<string, RBXScriptConnection>>();
         this.LogClass("Wiring up handlers")
@@ -85,7 +86,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
                     let entityId = rq.GetOrAddEntityId(touchingPersonage)
                     let foundPersonage = Spieler.GetPersonageFromEntityId(entityId)
                     if (foundPersonage !== undefined) {                        
-                        if (!this.Factions.HasAnyFactionIn( ...foundPersonage.Factions.Factions ) &&
+                        if (!this.FactionTracker.HasAnyFactionIn( ...foundPersonage.FactionTracker.Factions ) &&
                             this.State !== TransportableArtifactState.PickedUp) {
                             
                                 this.PickupArtifact(foundPlayer);
@@ -135,7 +136,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         }
     };
     State: TransportableArtifactState;
-    Factions: IFactionable
+    
     TransportedBy? : Model
     FlagPole: Part;
     FlagBanner: Part;

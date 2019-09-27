@@ -185,10 +185,13 @@ local function StartService(service)
 end
 
 
-local function Init()
+local function Init(logProgress)
 	
 	-- Load service modules:
 	local function LoadAllServices(parent, servicesTbl, parentFolder)
+		if logProgress then
+			print("Load service modules")
+		end
 		for _,child in pairs(parent:GetChildren()) do
 			if (child:IsA("ModuleScript")) then
 				LoadService(child, servicesTbl, parentFolder)
@@ -205,6 +208,9 @@ local function Init()
 	
 	-- Initialize services:
 	local function InitAllServices(services)
+		if logProgress then
+			print("Initialize services")
+		end
 		for _,service in pairs(services) do
 			if (getmetatable(service) == mt) then
 				InitService(service)

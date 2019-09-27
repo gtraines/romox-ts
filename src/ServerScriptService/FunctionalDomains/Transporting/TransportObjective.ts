@@ -1,15 +1,13 @@
 import { IGameModel, GameModel } from '../../../ReplicatedStorage/ToughS/ComponentModel/FundamentalTypes';
-import { IFactionable, Factionable } from '../../../ReplicatedStorage/ToughS/ComponentModel/FactionTypes';
-import { ITransportableArtifact } from './TransportableArtifact';
+import { IFactionable, IFactionComponent, FactionComponent } from '../../Components/Factionable'
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 
 const rq =  requireScript<IRquery>("rquery")
 
-export interface ITransportObjective extends IGameModel {
+export interface ITransportObjective extends IGameModel, IFactionable {
     WireUpHandlers(): Array<RBXScriptConnection>;
     GetOnTouchedHandler() : (otherPart : BasePart) => void
-    Factions : IFactionable
     TouchedConnection? : RBXScriptConnection
     CharacterTouchedObjectiveCallback? : 
         (character : Model, objective : ITransportObjective) => void
@@ -21,11 +19,12 @@ export class TransportObjective
     
     constructor(gameModel : Model) {
         super(gameModel)
+        // Look!
+        this.FactionTracker = new FactionComponent() as IFactionComponent
 
-        this.Factions = new Factionable()
-        if (this.GetComponentStringValue("Faction") !== undefined) {
-            this.Factions.AddFaction(this.GetComponentStringValue("Faction"))
-        }
+        this.FactionTracker.LoadFromCommaSeparatedString(
+            this.GetComponentStringValue("Factions"))
+        
         this.WireUpHandlers()
 
     }
@@ -51,7 +50,7 @@ export class TransportObjective
 
         return handler
     }
-    Factions : IFactionable
+    FactionTracker : IFactionComponent
     TouchedConnection?: RBXScriptConnection | undefined
     CharacterTouchedObjectiveCallback? : 
         (character : Model, objective : ITransportObjective) => void

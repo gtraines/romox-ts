@@ -1,5 +1,4 @@
 import { Workspace } from '@rbxts/services';
-import { IPersonage } from "ReplicatedStorage/ToughS/StandardLib/Personage";
 import { ITransportableArtifact } from './TransportableArtifact';
 import { CtfFlagArtifact } from './CtfFlagArtifact';
 import { ITransportObjective, TransportObjective } from "./TransportObjective";

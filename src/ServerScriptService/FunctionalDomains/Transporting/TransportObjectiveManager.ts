@@ -1,6 +1,6 @@
 import { IPersonage } from "ReplicatedStorage/ToughS/StandardLib/Personage";
 import { ITransportableArtifact } from './TransportableArtifact';
-import { ITransportObjective, TransportObjective } from './TransportObjective';
+import { ITransportObjective } from './TransportObjective';
 import { Spieler } from '../Spieler';
 
 export interface ITransportObjectiveManager {

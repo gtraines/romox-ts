@@ -3,7 +3,7 @@ import { IGameModel, GameModel } from '../ComponentModel/FundamentalTypes';
 import { IPersonageCrawler, PersonageCrawler } from './PersonageCrawler';
 import { IRquery } from '../../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
 import { requireScript } from '../ScriptLoader';
-import { Factionable, IFactionable } from '../ComponentModel/FactionTypes';
+import { FactionComponent, IFactionComponent, IFactionable } from '../../../ServerScriptService/Components/Factionable';
 
 const rq = requireScript("rquery") as IRquery
 const personageCrawler = new PersonageCrawler() as IPersonageCrawler
@@ -13,8 +13,7 @@ export enum PersonageRigType {
     R15 = 1
 }
 
-export interface IPersonage extends IGameModel{
-    Factions : IFactionable
+export interface IPersonage extends IGameModel, IFactionable {
     IsPlayer : boolean
     UserId? : string
     Humanoid : Humanoid
@@ -40,7 +39,7 @@ export class Personage extends GameModel implements IPersonage {
         
         this.Humanoid = personageCrawler.GetHumanoid(characterInstance)
         this.Torso = rq.PersonageTorsoOrEquivalent(characterInstance)
-        this.Factions = new Factionable()
+        this.FactionTracker = new FactionComponent()
         if (personageCrawler.IsPersonageR6(characterInstance)) {
             this.RigType = PersonageRigType.R6
         } else {
@@ -48,7 +47,7 @@ export class Personage extends GameModel implements IPersonage {
         }
         this.RootPart = personageCrawler.GetRootPart(characterInstance)
     }
-    Factions : IFactionable
+    FactionTracker : IFactionComponent
     IsPlayer: boolean;
     UserId? : string
     Humanoid: Humanoid;
