@@ -5,8 +5,21 @@ export interface IConfigManager {
     Loaded: boolean
     ConfigValues: Table
 }
+
 export interface IGameManager {
-    Initialize() : void;
+    ConfigManager : IConfigManager
+    IsConfigLoaded : boolean
+    LoadedConfig : Table
+    LoadedConfigValues : Map<string, string>
+    LoadedFeatureFlags : Map<string, string>
+
+    LoadConfigFromTable(table : Table) : void
+    LoadStandardConfig() : void
+
+    LoadFeatureFlagsFromTable(table : Table) : void
+    LoadStandardFeatureFlags() : void
+
+    Initialize(configManager? : IConfigManager) : void;
     RunIntermission() : void;
     StopIntermission() : void;
     GameReady() : boolean;

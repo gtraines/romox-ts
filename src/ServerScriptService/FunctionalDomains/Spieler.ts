@@ -49,6 +49,7 @@ export class Spieler {
             this.Personages = new Array<Personage>();
             this.PersonageEntityIdTracker = 
                 CollectionIntegration.GetCollectionService<string>("PersonageEntityId")
+            
             this._collections = new Map<string, ITagService<Model>>()
             this._CharacterDiedHandlers = new Array<(personage : Personage) => void>()
             this._CharacterJoinedHandlers = new Array<(personage : Personage) => void>()
@@ -57,6 +58,40 @@ export class Spieler {
         }
     }
 
+    static DestroyAllPlayers() : void {
+        let destroyFn = (player : Player) => {
+            if (player.Character !== undefined) {
+                player.Character.Destroy()
+            }
+            if (player.FindFirstChild("Backpack") !== undefined) {
+                let backpack = player.FindFirstChild("Backpack") as Instance
+                if (backpack !== undefined) {
+                    let backpackItems = backpack.GetChildren()
+                    backpackItems.forEach(item => {
+                        item.Destroy()
+                    });
+                }
+            }
+        }
+
+        this.PerformOnCurrentPlayers(destroyFn)
+    }
+
+    static DestroyAllCharacters() : void {
+
+    }
+
+    static PerformOnCurrentPlayers(fn : (player : Player) => void) : void {
+        let currentPlayers = Players.GetPlayers()
+        currentPlayers.forEach((player : Player) => {
+            fn(player)
+        })
+    }
+
+    static PerformOnAllCurrentAndFuturePlayers(fn : (player : Player) => void) : void {
+        this.PerformOnCurrentPlayers(fn)
+        Players.PlayerAdded.Connect(fn)
+    }
     static IsEntityIdPlayer(entityId : string) : boolean {
         if (this.EntityIdToPlayerIdMapping.has(entityId)) {
             return true
