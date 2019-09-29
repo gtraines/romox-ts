@@ -23,11 +23,8 @@ export class PlayerHandler {
         })
     }
 
-    static Init() : void {
-        
-
+    static Init() : void {   
         Players.PlayerAdded.Connect(this.GetOnPlayerAddedHandler())
         Players.PlayerRemoving.Connect(this.GetOnPlayerRemovingHandler())
-
     }
 }

@@ -6,7 +6,7 @@ import { ITransportObjective } from "./TransportObjective";
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
-import { IFactionComponent, FactionComponent } from '../../Components/Factionable';
+import { IFactionComponent, FactionComponent } from '../../Components/Factions/Factionable';
 import { Spieler } from '../Spieler';
 
 const rq = requireScript("rquery") as IRquery

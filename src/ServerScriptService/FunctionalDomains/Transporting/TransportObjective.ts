@@ -1,5 +1,5 @@
 import { IGameModel, GameModel } from '../../../ReplicatedStorage/ToughS/ComponentModel/FundamentalTypes';
-import { IFactionable, IFactionComponent, FactionComponent } from '../../Components/Factionable'
+import { IFactionable, IFactionComponent, FactionComponent } from '../../Components/Factions/Factionable'
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 

@@ -1,40 +1,33 @@
-import { IGameManager, IConfigManager } from './GameModulesTypings';
+import { IGameManager } from './GameModulesTypings';
+import { IConfigManager, ConfigManager, GameConfigKeys, FeatureFlagKeys } from './ConfigManager';
+import { ReplicatedStorage } from '@rbxts/services';
+import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
+import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
+
+const rq = requireScript<IRquery>("rquery")
+const Events = rq.GetOrAddItem("Events", "Folder", ReplicatedStorage)
+
+export interface IGameState {
+    IntermissionRunning : boolean
+    EnoughPlayers : boolean
+    GameRunning : boolean
+}
 
 
 export abstract class GameManagerBase implements IGameManager {
-    IsConfigLoaded = false
-    AreFeatureFlagsLoaded = false
-    IsConfigManagerLoaded = false
-    abstract ConfigManager: IConfigManager;
-    abstract LoadedConfig: Table;
-    abstract LoadedConfigValues: Map<string, string>;
-    abstract LoadedFeatureFlags: Map<string, string>;
 
-    LoadConfigFromTable(table: Table): void {
-        
-        this.IsConfigLoaded = true
-        throw "Method not implemented.";
-    }
-    LoadStandardConfig(): void {
-        this.IsConfigLoaded = true
-        throw "Method not implemented.";
-    }
-    LoadFeatureFlagsFromTable(table: Table): void {
-        
-        this.AreFeatureFlagsLoaded = true
-        throw "Method not implemented.";
+    ConfigManager: IConfigManager;
+    
+    constructor(configManager? : IConfigManager) {
 
-    }
-    LoadStandardFeatureFlags(): void {
-        
-        this.AreFeatureFlagsLoaded = true
-        throw "Method not implemented.";
+        if (configManager === undefined) {
+            this.ConfigManager = new ConfigManager()
+        } else {
+            this.ConfigManager = configManager
+        }
     }
 
-    Initialize(): void {
-
-        throw "Method not implemented.";
-    }    
+    abstract Initialize(): void 
     RunIntermission(): void {
         throw "Method not implemented.";
     }

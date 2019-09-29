@@ -1,23 +1,14 @@
-export interface IConfigManager {
-    Init(configFilename?: string, configTable?: Table) : boolean
-    GetConfigValueOrDefault(configKey: string, defaultToReturn?: any) : any
-    GetFeatureEnabled(featureKey: string) : boolean
-    Loaded: boolean
-    ConfigValues: Table
+import { IConfigManager } from './ConfigManager';
+
+export interface IMapManager {
+    Initialize() : void
+    SaveMap() : void
+    ClearMap() : void
+    LoadMap() : void
 }
 
 export interface IGameManager {
     ConfigManager : IConfigManager
-    IsConfigLoaded : boolean
-    LoadedConfig : Table
-    LoadedConfigValues : Map<string, string>
-    LoadedFeatureFlags : Map<string, string>
-
-    LoadConfigFromTable(table : Table) : void
-    LoadStandardConfig() : void
-
-    LoadFeatureFlagsFromTable(table : Table) : void
-    LoadStandardFeatureFlags() : void
 
     Initialize(configManager? : IConfigManager) : void;
     RunIntermission() : void;

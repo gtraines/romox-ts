@@ -11,7 +11,7 @@ local randumb = std.randumb
 
 -- Game services
 local Configurations = require(game.ServerStorage.Configurations)
-local DisplayManager = require(script.Parent.DisplayManager)
+local DisplayManager = require(script.Parent.CtfDisplayManager)
 
 -- Local variables
 

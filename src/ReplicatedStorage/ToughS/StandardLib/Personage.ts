@@ -3,7 +3,7 @@ import { IGameModel, GameModel } from '../ComponentModel/FundamentalTypes';
 import { IPersonageCrawler, PersonageCrawler } from './PersonageCrawler';
 import { IRquery } from '../../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
 import { requireScript } from '../ScriptLoader';
-import { FactionComponent, IFactionComponent, IFactionable } from '../../../ServerScriptService/Components/Factionable';
+import { FactionComponent, IFactionComponent, IFactionable } from '../../../ServerScriptService/Components/Factions/Factionable';
 
 const rq = requireScript("rquery") as IRquery
 const personageCrawler = new PersonageCrawler() as IPersonageCrawler

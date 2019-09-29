@@ -1,5 +1,5 @@
-import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
-import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
+import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
+import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 const rq = requireScript<IRquery>("rquery")
 
 
