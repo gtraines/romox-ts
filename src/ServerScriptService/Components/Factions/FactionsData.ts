@@ -151,16 +151,10 @@ const undeclared = new FactionDescription(
     []
 )
 
-export interface IFactionLookup {
-    FactionMap : Map<FactionIdentifier, FactionDescription>
-    GetFactionEnumFromString( factionName : string ) : FactionIdentifier
-    GetFactionDescription( factionEnum : FactionIdentifier ) : FactionDescription
-    AreFactionsAntagonistic( factionA : FactionIdentifier, factionB : FactionIdentifier ) : boolean
-    AreFactionsFriendly( factionA : FactionIdentifier, factionB : FactionIdentifier) : boolean
-}
+export class FactionLookup {
+    private static _isInitialized : boolean
+    static Init() : void {
 
-export class FactionLookup implements IFactionLookup {
-    constructor() {
         this.FactionMap = new Map<FactionIdentifier, FactionDescription>()
         this.FactionMap.set(FactionIdentifier.AmbientLife, ambient)
         this.FactionMap.set(FactionIdentifier.Education, education)
@@ -174,10 +168,19 @@ export class FactionLookup implements IFactionLookup {
         this.FactionMap.set(FactionIdentifier.PrivateEnterprise, privateEnterprise)
         this.FactionMap.set(FactionIdentifier.PrivateSecurity, privateSecurity)
         this.FactionMap.set(FactionIdentifier.Undeclared, undeclared)
+
+        this._isInitialized = true
     }
 
-    GetFactionEnumFromString( factionName : string ) : FactionIdentifier {
-        
+    private static _ensureInitialized() : void {
+        if (!this._isInitialized) {
+            this.Init()
+        }
+    }
+
+    static GetFactionEnumFromString( factionName : string ) : FactionIdentifier {
+        this._ensureInitialized()
+
         for (const entry in FactionIdentifier) {
             if (entry.lower() === factionName.lower()) {
                 return entry as FactionIdentifier
@@ -192,7 +195,8 @@ export class FactionLookup implements IFactionLookup {
         return FactionIdentifier.Undeclared
     }
 
-    GetFactionDescription( factionEnum : FactionIdentifier ) : FactionDescription {
+    static GetFactionDescription( factionEnum : FactionIdentifier ) : FactionDescription {
+        this._ensureInitialized()
         if (this.FactionMap.has(factionEnum)) {
             return this.FactionMap.get(factionEnum) as FactionDescription
         }
@@ -202,7 +206,8 @@ export class FactionLookup implements IFactionLookup {
             [])
     }
 
-    AreFactionsAntagonistic( factionA : FactionIdentifier, factionB : FactionIdentifier ) : boolean {
+    static AreFactionsAntagonistic( factionA : FactionIdentifier, factionB : FactionIdentifier ) : boolean {
+        this._ensureInitialized()
         let descA = this.GetFactionDescription(factionA)
         let descB = this.GetFactionDescription(factionB)
 
@@ -210,12 +215,15 @@ export class FactionLookup implements IFactionLookup {
             this.IsFactionInAntagonistList(factionB, descA)
     }
 
-    IsFactionInAntagonistList(factionEnum : FactionIdentifier, factionDesc  : FactionDescription) : boolean {
+    static IsFactionInAntagonistList(factionEnum : FactionIdentifier, factionDesc  : FactionDescription) : boolean {
+        this._ensureInitialized()
         let antagonists = factionDesc.AntagonisticFactions
         return antagonists.includes(factionEnum)
     }
 
-    AreFactionsFriendly( factionA : FactionIdentifier, factionB : FactionIdentifier) : boolean {
+    static AreFactionsFriendly( factionA : FactionIdentifier, factionB : FactionIdentifier) : boolean {
+        this._ensureInitialized()
+
         let descA = this.GetFactionDescription(factionA)
         let descB = this.GetFactionDescription(factionB)
 
@@ -223,12 +231,31 @@ export class FactionLookup implements IFactionLookup {
             this.IsFactionInFriendlyList(factionB, descA)
     }
 
-    IsFactionInFriendlyList(factionEnum : FactionIdentifier, factionDesc : FactionDescription) : boolean {
+    static IsFactionInFriendlyList(factionEnum : FactionIdentifier, factionDesc : FactionDescription) : boolean {
+        this._ensureInitialized()
+
         let friendlies = factionDesc.FriendlyFactions
         return friendlies.includes(factionEnum)
     }
 
-    FactionMap : Map<FactionIdentifier, FactionDescription>
+    static ParseFactionIdsFromCsv(csv : string) : FactionIdentifier[] {
+        this._ensureInitialized()
+        let parsedIds = new Array<FactionIdentifier>()
+        if (csv !== undefined) {
+            let valuesArr = csv.split(",")
+            valuesArr.forEach(value => {
+                parsedIds.push(this.GetFactionEnumFromString(value))
+            })
+        }
+
+        return parsedIds
+    }
+
+    static ParseFactionIdFromString(factionStr : string) : FactionIdentifier {
+        this._ensureInitialized()
+        return this.GetFactionEnumFromString(factionStr)
+    }
+
+    static FactionMap : Map<FactionIdentifier, FactionDescription>
 
 }
-

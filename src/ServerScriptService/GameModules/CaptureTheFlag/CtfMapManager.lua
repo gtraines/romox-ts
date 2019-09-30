@@ -20,7 +20,7 @@ function MapManager:SaveMap()
 			local copy = child:Clone()
 			if copy then
 				copy.Parent = MapSave
-			end	
+			end
 		end
 	end
 end

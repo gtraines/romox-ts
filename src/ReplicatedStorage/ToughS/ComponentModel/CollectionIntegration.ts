@@ -17,7 +17,7 @@ export interface ICollectionIntegration  {
 
 }
 
-export interface IEntityCollection extends ITagService<string> {
+export interface IEntityCollection extends ITagService<StringValue> {
 
 }
 
@@ -33,8 +33,8 @@ export class CollectionIntegration
         }
     }
 
-    static GetEntityCollectionService(collectionName : string) : ITagService<string> {
-        return this.GetCollectionService<string>(collectionName)
+    static GetEntityCollectionService(collectionName : string) : ITagService<StringValue> {
+        return this.GetCollectionService<StringValue>(collectionName)
     }
 
     static GetCollectionService<TItem>(collectionName : string) 
