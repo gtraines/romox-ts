@@ -1,44 +1,28 @@
 export enum FactionIdentifier {
-    EmergencyMedical = "EmergencyMedical",
-    LawEnforcement = "LawEnforcement",
-    OtherGovernment = "OtherGovernment",
-    PrivateEnterprise = "PrivateEnterprise",
     AmbientLife = "AmbientLife",
-    MalignantActors = "MalignantActors",
+    Education = "Education",
+    EmergencyMedical = "EmergencyMedical",
     IncidentActors = "IncidentActors",
-    ParkHosts = "ParkHosts"
-}
-
-
-export enum TeamIdentifier {
-    
-
-}
-
-export interface ITeamDescription {
-
+    LawEnforcement = "LawEnforcement",
+    Maintenance = "Maintenance",
+    MalignantActors = "MalignantActors",
+    OtherGovernment = "OtherGovernment",
+    ParkHosts = "ParkHosts",
+    PrivateEnterprise = "PrivateEnterprise",
+    PrivateSecurity = "PrivateSecurity",
+    Undeclared = "Undeclared",
 }
 
 export interface IFactionDescription {
     FactionId : FactionIdentifier
     DisplayName : string
-    AlliedFactions : Array<FactionIdentifier>
+    FriendlyFactions : Array<FactionIdentifier>
     AntagonisticFactions : Array<FactionIdentifier>
 }
 
-
 export class FactionDescription implements IFactionDescription {
     constructor(public FactionId : FactionIdentifier, 
-        public DisplayName : string, 
-        public AlliedFactions: FactionIdentifier[],
+        public DisplayName : string,
         public FriendlyFactions : FactionIdentifier[],
-        public AntagonisticFactions: FactionIdentifier[]) {
-
-        }
-}
-
-
-
-export class FactionLookup {
-    
+        public AntagonisticFactions: FactionIdentifier[]) {}
 }
