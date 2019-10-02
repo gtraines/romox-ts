@@ -13,19 +13,16 @@ export interface ITagService<TInstanceType> {
     onAdded(callback : (instance : TInstanceType) => void) : RBXScriptConnection
     onRemoved(callback : (instance : TInstanceType) => void) : RBXScriptConnection
 }
-export interface ICollectionIntegration  {
-
-}
 
 export interface IEntityCollection extends ITagService<StringValue> {
 
 }
 
-export class CollectionIntegration
-    implements ICollectionIntegration {
+export class CollectionIntegration {
 
-    static _createdCollections : Map<string, ITagService<any>>
-    static _isInitialized : boolean
+    private static _createdCollections : Map<string, ITagService<any>>
+    private static _isInitialized : boolean
+    
     static Init() : void {
         if (!this._isInitialized) {
             this._createdCollections = new Map<string, ITagService<any>>()
@@ -33,13 +30,21 @@ export class CollectionIntegration
         }
     }
 
+    private static _ensureInitialized() : void {
+        if (!this._isInitialized) {
+            this.Init()
+            this._isInitialized = true
+        }
+    }
+
     static GetEntityCollectionService(collectionName : string) : ITagService<StringValue> {
+        this._ensureInitialized()
         return this.GetCollectionService<StringValue>(collectionName)
     }
 
     static GetCollectionService<TItem>(collectionName : string) 
         : ITagService<TItem> {
-        this.Init()
+        this._ensureInitialized()
 
         if (this._createdCollections.has(collectionName)) {
             let foundInstance = this._createdCollections.get(collectionName)

@@ -27,6 +27,13 @@ export class FactionService {
         }
     }
 
+    static DefaultFaction = FactionIdentifier.Undeclared
+
+    static AssignEntityToSmallestFaction( entityId : string ) : FactionIdentifier {
+        // 
+        return this.DefaultFaction
+    }
+
     static GetOrAddFactionCollection( factionId : FactionIdentifier ) : IEntityCollection {
         this._ensureInitialized()
 
@@ -42,12 +49,18 @@ export class FactionService {
     }
 
     static AddEntityToFaction(entity : IGameEntity, factionId : FactionIdentifier) : boolean {
+        
         let entityIdValue = new Instance("StringValue")
         entityIdValue.Value = entity.EntityId
         
         let collection = this.GetOrAddFactionCollection(factionId)
         collection.add(entityIdValue)
         return true 
+    }
+
+    static RemoveEntityFromFaction(entity : IGameEntity, factionId : FactionIdentifier) : boolean {
+        
+        return true
     }
 
     static AreEnemies(entityA : IFactionable, entityB : IFactionable) : boolean {

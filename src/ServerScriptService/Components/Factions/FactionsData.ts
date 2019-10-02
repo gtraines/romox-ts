@@ -208,6 +208,9 @@ export class FactionLookup {
 
     static AreFactionsAntagonistic( factionA : FactionIdentifier, factionB : FactionIdentifier ) : boolean {
         this._ensureInitialized()
+        if (factionA === factionB) { 
+            return false
+        }
         let descA = this.GetFactionDescription(factionA)
         let descB = this.GetFactionDescription(factionB)
 
@@ -223,7 +226,9 @@ export class FactionLookup {
 
     static AreFactionsFriendly( factionA : FactionIdentifier, factionB : FactionIdentifier) : boolean {
         this._ensureInitialized()
-
+        if (factionA === factionB) { 
+            return true
+        }
         let descA = this.GetFactionDescription(factionA)
         let descB = this.GetFactionDescription(factionB)
 
@@ -233,7 +238,7 @@ export class FactionLookup {
 
     static IsFactionInFriendlyList(factionEnum : FactionIdentifier, factionDesc : FactionDescription) : boolean {
         this._ensureInitialized()
-
+        
         let friendlies = factionDesc.FriendlyFactions
         return friendlies.includes(factionEnum)
     }
