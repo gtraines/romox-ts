@@ -1,7 +1,7 @@
 import { FactionLookup } from './FactionsData';
 import { FactionIdentifier } from './FactionDescriptions';
 import { IFactionable } from './Factionable';
-import { IGameEntity } from '../../../ReplicatedStorage/ToughS/ComponentModel/FundamentalTypes';
+import { IGameEntity, IComponentizedGameEntity } from '../../../ReplicatedStorage/ToughS/ComponentModel/FundamentalTypes';
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { CollectionIntegration, IEntityCollection } from '../../../ReplicatedStorage/ToughS/ComponentModel/CollectionIntegration';
@@ -48,7 +48,7 @@ export class FactionService {
         return foundCollection as IEntityCollection
     }
 
-    static AddEntityToFaction(entity : IGameEntity, factionId : FactionIdentifier) : boolean {
+    static AddEntityToFaction(entity : IComponentizedGameEntity, factionId : FactionIdentifier) : boolean {
         
         let entityIdValue = new Instance("StringValue")
         entityIdValue.Value = entity.EntityId
@@ -58,7 +58,8 @@ export class FactionService {
         return true 
     }
 
-    static RemoveEntityFromFaction(entity : IGameEntity, factionId : FactionIdentifier) : boolean {
+    static RemoveEntityFromFaction(entity : IComponentizedGameEntity, factionId : FactionIdentifier) : boolean {
+        let fxn = this.GetOrAddFactionCollection(factionId)
         
         return true
     }
