@@ -5,6 +5,7 @@ import { IGameEntity, IComponentizedGameEntity } from '../../../ReplicatedStorag
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { CollectionIntegration, IEntityCollection } from '../../../ReplicatedStorage/ToughS/ComponentModel/CollectionIntegration';
+import { Personage } from '../../../ReplicatedStorage/ToughS/StandardLib/Personage';
 
 
 const rq = requireScript<IRquery>("rquery")
@@ -14,10 +15,23 @@ export class FactionService {
     private static _factionCollections : Map<FactionIdentifier, IEntityCollection>
 
     static Init() : void {
-        this._factionCollections = 
-            new Map<FactionIdentifier, IEntityCollection>() 
-            
-        this._isInitialized = true
+        if (!this._isInitialized) {
+            this._factionCollections = 
+                new Map<FactionIdentifier, IEntityCollection>() 
+            this._initializeFactionCollectionsMap()
+        
+            this._isInitialized = true
+        }
+    }
+
+    private static _initializeFactionCollectionsMap() : void {
+        let fxns = FactionLookup.GetFactionsAsList()
+        for (const fxn of fxns) {
+            this._factionCollections.set(
+                fxn, 
+                CollectionIntegration.GetEntityCollectionService(fxn as string)
+            )
+        }
     }
 
     private static _ensureInitialized() : void {
@@ -29,12 +43,32 @@ export class FactionService {
 
     static DefaultFaction = FactionIdentifier.Undeclared
 
-    static AssignEntityToSmallestFaction( entityId : string ) : FactionIdentifier {
-        // 
-        return this.DefaultFaction
+    static AssignEntityToSmallestFaction( 
+        entity : IComponentizedGameEntity) : FactionIdentifier {
+        
+        let smallestCount = 999999
+        let smallestFaction = this.DefaultFaction
+        
+        this._factionCollections.forEach(
+            (fxnClxn : IEntityCollection, fxnId : FactionIdentifier) => {
+            let fxnCount = fxnClxn.getTagged().size()
+            if (fxnCount < smallestCount) {
+                smallestCount = fxnCount
+                smallestFaction = fxnId
+            }
+        })
+
+        this.AddEntityToFaction(entity, smallestFaction)
+        return smallestFaction
     }
 
-    static GetOrAddFactionCollection( factionId : FactionIdentifier ) : IEntityCollection {
+    static GetEntityCountForFaction(factionId : FactionIdentifier) : number {
+        let fxnClxn = this.GetOrAddFactionCollection(factionId)
+        return fxnClxn.getTagged().size()
+    }
+
+    static GetOrAddFactionCollection( factionId : FactionIdentifier ) 
+        : IEntityCollection {
         this._ensureInitialized()
 
         let foundCollection : IEntityCollection
@@ -48,10 +82,15 @@ export class FactionService {
         return foundCollection as IEntityCollection
     }
 
-    static AddEntityToFaction(entity : IComponentizedGameEntity, factionId : FactionIdentifier) : boolean {
+    static AddPersonageToFaction(personage : Personage, 
+        factionId : FactionIdentifier) : void {
         
-        let entityIdValue = new Instance("StringValue")
-        entityIdValue.Value = entity.EntityId
+        this.AddEntityToFaction(personage, factionId)
+    }
+
+    static AddEntityToFaction(entity : IComponentizedGameEntity, 
+        factionId : FactionIdentifier) : boolean {
+        let entityIdValue = entity.GetEntityIdValue()
         
         let collection = this.GetOrAddFactionCollection(factionId)
         collection.add(entityIdValue)
@@ -59,12 +98,15 @@ export class FactionService {
     }
 
     static RemoveEntityFromFaction(entity : IComponentizedGameEntity, factionId : FactionIdentifier) : boolean {
-        let fxn = this.GetOrAddFactionCollection(factionId)
+        let entityIdValueToRemove = entity.GetEntityIdValue()
         
+        let collection = this.GetOrAddFactionCollection(factionId)
+        collection.remove(entityIdValueToRemove)
         return true
     }
 
-    static AreEnemies(entityA : IFactionable, entityB : IFactionable) : boolean {
+    static AreEnemies(entityA : IFactionable, entityB : IFactionable) 
+        : boolean {
         
         let entityAFactions = entityA.FactionTracker.Factions
         let entityBFactions = entityB.FactionTracker.Factions
@@ -85,7 +127,8 @@ export class FactionService {
         return areEnemies
     }
 
-    static AreFriends(entityA : IFactionable, entityB : IFactionable) : boolean {
+    static AreFriends(entityA : IFactionable, entityB : IFactionable) 
+        : boolean {
         
         let entityAFactions = entityA.FactionTracker.Factions
         let entityBFactions = entityB.FactionTracker.Factions

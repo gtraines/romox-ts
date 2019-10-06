@@ -195,6 +195,10 @@ export class FactionLookup {
         return FactionIdentifier.Undeclared
     }
 
+    static GetFactionsAsList() : FactionIdentifier[] {
+        return this.FactionMap.keys()
+    }
+
     static GetFactionDescription( factionEnum : FactionIdentifier ) : FactionDescription {
         this._ensureInitialized()
         if (this.FactionMap.has(factionEnum)) {
