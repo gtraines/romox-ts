@@ -26,16 +26,24 @@ export abstract class EntityComponentValue<TValueType>
 }
 
 export interface IGameEntity {
-    LogClass(message : string) : void
     EntityId : string
+    EntityInstance : Instance
+    GetEntityIdValue() : StringValue
+    LogClass(message : string) : void
 }
 
 export abstract class GameEntityBase implements IGameEntity {
     constructor(gameEntity : Instance) {
         assert(gameEntity !== undefined);
         this.EntityId = rq.GetOrAddEntityId(gameEntity)
+        this.EntityInstance = gameEntity
+
     }
+    EntityInstance : Instance
     EntityId : string
+    GetEntityIdValue() : StringValue {
+        return rq.GetOrAddItem("EntityId", "StringValue", this.EntityInstance) as StringValue
+    }
     LogClass(message : string) : void {
         
         let className = tostring(this)

@@ -1,184 +1,270 @@
 import { FactionIdentifier, FactionDescription } from './FactionDescriptions';
 
+const ambient = new FactionDescription(
+    FactionIdentifier.AmbientLife,
+    "Ambient Life",
+    [],
+    []
+)
 
-const police = new FactionDescription(
-    FactionIdentifier.Police,
-    "Police",
+const education = new FactionDescription(
+    FactionIdentifier.Education,
+    "Education",
     [
-        FactionIdentifier.FireDepartment,
-        FactionIdentifier.Medical,
-        FactionIdentifier.Government
+        FactionIdentifier.OtherGovernment,
+        FactionIdentifier.ParkHosts,
+        FactionIdentifier.Undeclared
     ],
     [
-        FactionIdentifier.Victim,
-        FactionIdentifier.Witness,
-        FactionIdentifier.Civilian,
-        FactionIdentifier.OtherWounded
-    ],
-    [
-        FactionIdentifier.Criminal,
-        FactionIdentifier.BadDriver,
-        FactionIdentifier.CivilViolator,
-        FactionIdentifier.SuspiciousPerson,
-        FactionIdentifier.TroubleMaker
+        FactionIdentifier.MalignantActors
     ]
 )
 
-const fireDept = new FactionDescription(
-    FactionIdentifier.FireDepartment,
-    "Fire Department",
+const emergencyMedical = new FactionDescription(
+    FactionIdentifier.EmergencyMedical,
+    "Emergency Medical",
     [
-        FactionIdentifier.Police,
-        FactionIdentifier.Medical,
-        FactionIdentifier.Government
+        FactionIdentifier.LawEnforcement,
+        FactionIdentifier.OtherGovernment,
+        FactionIdentifier.IncidentActors,
+        FactionIdentifier.ParkHosts
     ],
     [
-        FactionIdentifier.Victim,
-        FactionIdentifier.Witness,
-        FactionIdentifier.Civilian,
-        FactionIdentifier.OtherWounded
-    ],
-    [
-        FactionIdentifier.Criminal
+        FactionIdentifier.MalignantActors
     ]
 )
 
-const medical = new FactionDescription(
-    FactionIdentifier.Medical,
-    "Medical",
+const incidentActors = new FactionDescription(
+    FactionIdentifier.IncidentActors,
+    "Incident Actors",
     [
-        FactionIdentifier.Police,
-        FactionIdentifier.FireDepartment,
-        FactionIdentifier.Government
+        FactionIdentifier.LawEnforcement,
+        FactionIdentifier.EmergencyMedical,
+        FactionIdentifier.OtherGovernment,
+        FactionIdentifier.Maintenance,
+        FactionIdentifier.ParkHosts,
+        FactionIdentifier.PrivateSecurity
     ],
     [
-        FactionIdentifier.Victim,
-        FactionIdentifier.Witness,
-        FactionIdentifier.OtherWounded,
-        FactionIdentifier.Civilian,
-        FactionIdentifier.Criminal,
-        FactionIdentifier.BadDriver,
-        FactionIdentifier.CivilViolator,
-        FactionIdentifier.SuspiciousPerson,
-        FactionIdentifier.TroubleMaker
-    ],
-    [
+        FactionIdentifier.MalignantActors
     ]
 )
 
-const civilian = new FactionDescription(
-    FactionIdentifier.Civilian,
-    "Civilian",
+const lawEnforcement = new FactionDescription(
+    FactionIdentifier.LawEnforcement,
+    "Law Enforcement",
     [
-        FactionIdentifier.Witness,
-        FactionIdentifier.Victim,
-        FactionIdentifier.Government,
-        FactionIdentifier.BadDriver,
-        FactionIdentifier.CivilViolator,
-        FactionIdentifier.OtherWounded
+        FactionIdentifier.EmergencyMedical,
+        FactionIdentifier.OtherGovernment,
+        FactionIdentifier.PrivateSecurity,
+        FactionIdentifier.IncidentActors,
+        FactionIdentifier.ParkHosts
     ],
     [
-        FactionIdentifier.Police,
-        FactionIdentifier.FireDepartment,
-        FactionIdentifier.Medical
-    ],
-    [
-        FactionIdentifier.Criminal,
-        FactionIdentifier.SuspiciousPerson,
-        FactionIdentifier.TroubleMaker
+        FactionIdentifier.MalignantActors
     ]
 )
 
-const victim = new FactionDescription(
-    FactionIdentifier.Victim,
-    "Victim",
+const maintenance = new FactionDescription(
+    FactionIdentifier.Maintenance,
+    "Maintenance",
+    [],
+    []
+)
+
+const malignantActors = new FactionDescription(
+    FactionIdentifier.MalignantActors,
+    "Malignant Actors",
+    [],
     [
-        FactionIdentifier.Witness,
-        FactionIdentifier.OtherWounded,
-        FactionIdentifier.Government,
-        FactionIdentifier.BadDriver,
-        FactionIdentifier.CivilViolator
-    ],
-    [
-        FactionIdentifier.Police,
-        FactionIdentifier.FireDepartment,
-        FactionIdentifier.Medical
-    ],
-    [
-        FactionIdentifier.Criminal,
-        FactionIdentifier.SuspiciousPerson,
-        FactionIdentifier.TroubleMaker
+        FactionIdentifier.LawEnforcement,
+        FactionIdentifier.EmergencyMedical,
+        FactionIdentifier.OtherGovernment,
+        FactionIdentifier.PrivateSecurity,
+        FactionIdentifier.PrivateEnterprise,
+        FactionIdentifier.IncidentActors
     ]
 )
 
-const witness = new FactionDescription(
-    FactionIdentifier.Witness,
-    "Witness",
+const otherGovt = new FactionDescription(
+    FactionIdentifier.OtherGovernment,
+    "Government Agencies",
     [
-        FactionIdentifier.Victim,
-        FactionIdentifier.OtherWounded,
-        FactionIdentifier.Government,
-        FactionIdentifier.BadDriver,
-        FactionIdentifier.CivilViolator
+        FactionIdentifier.LawEnforcement,
+        FactionIdentifier.EmergencyMedical,
+        FactionIdentifier.Education,
+        FactionIdentifier.IncidentActors,
+        FactionIdentifier.ParkHosts,
+        FactionIdentifier.Maintenance
     ],
     [
-        FactionIdentifier.Police,
-        FactionIdentifier.FireDepartment,
-        FactionIdentifier.Medical
-    ],
-    [
-        FactionIdentifier.Criminal,
-        FactionIdentifier.SuspiciousPerson,
-        FactionIdentifier.TroubleMaker
+        FactionIdentifier.MalignantActors
     ]
 )
 
-const wounded = new FactionDescription(
-    FactionIdentifier.OtherWounded,
-    "Wounded Person",
+const parkHosts = new FactionDescription(
+    FactionIdentifier.ParkHosts,
+    "Park Hosts",
+    [],
+    []
+)
+
+const privateEnterprise = new FactionDescription(
+    FactionIdentifier.PrivateEnterprise,
+    "Private Enterprise",
     [
-        FactionIdentifier.Civilian,
-        FactionIdentifier.Victim,
-        FactionIdentifier.Witness,
-        FactionIdentifier.Government,
-        FactionIdentifier.Medical,
-        FactionIdentifier.FireDepartment
+        FactionIdentifier.Undeclared,
+        FactionIdentifier.LawEnforcement,
+        FactionIdentifier.EmergencyMedical,
+        FactionIdentifier.OtherGovernment,
+        FactionIdentifier.Maintenance,
+        FactionIdentifier.IncidentActors,
+        FactionIdentifier.ParkHosts,
     ],
     [
-        FactionIdentifier.Police
-    ],
-    [
-        FactionIdentifier.Criminal,
-        FactionIdentifier.SuspiciousPerson,
-        FactionIdentifier.TroubleMaker,
-        FactionIdentifier.BadDriver,
-        FactionIdentifier.CivilViolator
+        FactionIdentifier.MalignantActors
     ]
 )
 
-
-const government = new FactionDescription(
-    FactionIdentifier.Government,
-    "Government Personnel",
+const privateSecurity = new FactionDescription(
+    FactionIdentifier.PrivateSecurity,
+    "Private Security",
     [
-        FactionIdentifier.Police,
-        FactionIdentifier.FireDepartment,
-        FactionIdentifier.Medical
+        FactionIdentifier.LawEnforcement,
+        FactionIdentifier.EmergencyMedical,
+        FactionIdentifier.OtherGovernment,
     ],
     [
-        FactionIdentifier.Victim,
-        FactionIdentifier.Civilian,
-        FactionIdentifier.OtherWounded,
-        FactionIdentifier.Witness,
-    ],
-    [
-        FactionIdentifier.Criminal,
-        FactionIdentifier.SuspiciousPerson,
-        FactionIdentifier.TroubleMaker,
-        FactionIdentifier.BadDriver,
-        FactionIdentifier.CivilViolator
+        FactionIdentifier.MalignantActors
     ]
 )
 
-export const FactionsLookup = 
-    new Map<FactionIdentifier, FactionDescription>()
+const undeclared = new FactionDescription(
+    FactionIdentifier.Undeclared,
+    "Undeclared",
+    [
+        FactionIdentifier.ParkHosts,
+        FactionIdentifier.OtherGovernment,
+        FactionIdentifier.PrivateEnterprise,
+        FactionIdentifier.Education
+    ],
+    []
+)
+
+export class FactionLookup {
+    private static _isInitialized : boolean
+    static Init() : void {
+
+        this.FactionMap = new Map<FactionIdentifier, FactionDescription>()
+        this.FactionMap.set(FactionIdentifier.AmbientLife, ambient)
+        this.FactionMap.set(FactionIdentifier.Education, education)
+        this.FactionMap.set(FactionIdentifier.EmergencyMedical, emergencyMedical)
+        this.FactionMap.set(FactionIdentifier.IncidentActors, incidentActors)
+        this.FactionMap.set(FactionIdentifier.LawEnforcement, lawEnforcement)
+        this.FactionMap.set(FactionIdentifier.Maintenance, maintenance)
+        this.FactionMap.set(FactionIdentifier.MalignantActors, malignantActors)
+        this.FactionMap.set(FactionIdentifier.OtherGovernment, otherGovt)
+        this.FactionMap.set(FactionIdentifier.ParkHosts, parkHosts)
+        this.FactionMap.set(FactionIdentifier.PrivateEnterprise, privateEnterprise)
+        this.FactionMap.set(FactionIdentifier.PrivateSecurity, privateSecurity)
+        this.FactionMap.set(FactionIdentifier.Undeclared, undeclared)
+
+        this._isInitialized = true
+    }
+
+    private static _ensureInitialized() : void {
+        if (!this._isInitialized) {
+            this.Init()
+        }
+    }
+
+    static GetFactionEnumFromString( factionName : string ) : FactionIdentifier {
+        this._ensureInitialized()
+
+        for (const entry in FactionIdentifier) {
+            if (entry.lower() === factionName.lower()) {
+                return entry as FactionIdentifier
+            }
+        }
+        let factionVals = this.FactionMap.values() as FactionDescription[] 
+        for (let entry of factionVals) {
+            if (entry.DisplayName.lower() === factionName.lower()) {
+                return entry.FactionId
+            }
+        }
+        return FactionIdentifier.Undeclared
+    }
+
+    static GetFactionsAsList() : FactionIdentifier[] {
+        return this.FactionMap.keys()
+    }
+
+    static GetFactionDescription( factionEnum : FactionIdentifier ) : FactionDescription {
+        this._ensureInitialized()
+        if (this.FactionMap.has(factionEnum)) {
+            return this.FactionMap.get(factionEnum) as FactionDescription
+        }
+        return new FactionDescription(FactionIdentifier.Undeclared, 
+            "Undeclared",
+            [],
+            [])
+    }
+
+    static AreFactionsAntagonistic( factionA : FactionIdentifier, factionB : FactionIdentifier ) : boolean {
+        this._ensureInitialized()
+        if (factionA === factionB) { 
+            return false
+        }
+        let descA = this.GetFactionDescription(factionA)
+        let descB = this.GetFactionDescription(factionB)
+
+        return this.IsFactionInAntagonistList(factionA, descB) || 
+            this.IsFactionInAntagonistList(factionB, descA)
+    }
+
+    static IsFactionInAntagonistList(factionEnum : FactionIdentifier, factionDesc  : FactionDescription) : boolean {
+        this._ensureInitialized()
+        let antagonists = factionDesc.AntagonisticFactions
+        return antagonists.includes(factionEnum)
+    }
+
+    static AreFactionsFriendly( factionA : FactionIdentifier, factionB : FactionIdentifier) : boolean {
+        this._ensureInitialized()
+        if (factionA === factionB) { 
+            return true
+        }
+        let descA = this.GetFactionDescription(factionA)
+        let descB = this.GetFactionDescription(factionB)
+
+        return this.IsFactionInFriendlyList(factionA, descB) ||
+            this.IsFactionInFriendlyList(factionB, descA)
+    }
+
+    static IsFactionInFriendlyList(factionEnum : FactionIdentifier, factionDesc : FactionDescription) : boolean {
+        this._ensureInitialized()
+        
+        let friendlies = factionDesc.FriendlyFactions
+        return friendlies.includes(factionEnum)
+    }
+
+    static ParseFactionIdsFromCsv(csv : string) : FactionIdentifier[] {
+        this._ensureInitialized()
+        let parsedIds = new Array<FactionIdentifier>()
+        if (csv !== undefined) {
+            let valuesArr = csv.split(",")
+            valuesArr.forEach(value => {
+                parsedIds.push(this.GetFactionEnumFromString(value))
+            })
+        }
+
+        return parsedIds
+    }
+
+    static ParseFactionIdFromString(factionStr : string) : FactionIdentifier {
+        this._ensureInitialized()
+        return this.GetFactionEnumFromString(factionStr)
+    }
+
+    static FactionMap : Map<FactionIdentifier, FactionDescription>
+
+}
