@@ -1,10 +1,10 @@
 local Entity = require(script.Entity)
-local Util = require(script.Util)
-local t = require(script.t)
+local Util = require(script.Parent.Shared.Util)
+local t = require(script.Parent.Shared.t)
 local Constants = require(script.Constants)
 local Reducers = require(script.Operators.Reducers)
 local Comparators = require(script.Operators.Comparators)
-local inspect = require(script.Inspect).inspect
+local inspect = require(script.Parent.Shared.Inspect)
 
 local AggregateCollection = require(script.Aggregate.AggregateCollection)
 
