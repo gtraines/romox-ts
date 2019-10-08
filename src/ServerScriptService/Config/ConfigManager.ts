@@ -47,7 +47,11 @@ export class ConfigManager implements IConfigManager {
             this.Init()
         }
     }
-
+    private _ensureInitialized() : void {
+        if (!this.Loaded) {
+            this.Init()
+        }
+    }
     _getConfigs(filename : string) : Table {
 
         let loadFn = (confFilename : string) => {
@@ -89,9 +93,7 @@ export class ConfigManager implements IConfigManager {
     }
 
     GetConfigValueOrDefault<T>(configKey: string, defaultToReturn?: T) : T {
-        if (!this.Loaded) {
-            this.Init()
-        }
+        
         if (this.ConfigValues.has(configKey)) {
             return this.ConfigValues.get(configKey) as T
         }
@@ -100,10 +102,7 @@ export class ConfigManager implements IConfigManager {
     }
 
     GetFeatureEnabled(featureKey: string): boolean {
-        if (!this.Loaded) {
-            this.Init()
-        }
-
+        this._ensureInitialized()
         if (this.FeatureFlags.has(featureKey)) {
             return this.FeatureFlags.get(featureKey) as boolean
         }
@@ -130,26 +129,19 @@ export class ConfigManager implements IConfigManager {
     }
 
     SetFeatureFlags(featureValues: Map<string, boolean>): void {
-        if (!this.Loaded) {
-            this.Init()
-        }
-
+        this._ensureInitialized()
         featureValues.forEach((value : boolean, key : string) => {
             this.FeatureFlags.set(key, value)
         })
     }
 
     SetFeatureFlag(featureKey: string, flagValue: boolean = true): void {
-        if (!this.Loaded) {
-            this.Init()
-        }
+        this._ensureInitialized()
         this.FeatureFlags.set(featureKey, flagValue)
     }
 
     SetConfigValue<T>(configKey: string, value: T): void {
-        if (!this.Loaded) {
-            this.Init()
-        }
+        this._ensureInitialized()
         this.ConfigValues.set(configKey, value)
     }
 

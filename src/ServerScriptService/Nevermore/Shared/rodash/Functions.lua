@@ -590,7 +590,9 @@ function Functions.setInterval(fn, intervalInSeconds, delayInSeconds)
 	assert(t.optional(t.number)(delayInSeconds), "BadInput: delayInSeconds must be a number")
 	local timeout
 	local callTimeout
+	local lastCallTime
 	local function handleTimeout()
+		lastCallTime = time()
 		callTimeout()
 		fn(timeout)
 	end
@@ -602,8 +604,11 @@ function Functions.setInterval(fn, intervalInSeconds, delayInSeconds)
 	else
 		callTimeout()
 	end
-
+	
 	return {
+		getDeltaTime = function()
+			return time() - lastCallTime
+		end,
 		clear = function()
 			timeout:clear()
 		end

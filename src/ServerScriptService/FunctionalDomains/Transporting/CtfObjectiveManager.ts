@@ -17,9 +17,9 @@ export interface ICtfObjectiveManager extends ITransportObjectiveManager {
 
 export class CtfObjectiveManager extends TransportObjectiveManager implements ICtfObjectiveManager {
 
-    constructor(gameConfig: Array<any>) {
+    constructor(configValues : Map<string, any>, featureFlags : Map<string, boolean>) {
         super("Ctf")
-        this.GameConfig = gameConfig;
+        this.GameConfig = configValues;
         let folder = pubSub.GetOrCreateClientServerTopicCategory("Ctf");
         this.ReturnArtifact = pubSub.GetOrCreateClientServerTopicInCategory("Ctf", "ReturnArtifact");
         this.ReturnArtifact.OnServerEvent.Connect(() => {
@@ -29,7 +29,7 @@ export class CtfObjectiveManager extends TransportObjectiveManager implements IC
         this.CompletedTransport = pubSub.GetOrCreateClientServerTopicInCategory("Ctf", "CompletedTransport");
         
     }
-    GameConfig: any[];
+    GameConfig: Map<string, any>;
     ReturnArtifact: RemoteEvent;
     CompletedTransport: RemoteEvent;
     

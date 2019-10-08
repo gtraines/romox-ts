@@ -1,7 +1,7 @@
 import { IGameManager, IMapManager } from '../GameModulesTypings';
 import { GameManagerBase } from '../GameManagerBase';
 import { ReplicatedStorage, ServerScriptService } from '@rbxts/services';
-import { ConfigManager, IConfigManager, GameConfigKeys, FeatureFlagKeys } from '../ConfigManager';
+import { ConfigManager, IConfigManager, GameConfigKeys, FeatureFlagKeys } from '../../Config/ConfigManager';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 

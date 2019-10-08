@@ -1,5 +1,5 @@
 import { IGameManager } from './GameModulesTypings';
-import { IConfigManager, ConfigManager, GameConfigKeys, FeatureFlagKeys } from './ConfigManager';
+import { IConfigManager, ConfigManager, GameConfigKeys, FeatureFlagKeys } from '../Config/ConfigManager';
 import { ReplicatedStorage } from '@rbxts/services';
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
 import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
@@ -12,7 +12,6 @@ export interface IGameState {
     EnoughPlayers : boolean
     GameRunning : boolean
 }
-
 
 export abstract class GameManagerBase implements IGameManager {
 
@@ -28,9 +27,7 @@ export abstract class GameManagerBase implements IGameManager {
     }
 
     abstract Initialize(): void 
-    RunIntermission(): void {
-        throw "Method not implemented.";
-    }
+    RunIntermission(): void {}
     StopIntermission(): void {
         throw "Method not implemented.";
     }

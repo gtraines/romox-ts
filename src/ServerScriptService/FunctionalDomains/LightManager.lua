@@ -19,7 +19,7 @@ function module.addSurfaceLighting(part, surfaces, range, color)
 		lightObj.Color = color
 		lightObj.Enabled = true
 	end
-	
+
 end
 
 return module

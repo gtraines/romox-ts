@@ -1,4 +1,4 @@
-import { IConfigManager } from './ConfigManager';
+import { IConfigManager } from '../Config/ConfigManager';
 
 export interface IMapManager {
     Initialize() : void
@@ -6,6 +6,7 @@ export interface IMapManager {
     ClearMap() : void
     LoadMap() : void
 }
+
 
 export interface IGameManager {
     ConfigManager : IConfigManager

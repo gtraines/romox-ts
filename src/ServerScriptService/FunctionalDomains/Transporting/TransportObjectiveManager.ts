@@ -4,7 +4,7 @@ import { ITransportObjective } from './TransportObjective';
 import { Spieler } from '../Spieler';
 
 export interface ITransportObjectiveManager {
-    GameConfig: Array<any>;
+    GameConfig: Map<string, any>;
     ManagerName : string
     TransportableArtifacts: Map<string, ITransportableArtifact>
     TransportObjectives: Map<string, ITransportObjective>;
@@ -32,6 +32,7 @@ export interface ITransportObjectiveManager {
 export abstract class TransportObjectiveManager implements ITransportObjectiveManager {
 
     constructor(managerName : string) {
+        this.GameConfig = new Map<string, any>()
         this.ManagerName = managerName
         this.TransportableArtifacts = new Map<string, ITransportableArtifact>()
         this.TransportObjectives = new Map<string, ITransportObjective>()
@@ -40,7 +41,7 @@ export abstract class TransportObjectiveManager implements ITransportObjectiveMa
         this.GenerateAndRegisterArtifacts()
         this.GenerateAndRegisterObjectives()
     }
-    abstract GameConfig: any[];
+    GameConfig: Map<string, any>
     ManagerName : string
     TransportableArtifacts: Map<string, ITransportableArtifact>
     TransportObjectives: Map<string, ITransportObjective>;

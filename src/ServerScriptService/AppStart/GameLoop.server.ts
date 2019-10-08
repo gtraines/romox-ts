@@ -3,7 +3,7 @@ import { ServerScriptService, ReplicatedStorage } from "@rbxts/services";
 const nevermoreModule = ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript;
 const nevermoreInitialize = require(nevermoreModule);
 // Nevermore initialized, safe to proceed
-import { IGameManager, IConfigManager } from '../GameModules/GameModulesTypings';
+import { IGameManager } from '../GameModules/GameModulesTypings';
 import { SpawnerManager } from '../Spawning/SpawnerManager';
 
 import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
@@ -12,20 +12,18 @@ import { IStretcherTool, StretcherTool } from '../../ReplicatedStorage/Equipment
 import { Spieler } from '../FunctionalDomains/Spieler';
 import { ICtfObjectiveManager, CtfObjectiveManager } from '../FunctionalDomains/Transporting/CtfObjectiveManager';
 import { Personage } from '../../ReplicatedStorage/ToughS/StandardLib/Personage';
+import { IConfigManager, ConfigManager } from '../Config/ConfigManager';
+import { GameJector } from "./GameJector";
 
-
-const configManagerModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("ConfigManager") as ModuleScript;
-const configManager = require(configManagerModule) as IConfigManager;
-
-const configValues = [ "val1" ]
+const configManager = new ConfigManager(true)
+const GameManager = GameJector.GetGameFromConfig(configManager)
 
 Spieler.Init()
-const ctfObjectiveManager = new CtfObjectiveManager(configValues) as ICtfObjectiveManager
-const autoSpawnerModule = ServerScriptService.WaitForChild("Spawning").WaitForChild("PersonageSpawner") as ModuleScript;
-const AutoSpawner = require(autoSpawnerModule) as IPersonageSpawner;
 
-const gameMgrModule = ServerScriptService.WaitForChild("GameModules").WaitForChild("GameManager") as ModuleScript;
-const GameManager = require(gameMgrModule) as IGameManager;
+const autoSpawnerModule = 
+    ServerScriptService.WaitForChild("Spawning").WaitForChild("PersonageSpawner") as ModuleScript;
+const AutoSpawner = require(autoSpawnerModule) as IPersonageSpawner
+
 
 function OneTimeSetup() : void {
     GameManager.Initialize()
