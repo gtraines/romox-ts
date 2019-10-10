@@ -1,5 +1,5 @@
-local AllSelector = require(script.Parent.AllSelector)
-local ComponentSelector = require(script.Parent.ComponentSelector)
+local AllSelector = require(script.Parent.Selectors.AllSelector)
+local ComponentSelector = require(script.Parent.Selectors.ComponentSelector)
 local Util = require(script.Parent.Selectors.Util)
 
 local intervalSignal = game:GetService("RunService").Stepped
@@ -168,6 +168,28 @@ function System:setup() -- override
 	if #self._entities > 0 then
 		self:_start()
 	end
+
+	return self
+end
+
+function System:destroy() -- override
+	if not self._ready then
+		return
+	end
+	self._ready = nil
+
+	for category, _ in pairs(self._hooks) do
+		self._hooks[category] = {}
+	end
+
+	for _, selector in pairs(self._selectors) do
+		selector:destroy()
+	end
+
+	self._entities = {}
+	self._lookup = {}
+
+	self:_stop()
 
 	return self
 end

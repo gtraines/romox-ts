@@ -12,10 +12,12 @@ export interface IGameManager {
     ConfigManager : IConfigManager
 
     Initialize(configManager? : IConfigManager) : void;
-    RunIntermission() : void;
-    StopIntermission() : void;
-    GameReady() : boolean;
-    StartRound() : boolean;
+    BeforeGameStart() : void
+    GameReady() : boolean
+    RunIntermission() : void
+    StopIntermission() : void
+    BeforeRoundStart() : void
+    StartRound() : boolean
     Update() : void;
     RoundOver() : boolean;
     RoundCleanup() : void;
