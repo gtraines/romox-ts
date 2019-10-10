@@ -7,6 +7,8 @@ import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
 import { Spieler } from '../Spieler';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
+import { FactionService } from '../../Components/Factions/FactionService';
+import { Personage } from '../../../ReplicatedStorage/ToughS/StandardLib/Personage';
 
 const rq = requireScript<IRquery>("rquery")
 const pubSub = requireScript<IPubSub>("PubSub")
@@ -17,9 +19,8 @@ export interface ICtfObjectiveManager extends ITransportObjectiveManager {
 
 export class CtfObjectiveManager extends TransportObjectiveManager implements ICtfObjectiveManager {
 
-    constructor(configValues : Map<string, any>, featureFlags : Map<string, boolean>) {
+    constructor() {
         super("Ctf")
-        this.GameConfig = configValues;
         let folder = pubSub.GetOrCreateClientServerTopicCategory("Ctf");
         this.ReturnArtifact = pubSub.GetOrCreateClientServerTopicInCategory("Ctf", "ReturnArtifact");
         this.ReturnArtifact.OnServerEvent.Connect(() => {
@@ -29,7 +30,6 @@ export class CtfObjectiveManager extends TransportObjectiveManager implements IC
         this.CompletedTransport = pubSub.GetOrCreateClientServerTopicInCategory("Ctf", "CompletedTransport");
         
     }
-    GameConfig: Map<string, any>;
     ReturnArtifact: RemoteEvent;
     CompletedTransport: RemoteEvent;
     
@@ -62,10 +62,14 @@ export class CtfObjectiveManager extends TransportObjectiveManager implements IC
         let cb = (character: Model, objective: ITransportObjective) => {
             print(character.Name, " touched ", objective.ModelInstance.Name)
             let entityId = rq.GetOrAddEntityId(character)
+            let foundPersonage = Spieler.GetPersonageFromEntityId(entityId)
             let carryingArtifact = this.TransporterPersonages.has(entityId)
-            if (carryingArtifact) {
+            if (carryingArtifact && foundPersonage !== undefined) {
                 print("Carrying artifact!")
-                this.RemoveTransporterFromTrackedTransporters(entityId)
+                let objAndPersonageAreFriendly = FactionService.AreFriends(foundPersonage, objective)
+                if (objAndPersonageAreFriendly) {
+                    this.RemoveTransporterFromTrackedTransporters(entityId)
+                }
             }
         }
         return cb;

@@ -3,7 +3,7 @@ import { Players } from '@rbxts/services';
 export class PlayerHandler {
     static GetOnPlayerAddedHandler() : (player : Player) => void {
         let handler = (player : Player) => {
-
+            
         }
 
         return handler
