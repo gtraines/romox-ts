@@ -1,4 +1,6 @@
 import { IGameManager, IMapManager } from '../GameModulesTypings';
+import { GameState, IGameState } from '../GameState';
+
 import { GameManagerBase } from '../GameManagerBase';
 import { ReplicatedStorage, ServerScriptService } from '@rbxts/services';
 import { ConfigManager, IConfigManager, GameConfigKeys, FeatureFlagKeys } from '../../Config/ConfigManager';
@@ -17,14 +19,23 @@ const MapManager = require(
     ) as IMapManager
 
 export class CtfGameManager extends GameManagerBase implements IGameManager {
+
+    
     CaptureFlag : BindableEvent
     ReturnFlag : BindableEvent
+    GameRunning : boolean
+    IntermissionRunning : boolean
+    EnoughPlayers : boolean
+
     constructor() {
         super()
         this.CaptureFlag = rq.GetOrAddItem("CaptureFlag", "BindableEvent", Events) as BindableEvent
         this.ReturnFlag = rq.GetOrAddItem("ReturnFlag", "BindableEvent", Events) as BindableEvent
         
         this.Initialize()
+        this.GameRunning = false
+        this.IntermissionRunning = false
+        this.EnoughPlayers = false
     }
     Initialize(): void {
         if (!this.ConfigManager.Loaded) {
@@ -39,32 +50,58 @@ export class CtfGameManager extends GameManagerBase implements IGameManager {
             this.CaptureFlag.Event.Connect(this.GetOnCaptureFlagHandler())
             this.ReturnFlag.Event.Connect(this.GetOnReturnFlagHandler())
         }
+        
+    }
+    GetCurrentGameState(): IGameState {
+        
+        let overallState = new GameState(
+            this.GameRunning,
+            this.IntermissionRunning,
+            this.EnoughPlayers
+        )
+
+        return overallState
     }
     RunIntermission(): void {
-        throw "Method not implemented.";
+        this.IntermissionRunning = true
     }
     StopIntermission(): void {
-        throw "Method not implemented.";
+        this.IntermissionRunning = false
+    }
+    BeforeGameStart(): void {
+        
     }
     GameReady(): boolean {
         throw "Method not implemented.";
     }
+    BeforeRoundStart(): void {
+        this.GameRunning = false
+        this.EnoughPlayers = false
+    }
     StartRound(): boolean {
-        throw "Method not implemented.";
+        this.GameRunning = true
+        this.IntermissionRunning = false
+        this.EnoughPlayers = true
+
+        return true
     }
     Update(): void {
-        throw "Method not implemented.";
+        
     }
     RoundOver(): boolean {
-        throw "Method not implemented.";
+
+        this.GameRunning = false
+        this.IntermissionRunning = true
+
+        return true
     }
     RoundCleanup(): void {
-        throw "Method not implemented.";
+        this.GameRunning = false
     }
 
     GetOnCaptureFlagHandler() : (player : Player) => void {
         let handler = (player: Player) => {
-
+            
         }
         return handler
     }

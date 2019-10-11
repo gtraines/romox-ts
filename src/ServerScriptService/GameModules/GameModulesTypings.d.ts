@@ -1,4 +1,6 @@
 import { IConfigManager } from '../Config/ConfigManager';
+import { IGameState } from './GameState';
+
 
 export interface IMapManager {
     Initialize() : void
@@ -21,4 +23,5 @@ export interface IGameManager {
     Update() : void;
     RoundOver() : boolean;
     RoundCleanup() : void;
+    GetCurrentGameState() : IGameState
 }

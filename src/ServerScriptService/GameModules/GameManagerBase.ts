@@ -2,21 +2,15 @@ import { IGameManager } from './GameModulesTypings';
 import { IConfigManager, ConfigManager, GameConfigKeys, FeatureFlagKeys } from '../Config/ConfigManager';
 import { ReplicatedStorage } from '@rbxts/services';
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
+import { IGameState, GameState } from './GameState';
 import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
 
 const rq = requireScript<IRquery>("rquery")
 const Events = rq.GetOrAddItem("Events", "Folder", ReplicatedStorage)
 
-export interface IGameState {
-    IntermissionRunning : boolean
-    EnoughPlayers : boolean
-    GameRunning : boolean
-}
-
 export abstract class GameManagerBase implements IGameManager {
-
-    ConfigManager: IConfigManager;
     
+    ConfigManager: IConfigManager
     constructor(configManager? : IConfigManager) {
 
         if (configManager === undefined) {
@@ -25,25 +19,15 @@ export abstract class GameManagerBase implements IGameManager {
             this.ConfigManager = configManager
         }
     }
-
-    abstract Initialize(): void 
-    RunIntermission(): void {}
-    StopIntermission(): void {
-        throw "Method not implemented.";
-    }
-    GameReady(): boolean {
-        throw "Method not implemented.";
-    }
-    StartRound(): boolean {
-        throw "Method not implemented.";
-    }
-    Update(): void {
-        throw "Method not implemented.";
-    }
-    RoundOver(): boolean {
-        throw "Method not implemented.";
-    }
-    RoundCleanup(): void {
-        throw "Method not implemented.";
-    }
+    abstract Initialize(): void
+    abstract RunIntermission(): void
+    abstract StopIntermission(): void
+    abstract BeforeGameStart(): void
+    abstract GameReady(): boolean
+    abstract BeforeRoundStart(): void
+    abstract StartRound(): boolean
+    abstract Update(): void
+    abstract RoundOver(): boolean
+    abstract RoundCleanup(): void
+    abstract GetCurrentGameState() : IGameState
 }
