@@ -3,9 +3,7 @@ import { IGameModel, GameModel } from '../ComponentModel/FundamentalTypes';
 import { IPersonageCrawler, PersonageCrawler } from './PersonageCrawler';
 import { IRquery } from '../../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
 import { requireScript } from '../ScriptLoader';
-import { IFactionable } from '../../../ServerScriptService/Components/Factions/Factionable';
-import { FactionComponent, IFactionComponent } from '../../../ServerScriptService/Components/Factions/FactionComponent';
-
+import { FactionComponent, IFactionComponent, IFactionable } from '../ComponentModel/Factions/FactionComponent';
 
 const rq = requireScript("rquery") as IRquery
 const personageCrawler = new PersonageCrawler() as IPersonageCrawler
@@ -34,14 +32,14 @@ export class Personage extends GameModel implements IPersonage {
     constructor(characterInstance : Model) {
         super(characterInstance)
         this.IsPlayer = personageCrawler.IsPersonagePlayer(characterInstance)
-
+        // Helicopter!!!
         if (this.IsPlayer) {
             this.UserId = rq.GetUserIdString(rq.GetPlayerFromCharacterOrDescendant(characterInstance))
         }
         
         this.Humanoid = personageCrawler.GetHumanoid(characterInstance)
         this.Torso = rq.PersonageTorsoOrEquivalent(characterInstance)
-        this.FactionTracker = new FactionComponent()
+        this.FactionTracker = new FactionComponent() // Great job!
         if (personageCrawler.IsPersonageR6(characterInstance)) {
             this.RigType = PersonageRigType.R6
         } else {

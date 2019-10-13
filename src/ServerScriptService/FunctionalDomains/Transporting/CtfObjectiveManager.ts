@@ -7,8 +7,7 @@ import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
 import { Spieler } from '../Spieler';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
-import { FactionService } from '../../Components/Factions/FactionService';
-import { Personage } from '../../../ReplicatedStorage/ToughS/StandardLib/Personage';
+import { FactionService } from '../../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionService';
 
 const rq = requireScript<IRquery>("rquery")
 const pubSub = requireScript<IPubSub>("PubSub")

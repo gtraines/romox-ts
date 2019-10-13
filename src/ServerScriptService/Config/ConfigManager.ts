@@ -1,7 +1,7 @@
 import { TableToMap } from '../../ReplicatedStorage/ToughS/StandardLib/TableMap';
 import { ServerStorage } from '@rbxts/services';
 
-
+// Transform and roll out
 export const enum GameConfigKeys {
     INTERMISSION_DURATION = "INTERMISSION_DURATION",
     MIN_PLAYERS = "MIN_PLAYERS",
@@ -26,8 +26,8 @@ export interface IConfigManager {
     SetFeatureFlags(featureValues : Map<string, boolean>) : void
     SetFeatureFlag(featureKey : string, flagValue : boolean) : void
     SetConfigValue<T>(configKey  : string, value:  T) : void
-    LoadConfigFromTable(table : Table) : void
-    LoadFeatureFlagsFromTable(table : Table) : void
+    LoadConfigFromTable(configTable : Table) : void
+    LoadFeatureFlagsFromTable(configTable : Table) : void
     LoadStandardFeatureFlags() : void
 
     Loaded: boolean
@@ -43,6 +43,7 @@ export class ConfigManager implements IConfigManager {
         this.ConfigValues = new Map<string, any>()
         this.FeatureFlags = new Map<string, boolean>()
         
+        print("Yeehaw")
         if (useDefaultConfig) {
             this.Init()
         }
@@ -109,15 +110,23 @@ export class ConfigManager implements IConfigManager {
         
         return false
     }
-    LoadConfigFromTable(table: Table): void {
-        this.ConfigTable = table
+    LoadConfigFromTable(configTable: Table): void {
+        this.ConfigTable = configTable
         this.ConfigValues = TableToMap(this.ConfigTable)
     }
 
-    LoadFeatureFlagsFromTable(table: Table): void {
+    LoadFeatureFlagsFromTable(configTable: Table): void {
 
-        let featureFlagVals = TableToMap(table)
-        this.SetFeatureFlags(featureFlagVals)
+        let featureFlagVals = TableToMap(configTable)
+        let ffBools = new Map<string, boolean>()
+
+        featureFlagVals.entries().forEach(ffTableEntry => {
+            if (type(ffTableEntry[1]) === "boolean") {
+                ffBools.set(ffTableEntry[0], ffTableEntry[1] as boolean)
+            }
+        });
+
+        this.SetFeatureFlags(ffBools)
     }
 
     LoadStandardFeatureFlags() : void {

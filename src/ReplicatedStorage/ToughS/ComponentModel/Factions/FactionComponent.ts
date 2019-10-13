@@ -14,6 +14,10 @@ export interface IFactionComponent {
     TryRemoveFaction(factionId : FactionIdentifier) : boolean
 }
 
+export interface IFactionable {
+    FactionTracker : IFactionComponent 
+}
+
 export class FactionComponent implements IFactionComponent {
     constructor(...startingFactions : string[]) {
         this.Factions = new Array<FactionIdentifier>()

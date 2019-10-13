@@ -1,7 +1,7 @@
 import { IGameModel } from '../../../ReplicatedStorage/ToughS/ComponentModel/FundamentalTypes';
 import { IKeyValuePair } from '../../../ReplicatedStorage/ToughS/StandardLib/KeyValuePair';
 import { ITransportObjective } from "./TransportObjective";
-import { IFactionable } from '../../Components/Factions/Factionable';
+import { IFactionable } from '../../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionComponent';
 
 export enum TransportableArtifactState {
     AtSpawn = 0,

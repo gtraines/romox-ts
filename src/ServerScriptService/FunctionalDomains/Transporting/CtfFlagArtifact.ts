@@ -6,8 +6,9 @@ import { ITransportObjective } from "./TransportObjective";
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
-import { IFactionComponent, FactionComponent } from '../../Components/Factions/Factionable';
 import { Spieler } from '../Spieler';
+import { FactionComponent, IFactionComponent } from '../../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionComponent';
+
 
 const rq = requireScript("rquery") as IRquery
 const pubSub = requireScript("PubSub") as IPubSub
@@ -32,7 +33,8 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
 
         this.FactionTracker = new FactionComponent(...factions)
         if (this.GetComponentStringValue("Factions") !== undefined) {
-            this.FactionTracker.AddFaction(this.GetComponentStringValue("Factions"))
+            this.FactionTracker.LoadFromCommaSeparatedString(
+                this.GetComponentStringValue("Factions"))
         }
         
         this.State = TransportableArtifactState.AtSpawn

@@ -1,11 +1,11 @@
 import { FactionLookup } from './FactionsData';
 import { FactionIdentifier } from './FactionDescriptions';
-import { IFactionable } from './Factionable';
-import { IGameEntity, IComponentizedGameEntity } from '../../../ReplicatedStorage/ToughS/ComponentModel/FundamentalTypes';
-import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
-import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
-import { CollectionIntegration, IEntityCollection } from '../../../ReplicatedStorage/ToughS/ComponentModel/CollectionIntegration';
-import { Personage } from '../../../ReplicatedStorage/ToughS/StandardLib/Personage';
+import { IGameEntity, IComponentizedGameEntity } from '../FundamentalTypes';
+import { requireScript } from '../../ScriptLoader';
+import { IRquery } from '../../../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
+import { CollectionIntegration, IEntityCollection } from '../CollectionIntegration';
+import { Personage } from '../../StandardLib/Personage';
+import { IFactionable } from './FactionComponent';
 
 
 const rq = requireScript<IRquery>("rquery")

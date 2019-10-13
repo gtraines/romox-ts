@@ -1,4 +1,4 @@
-import { FactionIdentifier, FactionDescription } from './FactionDescriptions';
+import { FactionIdentifier, FactionDescription, FactionIdentifiers } from './FactionDescriptions';
 
 const ambient = new FactionDescription(
     FactionIdentifier.AmbientLife,
@@ -154,6 +154,7 @@ const undeclared = new FactionDescription(
 export class FactionLookup {
     private static _isInitialized : boolean
     static Init() : void {
+        this._isInitialized = false
 
         this.FactionMap = new Map<FactionIdentifier, FactionDescription>()
         this.FactionMap.set(FactionIdentifier.AmbientLife, ambient)
@@ -180,10 +181,10 @@ export class FactionLookup {
 
     static GetFactionEnumFromString( factionName : string ) : FactionIdentifier {
         this._ensureInitialized()
-
-        for (const entry in FactionIdentifier) {
-            if (entry.lower() === factionName.lower()) {
-                return entry as FactionIdentifier
+        // fack you eh
+        for (let entry of FactionIdentifiers.GetAsMap()) {
+            if (entry[0].lower() === factionName.lower()) {
+                return entry[1] as FactionIdentifier
             }
         }
         let factionVals = this.FactionMap.values() as FactionDescription[] 
@@ -196,6 +197,7 @@ export class FactionLookup {
     }
 
     static GetFactionsAsList() : FactionIdentifier[] {
+        this._ensureInitialized()
         return this.FactionMap.keys()
     }
 

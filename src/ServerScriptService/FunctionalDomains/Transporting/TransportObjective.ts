@@ -1,8 +1,8 @@
 import { IGameModel, GameModel } from '../../../ReplicatedStorage/ToughS/ComponentModel/FundamentalTypes';
-import { IFactionable } from '../../Components/Factions/Factionable'
-import { IFactionComponent, FactionComponent } from '../../Components/Factions/FactionComponent';
+import { IFactionable } from '../../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionComponent'
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
+import { IFactionComponent, FactionComponent } from '../../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionComponent';
 
 const rq =  requireScript<IRquery>("rquery")
 

@@ -16,6 +16,9 @@
       "Components": {
         "$path": "out/ServerScriptService/Components"
       },
+      "Config": {
+        "$path": "out/ServerScriptService/Config"
+      },
       "Finders": {
         "$path": "out/ServerScriptService/Finders"
       },
