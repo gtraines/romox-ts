@@ -1,4 +1,4 @@
-import { Players } from '@rbxts/services';
+import { Players, LogService } from '@rbxts/services';
 import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
 import { Personage, IPersonage } from '../../ReplicatedStorage/ToughS/StandardLib/Personage';
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
@@ -134,12 +134,17 @@ export class Spieler {
             
             if (playerInstance.Character !== undefined) {
                 let personageFromPlayer = new Personage(playerInstance.Character)
+                
+                print("Character was present for ", playerInstance.Name)
                 this.AddPersonageToTrackers(personageFromPlayer, playerInstance.UserId)
             } else {
-                playerInstance.CharacterAdded.Connect((addedCharacter : Model) => {
+                print("Character was NOT present for ", playerInstance.Name)
+                let charFunc = (addedCharacter : Model) => {
+                    print("NOW character is present for ", playerInstance.Name)
                     let personageFromCharacter = new Personage(addedCharacter)
                     this.AddPersonageToTrackers(personageFromCharacter, playerInstance.UserId)
-                })
+                }
+                let buzzerHand = playerInstance.CharacterAdded.Connect(charFunc)
             }
 
             return true

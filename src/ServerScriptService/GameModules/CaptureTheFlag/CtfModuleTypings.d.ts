@@ -23,8 +23,8 @@ export interface ICtfPlayerManager {
 }
 
 export interface ICtfDisplayManager {
-    StartIntermission(player : Player) : void
-    StopIntermission(player : Player) : void
+    StartIntermission(player? : Player) : void
+    StopIntermission(player? : Player) : void
     DisplayNotification(teamColor : string) : void
     UpdateTimerInfo(isIntermission : boolean, waitingForPlayers : boolean) : void
     DisplayVictory(winningTeam : Team) : void

@@ -42,7 +42,9 @@ export abstract class GameEntityBase implements IGameEntity {
     EntityInstance : Instance
     EntityId : string
     GetEntityIdValue() : StringValue {
-        return rq.GetOrAddItem("EntityId", "StringValue", this.EntityInstance) as StringValue
+        let entityId = rq.GetOrAddEntityId(this.EntityInstance)
+        let entityIdValue = rq.GetOrAddItem("EntityId", "StringValue", this.EntityInstance) as StringValue
+        return entityIdValue
     }
     LogClass(message : string) : void {
         

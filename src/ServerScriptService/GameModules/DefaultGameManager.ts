@@ -1,8 +1,8 @@
-import { ServerScriptService } from '@rbxts/services';
+import { ServerScriptService, Players } from '@rbxts/services';
 import { GameManagerBase } from "./GameManagerBase";
 import { GameConfigService } from '../Config/GameConfigService';
 import { IGameState, GameState } from './GameState';
-import { IGameManager } from "./GameModulesTypings";
+import { IGameManager, IMapManager } from './GameModulesTypings';
 import { Spieler } from '../FunctionalDomains/Spieler';
 import { Personage } from '../../ReplicatedStorage/ToughS/StandardLib/Personage';
 import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
@@ -10,17 +10,40 @@ import { SpawnerManager } from '../Spawning/SpawnerManager';
 import { FactionService } from '../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionService';
 import { IStretcherTool, StretcherTool } from '../../ReplicatedStorage/Equipment/StretcherTool';
 import { FactionIdentifier } from '../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionDescriptions';
+import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
+import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
+import { ICtfDisplayManager } from './CaptureTheFlag/CtfModuleTypings';
+
+
+const rq = requireScript<IRquery>("rquery")
+const mapManager = 
+    ServerScriptService.WaitForChild(
+        "GameModules").WaitForChild(
+            "CaptureTheFlag").WaitForChild(
+                "CtfMapManager") as ModuleScript
+
+const displayManagerModule = 
+    ServerScriptService.WaitForChild(
+        "GameModules").WaitForChild(
+            "CaptureTheFlag").WaitForChild(
+                "CtfDisplayManager") as ModuleScript
+
 
 const personageSpawnerModule = 
-        ServerScriptService.WaitForChild("Spawning").WaitForChild("PersonageSpawner") as ModuleScript;
+        ServerScriptService.WaitForChild(
+            "Spawning").WaitForChild("PersonageSpawner") as ModuleScript;
 
 export class DefaultGameManager extends GameManagerBase implements IGameManager {
     protected _isInitialized : boolean
 
     PersonageSpawner : IPersonageSpawner
+    MapManager : IMapManager
+    DisplayManager : ICtfDisplayManager
     constructor() {
         super()
         this.PersonageSpawner = require(personageSpawnerModule) as IPersonageSpawner
+        this.MapManager = require(mapManager) as IMapManager
+        this.DisplayManager = require(displayManagerModule) as ICtfDisplayManager
         this._isInitialized = false
     }
     protected _ensureInitialized() : void {
@@ -30,6 +53,7 @@ export class DefaultGameManager extends GameManagerBase implements IGameManager 
         }
     }
     Initialize(): void {
+        this.MapManager.SaveMap()
         Spieler.Init()
         FactionService.Init()
         if (GameConfigService.GetFeatureEnabled("UseNpcSpawners")) {
@@ -39,31 +63,51 @@ export class DefaultGameManager extends GameManagerBase implements IGameManager 
         this._isInitialized = true
     }    
     RunIntermission(): void {
-    
+        
     }
     StopIntermission(): void {
-    
+        this.DisplayManager.StopIntermission()
     }
     BeforeGameStart(): void {
-        let handler = (player : Player) => {
-            let defaultFaction = FactionIdentifier.Undeclared
-            Spieler.AddPlayerAsPersonage(player)
-            let playerAsPersonage = Spieler.FindPersonageFromPlayer(player)
-            FactionService.AddPersonageToFaction(playerAsPersonage, defaultFaction)
+        let playerAdded = (player : Player) => {
+            player.LoadCharacter()
         }
-        Spieler.PerformOnAllCurrentAndFuturePlayers(handler)
+        Spieler.AddOnPlayerJoinedHandler(playerAdded)
+        
+        let defaultFaction = FactionIdentifier.Undeclared
+        
+        let charAdded = (characterModel : Model) => {
+            let foundPlayer = Players.GetPlayerFromCharacter(characterModel)
+            if (foundPlayer !== undefined) {
 
+                if (Spieler.AddPlayerAsPersonage(foundPlayer)) {
+                    print("Added player as personage")
+                }
+                let entityId = rq.GetOrAddEntityId(characterModel)
+                if (entityId !== undefined) {
+                    print("Got entityID for ", characterModel.Name, " : ", entityId)
+                }
+                let characterPersonage = Spieler.GetPersonageFromEntityId(entityId)
+                if (characterPersonage !== undefined) {
+                    FactionService.AddPersonageToFaction(
+                        characterPersonage, defaultFaction)
+                    print("Got a personage")
+                }
+            }
+        }
+        Spieler.AddOnCharacterAddedHandler(charAdded)
     }
     GameReady(): boolean {
         this._ensureInitialized()
         return true
     }
     BeforeRoundStart(): void {
+        this._ensureInitialized()
         let stretcher = game.Workspace.FindFirstChild("RealStretcherTool") as Model
         let theLast = new StretcherTool(stretcher) as IStretcherTool
     }
     StartRound(): boolean {
-        
+        this._ensureInitialized()
         this.PersonageSpawner.CreateFemaleRunner()
         this.PersonageSpawner.CreateMaleRunner()            
         return true
@@ -72,12 +116,14 @@ export class DefaultGameManager extends GameManagerBase implements IGameManager 
         
     }
     RoundOver(): boolean {
+
         return false
     }
     RoundCleanup(): void {
-        
+        this.MapManager.ClearMap()
     }
     GetCurrentGameState(): IGameState {
+        this._ensureInitialized()
         return new GameState(true, false, true)
     }    
 }
