@@ -1,6 +1,6 @@
 import { FactionLookup } from './FactionsData';
-import { FactionIdentifier } from './FactionDescriptions';
-import { IGameEntity, IComponentizedGameEntity } from '../FundamentalTypes';
+import { FactionIdentifier, FactionIdentifiers } from './FactionDescriptions';
+import { IGameEntity, IComponentizedGameEntity, IEntityComponentValue } from '../FundamentalTypes';
 import { requireScript } from '../../ScriptLoader';
 import { IRquery } from '../../../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
 import { CollectionIntegration, IEntityCollection } from '../CollectionIntegration';
@@ -84,8 +84,9 @@ export class FactionService {
 
     static AddPersonageToFaction(personage : Personage, 
         factionId : FactionIdentifier) : void {
-        
-        this.AddEntityToFaction(personage, factionId)
+        personage.FactionTracker.ClearFactions()
+        personage.FactionTracker.AddFaction(factionId)
+        this.AddEntityToFactionExclusive(personage, factionId)
     }
 
     static AddEntityToFaction(entity : IComponentizedGameEntity, 
@@ -95,6 +96,34 @@ export class FactionService {
         let collection = this.GetOrAddFactionCollection(factionId)
         collection.add(entityIdValue)
         return true 
+    }
+
+    static AddEntityToFactionExclusive(entity : IComponentizedGameEntity, 
+        factionId : FactionIdentifier) : boolean {
+        let entityIdValue = entity.GetEntityIdValue()
+        
+        this._factionCollections.forEach(
+            (fxnClxn : IEntityCollection, fxnId : FactionIdentifier) => {
+            if (fxnClxn.has(entityIdValue)) {
+                this.RemoveEntityFromFaction(entity, fxnId)
+            }
+        })
+
+        let collection = this.GetOrAddFactionCollection(factionId)
+        collection.add(entityIdValue)
+        return true 
+    }
+
+    static IsEntityInFaction(entity : IComponentizedGameEntity,
+        factionId : FactionIdentifier) 
+        : boolean {
+        let collectionForId = this.GetOrAddFactionCollection(factionId)
+
+        if (collectionForId.has(entity.GetEntityIdValue())) { 
+            return true
+        }
+
+        return false
     }
 
     static RemoveEntityFromFaction(entity : IComponentizedGameEntity, factionId : FactionIdentifier) : boolean {

@@ -78,7 +78,7 @@ export class Spieler {
     }
 
     static DestroyAllCharacters() : void {
-
+        throw "Not defined"
     }
 
     static PerformOnCurrentPlayers(fn : (player : Player) => void) : void {
@@ -92,6 +92,7 @@ export class Spieler {
         this.PerformOnCurrentPlayers(fn)
         Players.PlayerAdded.Connect(fn)
     }
+
     static IsEntityIdPlayer(entityId : string) : boolean {
         if (this.EntityIdToPlayerIdMapping.has(entityId)) {
             return true
@@ -131,22 +132,20 @@ export class Spieler {
         let existingPersonageEntityId = this.GetEntityIdFromPlayerId(playerInstance.UserId)
 
         if (existingPersonageEntityId === undefined) {
-            
+
             if (playerInstance.Character !== undefined) {
                 let personageFromPlayer = new Personage(playerInstance.Character)
                 
-                print("Character was present for ", playerInstance.Name)
                 this.AddPersonageToTrackers(personageFromPlayer, playerInstance.UserId)
             } else {
-                print("Character was NOT present for ", playerInstance.Name)
+                
                 let charFunc = (addedCharacter : Model) => {
-                    print("NOW character is present for ", playerInstance.Name)
+                    
                     let personageFromCharacter = new Personage(addedCharacter)
                     this.AddPersonageToTrackers(personageFromCharacter, playerInstance.UserId)
                 }
                 let buzzerHand = playerInstance.CharacterAdded.Connect(charFunc)
             }
-
             return true
         }
         

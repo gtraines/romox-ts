@@ -12,6 +12,7 @@ export interface IFactionComponent {
     LoadFromCommaSeparatedString(csv : string) : void
     LoadFromStringValue(stringValue : StringValue) : void
     TryRemoveFaction(factionId : FactionIdentifier) : boolean
+    LogFactions() : void
 }
 
 export interface IFactionable {
@@ -86,5 +87,12 @@ export class FactionComponent implements IFactionComponent {
 
     ClearFactions(): void {
         this.Factions = new Array<FactionIdentifier>()
+    }
+    LogFactions() : void {
+        let currentFactions = ""
+        this.Factions.forEach((fxn)=> {
+            currentFactions = fxn + "," + currentFactions
+        })
+        print(currentFactions)
     }
 }

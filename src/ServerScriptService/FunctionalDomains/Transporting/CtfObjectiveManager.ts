@@ -59,14 +59,15 @@ export class CtfObjectiveManager extends TransportObjectiveManager implements IC
     GetCharacterTouchedObjectiveCallback(): 
         (character: Model, objective: ITransportObjective) => void {
         let cb = (character: Model, objective: ITransportObjective) => {
-            print(character.Name, " touched ", objective.ModelInstance.Name)
+            
             let entityId = rq.GetOrAddEntityId(character)
             let foundPersonage = Spieler.GetPersonageFromEntityId(entityId)
             let carryingArtifact = this.TransporterPersonages.has(entityId)
             if (carryingArtifact && foundPersonage !== undefined) {
-                print("Carrying artifact!")
+                
                 let objAndPersonageAreFriendly = FactionService.AreFriends(foundPersonage, objective)
                 if (objAndPersonageAreFriendly) {
+                    print("WE ARE FRIENDS")
                     this.RemoveTransporterFromTrackedTransporters(entityId)
                 }
             }

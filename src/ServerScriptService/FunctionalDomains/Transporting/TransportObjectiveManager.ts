@@ -52,14 +52,16 @@ export abstract class TransportObjectiveManager implements ITransportObjectiveMa
     AddTransporterToTrackedTransporters(entityId: string, 
         artifact : ITransportableArtifact): 
         void {
-        
+        print("Adding trxporter for ", artifact.GetComponentStringValue("Factions"))
         this.TransportingEntityIdToArtifactEntityIdMap.set(entityId, 
             artifact.EntityId)
         let personage = Spieler.GetPersonageFromEntityId(entityId)
         if (personage !== undefined) {
+
             this.TransporterPersonages.set(entityId, personage)
         }
     }
+    
     RemoveTransporterFromTrackedTransporters(entityId: string): void {
         this.TransporterPersonages.delete(entityId)
         this.TransportingEntityIdToArtifactEntityIdMap.delete(entityId)

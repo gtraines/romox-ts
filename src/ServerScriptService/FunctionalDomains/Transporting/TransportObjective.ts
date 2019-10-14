@@ -22,12 +22,11 @@ export class TransportObjective
         super(gameModel)
         // Look!
         this.FactionTracker = new FactionComponent() as IFactionComponent
-
+        print(this.GetComponentStringValue("Factions"))
         this.FactionTracker.LoadFromCommaSeparatedString(
             this.GetComponentStringValue("Factions"))
         
         this.WireUpHandlers()
-
     }
     WireUpHandlers(): RBXScriptConnection[] {
         let scriptConnections = new Array<RBXScriptConnection>()
@@ -48,7 +47,6 @@ export class TransportObjective
             // Cool down
             wait(0.2)
         }
-
         return handler
     }
     FactionTracker : IFactionComponent

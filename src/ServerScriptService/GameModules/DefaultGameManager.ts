@@ -13,6 +13,7 @@ import { FactionIdentifier } from '../../ReplicatedStorage/ToughS/ComponentModel
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
 import { requireScript } from '../../ReplicatedStorage/ToughS/ScriptLoader';
 import { ICtfDisplayManager } from './CaptureTheFlag/CtfModuleTypings';
+import { CtfObjectiveManager, ICtfObjectiveManager } from '../FunctionalDomains/Transporting/CtfObjectiveManager';
 
 
 const rq = requireScript<IRquery>("rquery")
@@ -39,11 +40,13 @@ export class DefaultGameManager extends GameManagerBase implements IGameManager 
     PersonageSpawner : IPersonageSpawner
     MapManager : IMapManager
     DisplayManager : ICtfDisplayManager
+    CtfObjectiveManager : ICtfObjectiveManager
     constructor() {
         super()
         this.PersonageSpawner = require(personageSpawnerModule) as IPersonageSpawner
         this.MapManager = require(mapManager) as IMapManager
         this.DisplayManager = require(displayManagerModule) as ICtfDisplayManager
+        this.CtfObjectiveManager = new CtfObjectiveManager()
         this._isInitialized = false
     }
     protected _ensureInitialized() : void {
@@ -60,6 +63,7 @@ export class DefaultGameManager extends GameManagerBase implements IGameManager 
             const spawnerManager = new SpawnerManager();
             spawnerManager.Init();
         }
+        
         this._isInitialized = true
     }    
     RunIntermission(): void {
@@ -84,14 +88,11 @@ export class DefaultGameManager extends GameManagerBase implements IGameManager 
                     print("Added player as personage")
                 }
                 let entityId = rq.GetOrAddEntityId(characterModel)
-                if (entityId !== undefined) {
-                    print("Got entityID for ", characterModel.Name, " : ", entityId)
-                }
+                
                 let characterPersonage = Spieler.GetPersonageFromEntityId(entityId)
                 if (characterPersonage !== undefined) {
                     FactionService.AddPersonageToFaction(
                         characterPersonage, defaultFaction)
-                    print("Got a personage")
                 }
             }
         }

@@ -8,6 +8,7 @@ import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { IPubSub } from '../../Nevermore/Shared/Events/PubSubTypings';
 import { Spieler } from '../Spieler';
 import { FactionComponent, IFactionComponent } from '../../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionComponent';
+import { FactionService } from '../../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionService';
 
 
 const rq = requireScript("rquery") as IRquery
@@ -33,10 +34,12 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
 
         this.FactionTracker = new FactionComponent(...factions)
         if (this.GetComponentStringValue("Factions") !== undefined) {
+            
             this.FactionTracker.LoadFromCommaSeparatedString(
                 this.GetComponentStringValue("Factions"))
         }
-        
+        this.LogClass("Factions:")
+        this.FactionTracker.LogFactions()
         this.State = TransportableArtifactState.AtSpawn
         this.FlagBanner = gameModel.FindFirstChild("FlagBanner") as Part
         this.FlagPole = gameModel.FindFirstChild("FlagPole") as Part
@@ -44,11 +47,9 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
     }
     WireUpHandlers(): IKeyValuePair<string, RBXScriptConnection>[] {
         let createdConnections = new Array<IKeyValuePair<string, RBXScriptConnection>>();
-        this.LogClass("Wiring up handlers")
         this.TouchedEventConnection = this.FlagPole.Touched.Connect(this.GetOnTouchedHandler());
-        this.LogClass("Wired touched event handlers")
         createdConnections.push(new KeyValuePair<string, RBXScriptConnection>("TouchedEventConnection", this.TouchedEventConnection));
-        print("WIRED")
+
         return createdConnections;
     }
     GetOnPickedUpHandler(): (player: Player) => void {
@@ -70,7 +71,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         return handler;
     }
     GetOnTouchedHandler(): (otherPart: BasePart) => void {
-        print("Getting touched handler")
+
         let handler = (otherPart: BasePart) => {
             
             let touchingPersonage = rq.AttachedCharacterOrNil(otherPart as Part);
@@ -84,17 +85,17 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
                         this.LogClass("Has NO health")
                         return;
                     }
-                    // 
+                    //  
                     let entityId = rq.GetOrAddEntityId(touchingPersonage)
                     let foundPersonage = Spieler.GetPersonageFromEntityId(entityId)
-                    if (foundPersonage !== undefined) {                        
-                        if (!this.FactionTracker.HasAnyFactionIn( ...foundPersonage.FactionTracker.Factions ) &&
+                    if (foundPersonage !== undefined) {   
+                        
+                        if (!FactionService.AreFriends(foundPersonage, this) &&
                             this.State !== TransportableArtifactState.PickedUp) {
                             
-                                this.PickupArtifact(foundPlayer);
+                            this.PickupArtifact(foundPlayer);
                         }
                     }
-                    
                 }
             }
         };
@@ -102,7 +103,6 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
         return handler;
     }
     PickupArtifact(player: Player) {
-        this.LogClass("Picking up")
         this.State = TransportableArtifactState.PickedUp;
         let carryingPersonage = new Personage(player.Character as Model);
         
