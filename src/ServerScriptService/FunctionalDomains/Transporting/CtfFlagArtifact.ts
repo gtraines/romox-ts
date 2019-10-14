@@ -89,7 +89,9 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
                     let entityId = rq.GetOrAddEntityId(touchingPersonage)
                     let foundPersonage = Spieler.GetPersonageFromEntityId(entityId)
                     if (foundPersonage !== undefined) {   
-                        
+                        if (foundPersonage.GetComponentBoolValue("CarryingFlag")) {
+                            return
+                        }    
                         if (!FactionService.AreFriends(foundPersonage, this) &&
                             this.State !== TransportableArtifactState.PickedUp) {
                             
