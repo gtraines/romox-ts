@@ -6,7 +6,7 @@ import { IGameManager, IMapManager } from './GameModulesTypings';
 import { Spieler } from '../FunctionalDomains/Spieler';
 import { Personage } from '../../ReplicatedStorage/ToughS/StandardLib/Personage';
 import { IPersonageSpawner } from '../Spawning/SpawnerTypings';
-import { SpawnerManager } from '../Spawning/SpawnerManager';
+import { SpawnerManager, ISpawnerManager } from '../Spawning/SpawnerManager';
 import { FactionService } from '../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionService';
 import { IStretcherTool, StretcherTool } from '../../ReplicatedStorage/Equipment/StretcherTool';
 import { FactionIdentifier } from '../../ReplicatedStorage/ToughS/ComponentModel/Factions/FactionDescriptions';
@@ -41,12 +41,15 @@ export class DefaultGameManager extends GameManagerBase implements IGameManager 
     MapManager : IMapManager
     DisplayManager : ICtfDisplayManager
     CtfObjectiveManager : ICtfObjectiveManager
+    SpawnerManager: ISpawnerManager
+
     constructor() {
         super()
         this.PersonageSpawner = require(personageSpawnerModule) as IPersonageSpawner
         this.MapManager = require(mapManager) as IMapManager
         this.DisplayManager = require(displayManagerModule) as ICtfDisplayManager
         this.CtfObjectiveManager = new CtfObjectiveManager()
+        this.SpawnerManager = new SpawnerManager()
         this._isInitialized = false
     }
     protected _ensureInitialized() : void {
@@ -60,8 +63,8 @@ export class DefaultGameManager extends GameManagerBase implements IGameManager 
         Spieler.Init()
         FactionService.Init()
         if (GameConfigService.GetFeatureEnabled("UseNpcSpawners")) {
-            const spawnerManager = new SpawnerManager();
-            spawnerManager.Init();
+            print("Using NPC Spawners")
+            this.SpawnerManager.Init();
         }
         
         this._isInitialized = true

@@ -7,11 +7,11 @@ export interface ISpawnerArtifact {
 
 export interface ICategorySpawner {
     SpawnsCategory : string;
-    SpawnersFolder : string;
+    SpawnersSubFolderName : string;
     ServerStorageFolder : string;
     Spawners : Array<ISpawnerArtifact>;
-    ConfigureSpawners() : void;
-    GetSpawnerModels(categoryName : string) : Array<Model>;
+    ConfigureSpawners() : void
+    GetSpawnerSubFolderContents(spawnerModelName: string) : Array<Model>
 }
 
 export interface IPersonageSpawner {

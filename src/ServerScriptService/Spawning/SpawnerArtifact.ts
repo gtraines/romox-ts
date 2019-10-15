@@ -13,6 +13,6 @@ export class SpawnerArtifact implements ISpawnerArtifact {
     }
     SpawnPad: Part;
     SpawnsAtCFrame: CFrame;
-    SpawnsPrototypeId: string;    
     SpawnCooldownTime: number;
+    SpawnsPrototypeId: string;
 }

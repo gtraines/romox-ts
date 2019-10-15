@@ -1,8 +1,9 @@
 
 import { ICategorySpawner, ISpawnerArtifact, IVehicleCategorySpawner } from './SpawnerTypings';
 import { ReplicatedStorage, ServerScriptService } from '@rbxts/services';
-import { NpcCategorySpawner } from './NpcCategorySpawner';
+import { NpcCategorySpawner } from './NpcSpawners/NpcCategorySpawner';
 import { GameConfigService } from '../Config/GameConfigService';
+import { SoldierCategorySpawner } from './NpcSpawners/SoldierCategorySpawner';
 
 const vehicleSpawnerModule = ServerScriptService.WaitForChild("Spawning").WaitForChild("VehicleCategorySpawner") as ModuleScript;
 const VehicleCategorySpawner = require(vehicleSpawnerModule) as IVehicleCategorySpawner;
@@ -26,7 +27,9 @@ export class SpawnerManager implements ISpawnerManager {
             this.CategorySpawners.push(VehicleCategorySpawner);
         }
         if (GameConfigService.GetFeatureEnabled("UseNpcSpawners")) {
-            this.CategorySpawners.push(new NpcCategorySpawner())
+            print("USING NPC SPAWNERS")
+            print("PUSHING SOLDIER CAT SPAWNER")
+            this.CategorySpawners.push(new SoldierCategorySpawner())
         }
         
         this.ConfigureSpawners();

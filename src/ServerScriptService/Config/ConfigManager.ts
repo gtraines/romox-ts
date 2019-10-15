@@ -32,7 +32,7 @@ export interface IConfigManager {
 
     Loaded: boolean
     ConfigTable: Table
-    ConfigValues: Map<string, any>
+    ConfigValues: Map<string, unknown>
     FeatureFlags: Map<string, boolean>
 }
 
@@ -40,7 +40,7 @@ export class ConfigManager implements IConfigManager {
     
     constructor(useDefaultConfig : boolean=true) {
         this.ConfigTable = { }
-        this.ConfigValues = new Map<string, any>()
+        this.ConfigValues = new Map<string, unknown>()
         this.FeatureFlags = new Map<string, boolean>()
         
         print("Yeehaw")
@@ -58,7 +58,10 @@ export class ConfigManager implements IConfigManager {
         let loadFn = (confFilename : string) => {
             let foundConfigModule = ServerStorage.FindFirstChild(confFilename) as ModuleScript
             if (foundConfigModule !== undefined) {
-                return require(foundConfigModule)
+                print("WE GOT BULLETS, YA KNOW")
+                let loadedModule = require(foundConfigModule)
+                print("Required loaded config module")
+                return loadedModule
             }
         }
 
@@ -66,13 +69,16 @@ export class ConfigManager implements IConfigManager {
         let callResult = pcall(loadFn, filename)
         
         if (callResult[0]) {
+            print("BUT IT LOOKS SO COOL")
             let resultItem = callResult[1]
             if (resultItem !== undefined) {
+                print("WELL YA GOTTA GO GET IT")
                 let castResultItem = resultItem as Table
                 if (castResultItem !== undefined) {
+                    print("Success! Cast the result of the pcall to a Table")
                     return castResultItem
                 }
-                throw errorMessage + "Unable to cast to Table"
+                throw errorMessage + " Unable to cast to Table"
             }
             throw errorMessage + "PCall failed"
         }
@@ -84,10 +90,12 @@ export class ConfigManager implements IConfigManager {
         
         if (configTable === undefined) {
             configFilename = configFilename || "Configurations"
+            print("Getting configs: ", configFilename)
             configTable = this._getConfigs(configFilename)
         }
         
         this.LoadConfigFromTable(configTable)
+        print("Loaded config from table; next is FEATURE FLAGS")
         this.LoadStandardFeatureFlags()
         this.Loaded = true
         return this.Loaded
@@ -113,14 +121,19 @@ export class ConfigManager implements IConfigManager {
     LoadConfigFromTable(configTable: Table): void {
         this.ConfigTable = configTable
         this.ConfigValues = TableToMap(this.ConfigTable)
+        print("VERY NICE I LIKE YOU Loaded config values from table")
+        this.ConfigValues.forEach((dictValue, dictKey) => {
+            print(tostring(dictValue),": ", tostring(dictKey))
+        });
     }
 
     LoadFeatureFlagsFromTable(configTable: Table): void {
-
+        print("Loading feature flags")
         let featureFlagVals = TableToMap(configTable)
         let ffBools = new Map<string, boolean>()
 
         featureFlagVals.entries().forEach(ffTableEntry => {
+            print(ffTableEntry[0], " : ", tostring(ffTableEntry[1]))
             if (type(ffTableEntry[1]) === "boolean") {
                 ffBools.set(ffTableEntry[0], ffTableEntry[1] as boolean)
             }
@@ -131,9 +144,16 @@ export class ConfigManager implements IConfigManager {
 
     LoadStandardFeatureFlags() : void {
         if (this.ConfigValues.has(GameConfigKeys.FeatureFlags)) {
+            print("Config has feature flags")
             let fflagTable = 
                 this.ConfigValues.get(GameConfigKeys.FeatureFlags) as Table
              this.LoadFeatureFlagsFromTable(fflagTable)
+        }
+        else {
+            print("Doesn't have feature flags, jerk!!!!!")
+            this.ConfigValues.forEach((dictValue, dictKey) => {
+                print(tostring(dictValue),": ", tostring(dictKey))
+            });
         }
     }
 
@@ -156,6 +176,6 @@ export class ConfigManager implements IConfigManager {
 
     Loaded: boolean = false
     ConfigTable: Table
-    ConfigValues: Map<string, any>
+    ConfigValues: Map<string, unknown>
     FeatureFlags: Map<string, boolean>
 }
