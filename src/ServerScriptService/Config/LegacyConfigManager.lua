@@ -1,11 +1,14 @@
 local ServerStorage = game:GetService("ServerStorage")
 
-local module = {
+local moduleProto = {
+    __type = "configManager",
     Loaded = false,
     ConfigValues = {}
 }
 
-function module:_getConfigs(filename)
+local configManagerMeta = { __index = moduleProto }
+
+function moduleProto:_getConfigs(filename)
     local loadConfigFunc = function(configFilename)
         local foundConfigModule = ServerStorage:FindFirstChild(configFilename)
         if foundConfigModule ~= nil then
@@ -20,7 +23,7 @@ function module:_getConfigs(filename)
     return {}
 end
 
-function module:Init(configFilename, configTable)
+function moduleProto:Init(configFilename, configTable)
     if configTable == nil then
         configFilename = configFilename or "Configurations"
         configTable = self:_getConfigs(configFilename)
@@ -32,7 +35,7 @@ function module:Init(configFilename, configTable)
     return self.Loaded
 end
 
-function module:GetConfigValueOrDefault(configKey, defaultToReturn)
+function moduleProto:GetConfigValueOrDefault(configKey, defaultToReturn)
     if not self.Loaded then
         self:Init()
     end
@@ -44,7 +47,7 @@ function module:GetConfigValueOrDefault(configKey, defaultToReturn)
     return nil
 end
 
-function module:GetFeatureEnabled(featureKey)
+function moduleProto:GetFeatureEnabled(featureKey)
     if not self.Loaded then
         self:Init()
     end
@@ -58,4 +61,9 @@ function module:GetFeatureEnabled(featureKey)
     return false
 end
 
-return module
+function moduleProto.new()
+	local self = setmetatable({}, configManagerMeta)
+	return self
+end
+
+return moduleProto
