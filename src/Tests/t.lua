@@ -56,7 +56,7 @@ end
 
 function t.coerceIntoEnum(value, enum)
 	-- Coerces a value into an enum item, if possible, throws an error otherwise.
-	if lib.isAnEnum(enum) then
+	if t.isAnEnum(enum) then
 		for _, enum_item in next, enum:GetEnumItems() do
 			if value == enum_item or value == enum_item.Name or value == enum_item.Value then return enum_item end
 		end

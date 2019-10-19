@@ -6,7 +6,7 @@ function mt.__call(self, source)
 end
 setmetatable(query, mt)
 
-function tableIter(t)
+local function tableIter(t)
     local i = 0
     return function()
         i = i + 1
@@ -59,8 +59,8 @@ local typeoffunc = type(function() end)
 local typeoftable = type({})
 local typeofstring = type("")
 
-function interpret(lambda)
-    lambtype = type(lambda)
+local function interpret(lambda)
+    local lambtype = type(lambda)
     if lambtype == typeoffunc then
         return lambda
     elseif lambtype == typeofstring then
