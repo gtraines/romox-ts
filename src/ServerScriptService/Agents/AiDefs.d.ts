@@ -4,8 +4,7 @@ import { IPathProgressData } from "../Nevermore/Shared/Senses/SensesTypings";
 export interface IAiAgentContext {
     PersonageConfiguration : Table;
     Personage : Model;
-    StateMachine : IStateMachine;
-    
+    StateMachine : IStateMachine;   
 }
 
 export interface IAgentInterest {
@@ -22,9 +21,7 @@ export interface IAgentInterest {
 export interface IAiAgent {
     StateMachine : IStateMachine;
     WireUpStateMachine() : void;
-
 }
-
 
 export interface IPathfindingAi {
     StateMachine : IStateMachine;

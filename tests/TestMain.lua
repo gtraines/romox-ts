@@ -1,19 +1,19 @@
 
-newproxy = function(yesOrNo)
-    if yesOrNo ~= true then
-        return {}
-    end
+-- newproxy = function(yesOrNo)
+--     if yesOrNo ~= true then
+--         return {}
+--     end
     
-    local proto = {}
-    local meta = { 
-        __index = proto,
-        __len = 0,
-        __type = "userdata"
-     }
+--     local proto = {}
+--     local meta = { 
+--         __index = proto,
+--         __len = 0,
+--         __type = "userdata"
+--      }
     
-    local receiver = setmetatable({}, meta)
-    return receiver
-end
+--     local receiver = setmetatable({}, meta)
+--     return receiver
+-- end
 
 local lemur = require("lemur")
 local habitat = lemur.Habitat.new()
@@ -24,6 +24,9 @@ end
 
 local function ReplicatedStoragePath( replicatedStoragePath  )
     return "../out/ReplicatedStorage/" .. replicatedStoragePath
+end
+local function ToughSPath( toughSPath )
+    return ReplicatedStoragePath("ToughS/" .. toughSPath) 
 end
 
 local ServerScriptService = habitat.game:GetService("ServerScriptService")
@@ -37,25 +40,38 @@ local game = habitat.game
 local topLevelReplicatedStorage = habitat:loadFromFs(ReplicatedStoragePath(""))
 topLevelReplicatedStorage.Parent = ReplicatedStorage
 
-local toughS = habitat:loadFromFs(ReplicatedStoragePath("ToughS"))
+local toughS = habitat:loadFromFs(ToughSPath(""))
 toughS.Parent = ReplicatedStorage
 
 -- StandardLib
-local toughSStdLib = habitat:loadFromFs(ReplicatedStoragePath("StandardLib"))
+local toughSStdLib = habitat:loadFromFs(ToughSPath("StandardLib"))
 toughSStdLib.Parent = toughS
 
-local toughSStdLibDataAccess = habitat:loadFromFs(ReplicatedStoragePath("StandardLib/DataAccess"))
+local toughSStdLibDataAccess = habitat:loadFromFs(ToughSPath("StandardLib/DataAccess"))
 toughSStdLibDataAccess.Parent = toughSStdLib
 
 -- ComponentModel
+
 local toughSComponentModel = habitat:loadFromFs(ReplicatedStoragePath("ToughS/ComponentModel"))
 toughSComponentModel.Parent = toughS
 
 local toughSFactions = habitat:loadFromFs(ReplicatedStoragePath("ToughS/ComponentModel/Factions"))
 toughSFactions.Parent = toughSComponentModel
 
+local nevermoreInit = habitat:loadFromFs("./_nevermoreInit.lua")
+nevermoreInit.Parent = ServerScriptService
+
 local nevermoreScripts = habitat:loadFromFs(ReplicatedStoragePath("Nevermore"))
 nevermoreScripts.Parent = ReplicatedStorage
+
+local nvrMoreServerSide = habitat:loadFromFs(ServerScriptServicePath("Nevermore"))
+nvrMoreServerSide.Parent = ServerScriptService
+
+local nevermoreInit = habitat:loadFromFs("./_nevermoreInit.lua")
+nevermoreInit.Parent = ServerScriptService
+
+--local nevermoreResources = habitat:loadFromFs(ReplicatedStoragePath("NevermoreResources"))
+--nevermoreResources.Parent = ReplicatedStorage
 
 local equipment = habitat:loadFromFs(ReplicatedStoragePath("Equipment"))
 equipment.Parent = ReplicatedStorage
@@ -65,9 +81,6 @@ equipment.Parent = ReplicatedStorage
 ]]
 local sss = habitat:loadFromFs(ServerScriptServicePath(""))
 sss.Parent = ServerScriptService
-
-local nvrMoreServerSide = habitat:loadFromFs(ServerScriptServicePath("Nevermore"))
-nvrMoreServerSide.Parent = ServerScriptService
 
 local config = habitat:loadFromFs(ServerScriptServicePath("Config"))
 config.Parent = ServerScriptService
@@ -87,7 +100,7 @@ local functionalDomains = habitat:loadFromFs(ServerScriptServicePath("Functional
 functionalDomains.Parent = ServerScriptService
 
 local trxDomain = habitat:loadFromFs(ServerScriptServicePath("FunctionalDomains/Transporting"))
-trxDomain.Parents = functionalDomains
+trxDomain.Parent = functionalDomains
 
 --[[ Agents ]]
 local agents = habitat:loadFromFs(ServerScriptServicePath("Agents"))
@@ -118,11 +131,16 @@ ctfModule.Parent = gameModules
 local appStart = habitat:loadFromFs(ServerScriptServicePath("AppStart"))
 appStart.Parent = ServerScriptService
 
-local nevermoreRequire = habitat:require(ReplicatedStorage.Nevermore)
+local childses = habitat.game:GetService("ServerScriptService"):GetChildren()
+
+for _, name in pairs(childses) do
+    print(name)
+end
+
+
 local module = {
     game = game,
     habitat = habitat,
-    NevermoreRequire = nevermoreRequire,
     ServerScriptService = ServerScriptService,
     ReplicatedStorage = ReplicatedStorage
 }

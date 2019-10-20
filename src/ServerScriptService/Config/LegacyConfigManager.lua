@@ -1,7 +1,7 @@
 local ServerStorage = game:GetService("ServerStorage")
 
 local moduleProto = {
-    __type = "configManager",
+    __type = "ConfigManager",
     Loaded = false,
     ConfigValues = {}
 }

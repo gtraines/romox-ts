@@ -1,4 +1,3 @@
-local RocketManager = {}
 
 -- ROBLOX Services
 local Players = game.Players
@@ -9,6 +8,7 @@ local Tool = script.Parent.Parent
 local HitPlayer = Tool:WaitForChild('HitPlayers')
 local DirectHitPlayer = Tool:WaitForChild('DirectHitPlayer')
 local Configurations = Tool.Configuration
+local RocketManager = {}
 
 function RocketManager:BindRocketEvents(rocket)
 	local exploded = false

@@ -1,4 +1,4 @@
-import { Workspace, Players } from '@rbxts/services';
+//import { Workspace, Players } from '@rbxts/services';
 import { IGameModel, GameModel } from '../ComponentModel/FundamentalTypes';
 import { IPersonageCrawler, PersonageCrawler } from './PersonageCrawler';
 import { IRquery } from '../../../ServerScriptService/Nevermore/Shared/StandardLib/StdLibTypings';
@@ -86,7 +86,7 @@ export class Personage extends GameModel implements IPersonage {
                 foundWeld.Destroy()
             }
             wasSitting = true
-        } 
+        }
         if (this.Humanoid.Sit) {
             this.Humanoid.Sit = false
             wasSitting = true

@@ -25,9 +25,11 @@ export class StretcherTool extends ToolBase implements IStretcherTool {
         let handler = (part : BasePart ) => {
             let foundHumanoid = rq.AttachedHumanoidOrNil(part as Part) as Humanoid
             if (foundHumanoid !== undefined && !this.IsOccupied()) {
+                // Refactor to something else
                 let health = foundHumanoid.Health 
                 let personageModel = foundHumanoid.Parent as Model
                 let isAlivePersonage = foundHumanoid.Health > 0
+
                 if (isAlivePersonage && health < 100 && !this.IsOccupied() && this.ToolInstance.Parent !== personageModel) {
                     print("Detected personage: ", personageModel.Name)
                     print("Parent personage: ", this.ToolInstance.Parent)

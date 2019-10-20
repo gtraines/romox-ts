@@ -1,4 +1,5 @@
 
+// @deprecated
 export const TableToMap : (luaTable : Table) => Map<string, unknown> = 
     (luaTable : Table) => {
         let mapResult = new Map<string, unknown>()
@@ -13,6 +14,6 @@ export const TableToMap : (luaTable : Table) => Map<string, unknown> =
             print(tostring(key2.value))
             mapResult.set( key2.key, key2.value)
         }
-        
+        // 
         return mapResult
     }

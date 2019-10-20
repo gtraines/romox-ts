@@ -6,7 +6,7 @@ const nevermoreInitialize = require(nevermoreModule);
 import { IGameManager } from '../GameModules/GameModulesTypings';
 
 import { GameJector } from './GameJector';
-const GameManager = GameJector.GetDefaultGame()
+const GameManager = GameJector.GetDefaultGame() as IGameManager
 
 function OneTimeSetup() : void {
     GameManager.Initialize()

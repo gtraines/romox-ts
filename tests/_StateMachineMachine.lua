@@ -5,7 +5,17 @@ local game = _testMain.game
 local habitat = _testMain.habitat
 local ReplicatedStorage = _testMain.ReplicatedStorage
 
-local StateMachineMachine = _testMain.NevermoreRequire("StateMachineMachine")
+local replicatedStorageChildren = ReplicatedStorage:GetChildren()
+
+for _, child in pairs(replicatedStorageChildren) do
+    print(child.Name)
+end
+local modScript = ReplicatedStorage.Nevermore
+print(modScript)
+
+local nevermoreRequire = habitat.require("Nevermore")
+
+local StateMachineMachine = nevermoreRequire("StateMachineMachine")
 
 local internalSharedData = {
     ReadyForSecondStateA = false

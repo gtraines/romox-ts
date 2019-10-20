@@ -1,4 +1,4 @@
-
+// 5 bags
 export interface IDataStoreResponseCode {
     ErrorCode: number
     ErrorMessage: string

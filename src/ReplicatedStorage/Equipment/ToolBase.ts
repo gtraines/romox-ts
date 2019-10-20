@@ -11,6 +11,7 @@ export interface IToolBase {
 
 export abstract class ToolBase implements IToolBase {
     constructor(toolModel : Model) {
+        // When a squirrel starts talking
         this.ToolModel = toolModel
         this.ToolInstance = toolModel.FindFirstChildWhichIsA("Tool") as Tool
         this.ConfigureToolInstance()

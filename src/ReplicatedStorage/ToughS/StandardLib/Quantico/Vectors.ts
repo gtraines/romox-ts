@@ -71,7 +71,8 @@ export class Vector implements IVector {
                 tostring(vectorA.GetRank()) + " vectorB: " + tostring(vectorB.GetRank())
             throw msg
         }
-        let newArr = new Array<number>(vectorA.GetRank())
+
+        let newArr = new Array<number>()
 
         for (let idx = 0; idx < vectorA.GetRank(); idx++) {
             let valA = vectorA.AsArray()[idx]
