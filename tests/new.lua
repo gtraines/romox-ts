@@ -18,7 +18,7 @@
 		})
 ]]
 
-
+local t = require("t")
 local newCheck = t.tuple(t.optional(t.table), t.optional(t.table))
 local function new(props, children)
 	assert(newCheck(props, children))

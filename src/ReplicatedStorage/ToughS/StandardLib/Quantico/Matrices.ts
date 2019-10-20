@@ -31,21 +31,33 @@ export class Matrix extends Array<IVector> implements IMatrix {
             }
         }
     }
+    GetDeterminant() : IMatrix {
+        throw "Not implemented"
+    }
     GetDimensions(): IDimension2Shape {
         let rows = this.size()
         let columns = this[0].GetRank()
 
         return new Dimension2Shape(rows, columns)
     }
+    GetColumns() : Array<IVector> {
+        throw "Not implemented"
+    }
+    GetRows() : Array<IVector> {
+        throw "Not implemented"
+    }
     Transpose() : IMatrix {
-
+        throw "Not implemented"
+    }
+    GetLowerUpper() : { Lower: IMatrix, Upper: IMatrix } {
+        throw "Not implemented"
     }
 }
 
-function toMatrix(vecList: Vector[]): Matrix {
-    let data = new Array(vecList.size());
-    for(let i=0; i<data.size(); i++) {
-      data[i] = vecList[i].data.slice();
+function toMatrix(vecList: IVector[]): Matrix {
+    let data = new Array<IVector>();
+    for (let i=0; i<data.size(); i++) {
+      data.push(vecList[i].Copy());
     }
     return new Matrix(data);
   }

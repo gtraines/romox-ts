@@ -3,14 +3,10 @@
 local _testMain = require("TestMain")
 local game = _testMain.game
 local habitat = _testMain.habitat
-local ServerScriptService = _testMain.ServerScriptService
+local ReplicatedStorage = _testMain.ReplicatedStorage
 
--- load ServiceFinder within habitat?
-local libFinder = habitat:require(ServerScriptService:FindFirstChild("Finders"):FindFirstChild("LibFinder"))
-assert(libFinder ~= nil, "Didn't load libFinder")
-local DomainFinder = habitat:require(ServerScriptService.Finders.DomainFinder)
+local StateMachineMachine = _testMain.NevermoreRequire("StateMachineMachine")
 
-local StateMachineMachine = libFinder:FindLib("statemachinemachine")
 local internalSharedData = {
     ReadyForSecondStateA = false
 }
