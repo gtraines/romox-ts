@@ -31,4 +31,5 @@ export abstract class TestClassBase implements ITestClass {
 
         return allSuccess
     }
+    
 }

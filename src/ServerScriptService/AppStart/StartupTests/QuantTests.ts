@@ -22,8 +22,8 @@ export class QuantTests extends TestClassBase implements ITestClass {
             let vectorY = new Vector([0, 2])
 
             let outputVec = Vector.AddVectors(vectorX, vectorY)
-            assert(outputVec.AsArray()[0] === 3, "Expected 3, got: " + tostring(outputVec.AsArray()[0]))
-            assert(outputVec.AsArray()[1] === 6, "Expected 6, got: " + tostring(outputVec.AsArray()[1]))
+            assert(outputVec.Elements[0] === 3, "Expected 3, got: " + tostring(outputVec.Elements[0]))
+            assert(outputVec.Elements[1] === 6, "Expected 6, got: " + tostring(outputVec.Elements[1]))
 
             return true
         }

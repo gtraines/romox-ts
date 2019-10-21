@@ -1,82 +1,93 @@
 
 export interface IVector {
+    Elements : Array<number>
     AddScalar(scalarValue : number) : IVector
-    AsArray() : Array<number>
     Copy() : IVector
     DivideByScalar(scalarValue : number) : IVector
+    GetElement(idx : number) : number
+    SetElement(idx: number, newValue: number) : void
     GetRank() : number
     MultiplyScalar(scalarValue : number) : IVector
-    PerformMapping(elementwiseOperation : (element : number) => number ) : void
     SubtractScalar(scalarValue : number) : IVector
 }
 
 export class Vector implements IVector {
-    private _innerArray: Array<number>
-    constructor(startVal: Array<number>) {
-        this._innerArray = startVal
-    }
-    AsArray(): number[] {
-        return this._innerArray
+    Elements : Array<number>
+    constructor(startingElements? :Array<number>) {
+        if (startingElements !== undefined) {
+            this.Elements = startingElements
+        } else {
+            this.Elements = new Array<number>()
+        }
     }    
     GetRank() : number {
-        return this.AsArray().size()
+        return this.Elements.size()
     }
-    PerformMapping(
-        elementwiseOperation : 
-        (element : number, index : number, referenceArray : readonly number[]) => number
-        ) : void {
-        let innerArrayMemoized = this._innerArray.copy()
+    GetElement(idx : number) : number {
+        return this.Elements[idx]
+    }
+    SetElement(idx: number, newValue: number) : void {
+        this.Elements[idx] = newValue
+    }
+    _performMappingOnAllElements(mappingFn: (scalarValue: number) => number ): Array<number> {
+        let elementsMemo = this.Elements.copy()
 
-        this._innerArray = innerArrayMemoized.map(elementwiseOperation)
+        this.Elements = elementsMemo.map(mappingFn)
+        return this.Elements
     }
     AddScalar(scalarValue : number) : IVector {
-        
-        this.PerformMapping(( elementValue : number ) => {
+        this._performMappingOnAllElements(( elementValue : number ) => {
             return elementValue + scalarValue
         })
         return this
     }
     MultiplyScalar(scalarValue : number) : IVector {
-        
-        this.PerformMapping(( elementValue : number ) => {
+
+        this._performMappingOnAllElements(( elementValue : number ) => {
             return elementValue * scalarValue
         })
         return this
     }
     DivideByScalar(scalarValue : number) : IVector {
         
-        this.PerformMapping(( elementValue : number ) => {
+        this._performMappingOnAllElements(( elementValue : number ) => {
             return elementValue / scalarValue
         })
         return this
     }
     SubtractScalar(scalarValue : number) : IVector {
         
-        this.PerformMapping(( elementValue : number ) => {
+        this._performMappingOnAllElements(( elementValue : number ) => {
             return elementValue - scalarValue
         })
         return this
     }
-    Copy() : IVector {
-        return new Vector(this.AsArray())
+    size(): number {
+        return this.Elements.size()
     }
-
+    Copy() : IVector {
+        return new Vector(this.Elements)
+    }
     static VectorToVector(
         vectorA : IVector, 
         vectorB : IVector, 
-        operation : (valueA : number, valueB : number) => number) : IVector {
+        operation : 
+            (valueA : number, valueB : number) 
+                => number) 
+    : IVector {
         
         if (vectorA.GetRank() !== vectorB.GetRank()) {
             let msg = "Vectors must be of equal length: vectorA: " + 
-                tostring(vectorA.GetRank()) + " vectorB: " + tostring(vectorB.GetRank())
+                tostring(vectorA.GetRank()) + 
+                " vectorB: " + tostring(vectorB.GetRank())
             throw msg
         }
 
         let newArr = new Array<number>()
 
         for (let idx = 0; idx < vectorA.GetRank(); idx++) {
-            let valA = vectorA.AsArray()[idx]
-            let valB = vectorB.AsArray()[idx]
+            let valA = vectorA.GetElement(idx)
+            let valB = vectorB.GetElement(idx)
 
             newArr.push(operation(valA, valB))
         }
@@ -124,6 +135,5 @@ export class Vector implements IVector {
             return false
         }
         throw "Not done implementing this"
-    }
-    
+    }  
 }
