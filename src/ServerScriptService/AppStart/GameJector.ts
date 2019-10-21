@@ -1,5 +1,5 @@
 import { IGameManager } from '../GameModules/GameModulesTypings';
-import { IConfigManager, ConfigManager } from '../Config/ConfigManager';
+import { IConfigManager } from '../Config/ConfigManager';
 import { DefaultGameManager } from '../GameModules/DefaultGameManager';
 
 export class GameJector {

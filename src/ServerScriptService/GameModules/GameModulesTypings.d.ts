@@ -11,7 +11,6 @@ export interface IMapManager {
 
 
 export interface IGameManager {
-    ConfigManager : IConfigManager
 
     Initialize(configManager? : IConfigManager) : void;
     BeforeGameStart() : void

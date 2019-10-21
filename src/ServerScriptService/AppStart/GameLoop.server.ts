@@ -3,10 +3,18 @@ import { ServerScriptService, ReplicatedStorage } from "@rbxts/services";
 const nevermoreModule = ReplicatedStorage.WaitForChild("Nevermore") as ModuleScript;
 const nevermoreInitialize = require(nevermoreModule);
 // Nevermore initialized, safe to proceed
+import { TestRunner } from './StartupTests/TestRunner';
 import { IGameManager } from '../GameModules/GameModulesTypings';
 
 import { GameJector } from './GameJector';
+
 const GameManager = GameJector.GetDefaultGame() as IGameManager
+
+function PreFlightCheck() : void {
+    if (!TestRunner.RunTests()) {
+        throw "Failed startup tests"
+    }
+}
 
 function OneTimeSetup() : void {
     GameManager.Initialize()
@@ -33,5 +41,6 @@ function RunForever() : void {
     }
 }
 
+PreFlightCheck();
 OneTimeSetup();
 RunForever();

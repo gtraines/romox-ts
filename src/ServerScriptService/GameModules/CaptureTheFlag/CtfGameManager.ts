@@ -3,9 +3,11 @@ import { GameState, IGameState } from '../GameState';
 
 import { GameManagerBase } from '../GameManagerBase';
 import { ReplicatedStorage, ServerScriptService } from '@rbxts/services';
-import { ConfigManager, IConfigManager, GameConfigKeys, FeatureFlagKeys } from '../../Config/ConfigManager';
+
+import { GameConfigKeys, FeatureFlagKeys } from '../../Config/ConfigManager';
 import { IRquery } from '../../Nevermore/Shared/StandardLib/StdLibTypings';
 import { requireScript } from '../../../ReplicatedStorage/ToughS/ScriptLoader';
+import { GameConfigService } from '../../Config/GameConfigService';
 
 
 const rq = requireScript<IRquery>("rquery")
@@ -38,15 +40,11 @@ export class CtfGameManager extends GameManagerBase implements IGameManager {
         this.EnoughPlayers = false
     }
     Initialize(): void {
-        if (!this.ConfigManager.Loaded) {
-            this.ConfigManager.Init()
-        }
-        if (
-            this.ConfigManager.GetFeatureEnabled(FeatureFlagKeys.UseSaveMap)
-            ) {
+        
+        if (GameConfigService.GetFeatureEnabled(FeatureFlagKeys.UseSaveMap)) {
             MapManager.SaveMap()
         }
-        if (this.ConfigManager.GetFeatureEnabled(FeatureFlagKeys.IsCaptureTheFlag)) {
+        if (GameConfigService.GetFeatureEnabled(FeatureFlagKeys.IsCaptureTheFlag)) {
             this.CaptureFlag.Event.Connect(this.GetOnCaptureFlagHandler())
             this.ReturnFlag.Event.Connect(this.GetOnReturnFlagHandler())
         }

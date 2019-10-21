@@ -1,5 +1,4 @@
 import { IGameManager } from './GameModulesTypings';
-import { IConfigManager, ConfigManager, GameConfigKeys, FeatureFlagKeys } from '../Config/ConfigManager';
 import { ReplicatedStorage } from '@rbxts/services';
 import { IRquery } from '../Nevermore/Shared/StandardLib/StdLibTypings';
 import { IGameState, GameState } from './GameState';
@@ -10,14 +9,8 @@ const Events = rq.GetOrAddItem("Events", "Folder", ReplicatedStorage)
 
 export abstract class GameManagerBase implements IGameManager {
     
-    ConfigManager: IConfigManager
-    constructor(configManager? : IConfigManager) {
-
-        if (configManager === undefined) {
-            this.ConfigManager = new ConfigManager()
-        } else {
-            this.ConfigManager = configManager
-        }
+    constructor() {
+        
     }
     abstract Initialize(): void
     abstract RunIntermission(): void

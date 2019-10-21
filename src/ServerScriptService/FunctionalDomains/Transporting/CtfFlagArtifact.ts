@@ -38,8 +38,7 @@ export class CtfFlagArtifact extends GameModel implements ICtfFlagArtifact {
             this.FactionTracker.LoadFromCommaSeparatedString(
                 this.GetComponentStringValue("Factions"))
         }
-        this.LogClass("Factions:")
-        this.FactionTracker.LogFactions()
+        
         this.State = TransportableArtifactState.AtSpawn
         this.FlagBanner = gameModel.FindFirstChild("FlagBanner") as Part
         this.FlagPole = gameModel.FindFirstChild("FlagPole") as Part

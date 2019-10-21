@@ -20,11 +20,12 @@ export class TransportObjective
     
     constructor(gameModel : Model) {
         super(gameModel)
-        // Look!
+        
         this.FactionTracker = new FactionComponent() as IFactionComponent
-        print(this.GetComponentStringValue("Factions"))
+        
         this.FactionTracker.LoadFromCommaSeparatedString(
-            this.GetComponentStringValue("Factions"))
+            this.GetComponentStringValue("Factions")
+        )
         
         this.WireUpHandlers()
     }
