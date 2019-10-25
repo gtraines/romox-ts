@@ -9,7 +9,7 @@ export interface IRandumbModule {
 export interface IRquery {
     CreateFolder: (folderName : string, parentObjectInstance : Instance) => Folder
     FindSiblingNamed: (part : Instance, siblingName : string) => Instance
-    DeepCopyTable: (orig : Table) => Table;
+    DeepCopyTable: (orig : object) => object;
     GetAlivePersonageOrPlayerHumanoid: (personageOrPlayer : Instance) => Humanoid
     GetPersonageOrPlayerRootPart: (personageOrPlayer : Instance) => Part
     GetPersonageOrPlayerHumanoidOrNil: (personageOrPlayer : Instance) => Humanoid
@@ -32,7 +32,7 @@ export interface IRquery {
     IntValueOrNil: (valueName : string, parent : Instance) => number
     GetOrAddItem: (itemName: string, itemType: string, parent: Instance) => Instance
     GetOrAddEntityId: (item : Instance) => string
-    Assign: ( target : Table, ... sourceThings : any[]) => Table
+    Assign: ( target : object, ... sourceThings : any[]) => object
 }
 
 export interface IWraptor {

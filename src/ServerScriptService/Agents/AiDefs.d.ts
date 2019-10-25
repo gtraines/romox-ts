@@ -2,7 +2,7 @@ import { IStateMachine, IStateMachineState } from '../Nevermore/Shared/StateMach
 import { IPathProgressData } from "../Nevermore/Shared/Senses/SensesTypings";
 
 export interface IAiAgentContext {
-    PersonageConfiguration : Table;
+    PersonageConfiguration : object;
     Personage : Model;
     StateMachine : IStateMachine;   
 }
@@ -36,6 +36,6 @@ export interface IPathfindingAi {
     GetRepulsionVector(unitPosition : Vector3, otherUnitsPosition : Vector3) : Vector3;
     GetNewState(stateName : string) : IStateMachineState;
     GetIdleState() : IStateMachineState;
-    LoadConfig(configSource : Table, configName : string, defaultValue : any) : void;
+    LoadConfig(configSource : object, configName : string, defaultValue : any) : void;
     GetConfigValue(configName : string) : any;
 }

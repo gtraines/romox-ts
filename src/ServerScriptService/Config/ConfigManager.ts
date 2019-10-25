@@ -20,18 +20,18 @@ export const enum FeatureFlagKeys {
 }
 
 export interface IConfigManager {
-    Init(configFilename?: string, configTable?: Table) : boolean
+    Init(configFilename?: string, configTable?: object) : boolean
     GetConfigValueOrDefault<T>(configKey: string, defaultToReturn?: T) : T
     GetFeatureEnabled(featureKey: string) : boolean
     SetFeatureFlags(featureValues : Map<string, boolean>) : void
     SetFeatureFlag(featureKey : string, flagValue : boolean) : void
     SetConfigValue<T>(configKey  : string, value:  T) : void
-    LoadConfigFromTable(configTable : Table) : void
-    LoadFeatureFlagsFromTable(configTable : Table) : void
+    LoadConfigFromTable(configTable : object) : void
+    LoadFeatureFlagsFromTable(configTable : object) : void
     LoadStandardFeatureFlags() : void
 
     Loaded: boolean
-    ConfigTable: Table
+    ConfigTable: object
     ConfigValues: Map<string, unknown>
     FeatureFlags: Map<string, boolean>
 }

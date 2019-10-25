@@ -1,8 +1,8 @@
 import { IKeyValuePair } from '../../../../ReplicatedStorage/ToughS/StandardLib/KeyValuePair';
 
 export interface IRodash {
-    slice: (source : Array<Table>, first? : number, last? : number, step? : number) => Table[]
-    get: <TKey, TValue>(source : Iterable<Table>, key : TKey, ... keys : TKey[]) => TValue
+    slice: (source : Array<object>, first? : number, last? : number, step? : number) => object[]
+    get: <TKey, TValue>(source : Iterable<object>, key : TKey, ... keys : TKey[]) => TValue
     map: <TKey, TValueA, TValueB>(source: Iterable<IKeyValuePair<TKey, TValueA>>,
         handler: (element: IKeyValuePair<TKey, TValueA>) => TValueB) => Iterable<IKeyValuePair<TKey, TValueB>>
     mapValues: <TKey, TValueA, TValueB>(source: Iterable<IKeyValuePair<TKey, TValueA>>,

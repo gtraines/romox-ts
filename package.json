@@ -19,8 +19,10 @@
   "homepage": "https://github.com/gtraines/romox-ts#readme",
   "devDependencies": {},
   "dependencies": {
-    "@rbxts/services": "^1.0.23",
-    "@rbxts/types": "^1.0.260",
-    "roblox-ts": "^0.2.14"
+    "@rbxts/services": "^1.0.28",
+    "@rbxts/types": "^1.0.283",
+    "rbx-types": "^1.0.191",
+    "roblox-ts": "^0.1.17",
+    "types": "^0.1.1"
   }
 }

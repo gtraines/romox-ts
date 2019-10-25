@@ -1,7 +1,7 @@
 
 // @deprecated
-export const TableToMap : (luaTable : Table) => Map<string, unknown> = 
-    (luaTable : Table) => {
+export const TableToMap : (luaTable : object) => Map<string, unknown> = 
+    (luaTable : object) => {
         let mapResult = new Map<string, unknown>()
         
         let tblArr = luaTable as {[index: string]: unknown}[]
